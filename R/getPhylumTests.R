@@ -1,0 +1,17 @@
+getPhylumTests <- function(phobj, var="Condition", outname="phylumTests", paired=F){
+  ## Total abundance by phylum, apparently by summing over all ASVs in phylum
+  ps_phylum <- phyloseq::tax_glom(phobj, "Phylum")
+  phyloseq::taxa_names(ps_phylum) <- phyloseq::tax_table(ps_phylum)[, "Phylum"]
+
+  comps <- combn(unique(unlist(sample_data(ps_phylum)[, var])), 2, simplify = F)
+  signif_codes <- list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, Inf), symbols = c("****", "***", "**", "*", "ns"))
+
+  dfmelt <- phyloseq::psmelt(ps_phylum) %>%
+    group_by(Phylum)
+
+  pvals <- dfmelt %>%
+    dplyr::group_modify(~ broom::tidy(wilcox.test(data=., as.formula(paste0( "Abundance ~", var)), paired = paired)))
+  pvals$padj = p.adjust(pvals$p.value, method="BH")
+  write_tsv(pvals, file=outname)
+  return(pvals)
+}
