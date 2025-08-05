@@ -9,18 +9,17 @@
 #' @param name PARAM_DESCRIPTION, Default: 'linearmodels'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[base]{subset}}
 #'  \code{\link[dplyr]{mutate}}
 #' @rdname makeLinearModelsSingleVariable
-#' @export 
-#' @importFrom base subset
+#' @export
 #' @importFrom dplyr mutate
 makeLinearModelsSingleVariable <- function(divtab,
                                            interestvar,
@@ -30,7 +29,7 @@ makeLinearModelsSingleVariable <- function(divtab,
                                            outdir = "", name = "linearmodels" ){
   if(length(unique(divtab[, interestvar])) < 2) return(list()) #Error: only 1 level, not possible to fit model
   extravars <-  map_vec(divtab[, extravars], \(x)length(unique(x[!is.na(x)]))) %>%
-    base::subset(. > 1) %>% names # remove variables without 2 or more levels
+    subset(. > 1) %>% names # remove variables without 2 or more levels
 
   models <- list()
   anovas_singlevar <- data.frame()

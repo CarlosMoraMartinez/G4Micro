@@ -14,11 +14,11 @@ makePermanova(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{Phyloseq Object}
 
-\item{dist_method}{PARAM_DESCRIPTION, Default: 'bray'}
+\item{dist_method}{Distance method to pass to the phyloseq::distance function, Default: 'bray'}
 
-\item{seed}{PARAM_DESCRIPTION, Default: 123}
+\item{seed}{Random seed, Default: 123}
 
 \item{exclude_vars}{PARAM_DESCRIPTION, Default: c("sampleID")}
 
@@ -27,10 +27,12 @@ makePermanova(
 \item{disp_permutations}{PARAM_DESCRIPTION, Default: 1000}
 }
 \value{
-OUTPUT_DESCRIPTION
+A DataFrame object with the PERMANOVA results for each variable in the phyloseq object metadata
 }
 \description{
-FUNCTION_DESCRIPTION
+This function performs PERMANOVA, as implemented in the vegan::adonis2 function,
+for all the variables included in the metadata of a phyloseq object,
+except for those included in the 'exclude_vars' argument. Based on:
 }
 \details{
 DETAILS
@@ -38,9 +40,15 @@ DETAILS
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ makePermanova(phobj, dist_method = "bray",
+                 seed = 123,
+                 exclude_vars = c("sampleID", "patient_name"),
+                 outname = "my_output_name")
  }
 }
+}
+\references{
+From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
 }
 \seealso{
 \code{\link[phyloseq]{distance}}, \code{\link[phyloseq]{prune_samples}}

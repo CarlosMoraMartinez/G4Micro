@@ -9,17 +9,17 @@
 #' @param name PARAM_DESCRIPTION, Default: 'CCA_from_CLR'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname makeCCA
-#' @export 
+#' @export
 makeCCA <- function(datamat, tax_matrix_clr, metadata,metadatavar="Psoriasis",
                     pcvar2retain=0.9, outdir = "", name="CCA_from_CLR"){
-  library(C)
+  #library(C)
   #Assumes matrices have the same number of rows (subjects) and that are ordered in the same way
   txpca <- prcomp(tax_matrix_clr %>% t)
   txsum <- txpca %>% summary()

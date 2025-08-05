@@ -14,20 +14,19 @@
 #' @param h PARAM_DESCRIPTION, Default: 4
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[base]{subset}}
 #'  \code{\link[phyloseq]{prune_samples}}
 #'  \code{\link[ggsignif]{stat_signif}}
 #'  \code{\link[dplyr]{mutate}}
 #' @rdname getAlphaDiversity
-#' @export 
-#' @importFrom base subset
+#' @export
 #' @importFrom phyloseq prune_samples
 #' @importFrom ggsignif stat_signif
 #' @importFrom dplyr mutate
@@ -44,7 +43,7 @@ getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
   #Get Alpha Diversity values
   divtab <- calculateAlphaDiversityTable(phseq_obj, outdir, indices, name)
   vars <-  map_vec(divtab[, vars], \(x)length(unique(x[!is.na(x)]))) %>%
-    base::subset(. > 1) %>% names
+    subset(. > 1) %>% names
   # Get statistical tests (not used later)
   alphadif <- testDiversityDifferences(divtab, indices, vars, outdir, name)
   plots <- list()

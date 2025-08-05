@@ -1,30 +1,38 @@
 #' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param dist_method PARAM_DESCRIPTION, Default: 'bray'
-#' @param seed PARAM_DESCRIPTION, Default: 123
+#' @description
+#' This function performs PERMANOVA, as implemented in the vegan::adonis2 function,
+#' for all the variables included in the metadata of a phyloseq object,
+#' except for those included in the 'exclude_vars' argument. Based on:
+#' @param phobj Phyloseq Object
+#' @param dist_method Distance method to pass to the phyloseq::distance function, Default: 'bray'
+#' @param seed Random seed, Default: 123
 #' @param exclude_vars PARAM_DESCRIPTION, Default: c("sampleID")
 #' @param outname PARAM_DESCRIPTION, Default: 'permanovas.tsv'
 #' @param disp_permutations PARAM_DESCRIPTION, Default: 1000
-#' @return OUTPUT_DESCRIPTION
+#' @return A DataFrame object with the PERMANOVA results for each variable in the phyloseq object metadata
+#' @references
+#' From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  makePermanova(phobj, dist_method = "bray",
+#'                  seed = 123,
+#'                  exclude_vars = c("sampleID", "patient_name"),
+#'                  outname = "my_output_name")
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[phyloseq]{distance}}, \code{\link[phyloseq]{prune_samples}}
 #'  \code{\link[dplyr]{arrange}}
 #' @rdname makePermanova
-#' @export 
+#' @export
+#' @importFrom vegan permutest adonis2 betadisper capscale anova.cca
 #' @importFrom phyloseq distance prune_samples
 #' @importFrom dplyr arrange
+#' @importFrom stringi stri_trans_general
 makePermanova <- function(phobj, dist_method = "bray", seed = 123,
                           exclude_vars = c("sampleID"), outname = "permanovas.tsv", disp_permutations=1000){
-  ## From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
-  library(stringi)
 
   meta <- sample_data(phobj)
   braydist <- phyloseq::distance(phobj, method = dist_method)
