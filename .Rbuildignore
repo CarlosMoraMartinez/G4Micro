@@ -1,2 +1,4 @@
 ^G4Micro\.Rproj$
 ^\.Rproj\.user$
+^\.github$
+^README\.Rmd$
