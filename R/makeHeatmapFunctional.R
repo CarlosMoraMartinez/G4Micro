@@ -13,17 +13,18 @@
 #' @param h PARAM_DESCRIPTION, Default: 14
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{filter}}
 #' @rdname makeHeatmapFunctional
-#' @export 
+#' @export
 #' @importFrom dplyr filter
+#' @importFrom pheatmap pheatmap
 makeHeatmapFunctional <- function(resdf, met2use, df2plot,
                                   variable = "condition",
                                   opt,

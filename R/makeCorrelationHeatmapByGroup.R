@@ -16,17 +16,18 @@
 #' @param annot_asvs PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{select}}
 #' @rdname makeCorrelationHeatmapByGroup
-#' @export 
+#' @export
 #' @importFrom dplyr select
+#' @importFrom pheatmap pheatmap
 makeCorrelationHeatmapByGroup <- function(mat1, mat2, metadata,var2plot="Psoriasis",
                                           varwithnames = "sampleID",
                                           cormethod="pearson",

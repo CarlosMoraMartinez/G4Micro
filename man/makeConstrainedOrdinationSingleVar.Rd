@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeConstrainedOrdinationSingleVar.R
 \name{makeConstrainedOrdinationSingleVar}
 \alias{makeConstrainedOrdinationSingleVar}
-\title{FUNCTION_TITLE}
+\title{makeConstrainedOrdinationSingleVar}
 \usage{
 makeConstrainedOrdinationSingleVar(
   phobj,
@@ -11,17 +11,17 @@ makeConstrainedOrdinationSingleVar(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{phyloseq object}
 
-\item{variables}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{variables}{Vector of variables to include in the ordination formula, Default: c("Condition")}
 
-\item{dist_type}{PARAM_DESCRIPTION, Default: 'bray'}
+\item{dist_type}{Distance to use, Default: 'bray'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot object
 }
 \description{
-FUNCTION_DESCRIPTION
+Uses the phyloseq::ordinate method with the CAP method
 }
 \details{
 DETAILS

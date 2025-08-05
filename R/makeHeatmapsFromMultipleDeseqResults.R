@@ -13,16 +13,17 @@
 #' @param h PARAM_DESCRIPTION, Default: 4
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
 #' @rdname makeHeatmapsFromMultipleDeseqResults
-#' @export 
+#' @export
+#' @importFrom pheatmap pheatmap
 #' @importFrom dplyr mutate select
 makeHeatmapsFromMultipleDeseqResults <- function(deseq_results_list,
                                                  daa_main,

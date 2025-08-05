@@ -15,16 +15,17 @@
 #' @param taxalist PARAM_DESCRIPTION, Default: c()
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{filter}}
 #' @rdname makeHeatmap
-#' @export 
+#' @export
+#' @importFrom pheatmap pheatmap
 #' @importFrom dplyr filter
 makeHeatmap <- function(resdf, dds, df2plot,
                         variable = "condition",

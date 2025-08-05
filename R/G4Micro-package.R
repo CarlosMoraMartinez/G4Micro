@@ -10,6 +10,8 @@
 #' @import magrittr
 #' @import phyloseq
 #' @import stats
+#' @import grDevices
+#' @import graphics
 "_PACKAGE"
 
 ## usethis namespace: start

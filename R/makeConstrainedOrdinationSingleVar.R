@@ -1,23 +1,24 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
-#' @param dist_type PARAM_DESCRIPTION, Default: 'bray'
-#' @return OUTPUT_DESCRIPTION
+#' @title makeConstrainedOrdinationSingleVar
+#' @description Uses the phyloseq::ordinate method with the CAP method
+#' @param phobj phyloseq object
+#' @param variables Vector of variables to include in the ordination formula, Default: c("Condition")
+#' @param dist_type Distance to use, Default: 'bray'
+#' @return A ggplot object
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[phyloseq]{distance}}
 #'  \code{\link[vegan]{scores}}
 #' @rdname makeConstrainedOrdinationSingleVar
-#' @export 
+#' @export
 #' @importFrom phyloseq distance
 #' @importFrom vegan scores
+#' @importFrom ggrepel geom_text_repel
 makeConstrainedOrdinationSingleVar<-function(phobj, variables = c("Condition"),  dist_type="bray"){
   phobj_not_na <- phobj
   metad <- data.frame(sample_data(phobj_not_na))
@@ -29,7 +30,8 @@ makeConstrainedOrdinationSingleVar<-function(phobj, variables = c("Condition"), 
   bray_not_na <- phyloseq::distance(physeq = phobj_not_na, method = dist_type)
 
   # CAP ordinate
-  cap_ord <<- ordinate(
+  # <<- removed
+  cap_ord <- ordinate(
     physeq = phobj_not_na,
     method = "CAP",
     distance = bray_not_na,
