@@ -1,3 +1,34 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param bacnames PARAM_DESCRIPTION
+#' @param df_all PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param quantvar PARAM_DESCRIPTION, Default: 'IMC_log'
+#' @param quantvar_name PARAM_DESCRIPTION, Default: 'log(IMC)'
+#' @param corrmethod PARAM_DESCRIPTION, Default: 'pearson'
+#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 10
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[assertthat]{assert_that}}
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{summarise}}
+#'  \code{\link[broom]{reexports}}
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname makePlotBySpecies
+#' @export 
+#' @importFrom assertthat assert_that
+#' @importFrom dplyr select summarise
+#' @importFrom broom glance
+#' @importFrom cowplot plot_grid
 makePlotBySpecies <- function(bacnames, df_all, outdir, name, quantvar="IMC_log",
                               quantvar_name = "log(IMC)",
                               corrmethod="pearson", plim_plot=0.05, w=8, h=10){

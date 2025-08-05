@@ -1,3 +1,23 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param max_nas PARAM_DESCRIPTION, Default: 0.2
+#' @param min_pct PARAM_DESCRIPTION, Default: 0.1
+#' @param max_classes PARAM_DESCRIPTION, Default: 5
+#' @param exclude PARAM_DESCRIPTION, Default: c()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname getValidFactors
+#' @export 
+#' @importFrom dplyr mutate
 getValidFactors <- function(df, max_nas=0.2, min_pct=0.1, max_classes=5, exclude=c()){
   is_factor <- function(x){
     (is.factor(x) |

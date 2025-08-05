@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tab PARAM_DESCRIPTION
+#' @param plim PARAM_DESCRIPTION, Default: 0.001
+#' @param name PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param include_longnames PARAM_DESCRIPTION, Default: FALSE
+#' @param w PARAM_DESCRIPTION, Default: 12
+#' @param h PARAM_DESCRIPTION, Default: 12
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate}}
+#' @rdname makeBarplotFunctional
+#' @export 
+#' @importFrom dplyr filter arrange mutate
 makeBarplotFunctional <- function(tab, plim=0.001, name, outdir,
                                   include_longnames = FALSE,
                                   w=12, h=12){

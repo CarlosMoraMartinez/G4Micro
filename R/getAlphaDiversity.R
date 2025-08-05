@@ -1,3 +1,36 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phseq_obj PARAM_DESCRIPTION
+#' @param vars PARAM_DESCRIPTION
+#' @param qvars PARAM_DESCRIPTION, Default: c()
+#' @param opt PARAM_DESCRIPTION, Default: list()
+#' @param indices PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")
+#' @param name PARAM_DESCRIPTION, Default: 'AlphaDiversity'
+#' @param signif_levels PARAM_DESCRIPTION, Default: c(`***` = 0.001, `**` = 0.01, `*` = 0.05, ns = 1.1)
+#' @param correct_pvalues PARAM_DESCRIPTION, Default: TRUE
+#' @param correct_pvalues_indices PARAM_DESCRIPTION, Default: FALSE
+#' @param test2show PARAM_DESCRIPTION, Default: 'wilcox.test'
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 4
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[base]{subset}}
+#'  \code{\link[phyloseq]{prune_samples}}
+#'  \code{\link[ggsignif]{stat_signif}}
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname getAlphaDiversity
+#' @export 
+#' @importFrom base subset
+#' @importFrom phyloseq prune_samples
+#' @importFrom ggsignif stat_signif
+#' @importFrom dplyr mutate
 getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
                               opt = list(),
                               indices=c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher"),

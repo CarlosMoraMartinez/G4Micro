@@ -1,4 +1,31 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param pcBoxplots PARAM_DESCRIPTION
+#' @param daa_all PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
+#' @param pca_name PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'
+#' @param varname PARAM_DESCRIPTION, Default: 'Condition'
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 14
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{arrange}}
+#'  \code{\link[tidyr]{gather}}
+#' @rdname makePCBarplot
+#' @export 
+#' @importFrom dplyr select mutate arrange
+#' @importFrom tidyr gather
 makePCBarplot <- function(phname, all_model_results, pcBoxplots, daa_all, opt,
                           get_pcnames_from="padj_taxa_res",
                           pca_name="padj_taxa_pcas",

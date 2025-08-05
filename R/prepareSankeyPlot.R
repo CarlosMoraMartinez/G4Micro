@@ -1,4 +1,35 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param daa_proc_all PARAM_DESCRIPTION
+#' @param daa_by_sp_all PARAM_DESCRIPTION
+#' @param quant_by_proc PARAM_DESCRIPTION
+#' @param metadf PARAM_DESCRIPTION
+#' @param plim PARAM_DESCRIPTION, Default: 0.01
+#' @param plim_sp PARAM_DESCRIPTION, Default: 0.01
+#' @param include_others PARAM_DESCRIPTION, Default: FALSE
+#' @param include_longnames PARAM_DESCRIPTION, Default: FALSE
+#' @param others_name PARAM_DESCRIPTION, Default: 'Aggr. taxa'
+#' @param case_name PARAM_DESCRIPTION, Default: 'Depression'
+#' @param control_name PARAM_DESCRIPTION, Default: 'Control'
+#' @param outdir PARAM_DESCRIPTION, Default: '~/'
+#' @param name PARAM_DESCRIPTION, Default: 'test'
+#' @param ntop PARAM_DESCRIPTION, Default: 0
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{arrange}}
+#'  \code{\link[scales]{pal_gradient_n}}
+#' @rdname prepareSankeyPlot
+#' @export 
+#' @importFrom dplyr filter mutate summarise_if select summarise arrange
+#' @importFrom scales gradient_n_pal
 prepareSankeyPlot <- function(daa_proc_all,
                               daa_by_sp_all,
                               quant_by_proc,

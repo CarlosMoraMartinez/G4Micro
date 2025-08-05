@@ -1,3 +1,28 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param dfraw PARAM_DESCRIPTION
+#' @param vars2pc PARAM_DESCRIPTION
+#' @param labvar PARAM_DESCRIPTION, Default: 'PACIENTE'
+#' @param plotvars PARAM_DESCRIPTION, Default: c("Condition")
+#' @param transform PARAM_DESCRIPTION, Default: 'scale'
+#' @param dims PARAM_DESCRIPTION, Default: 2:5
+#' @param name PARAM_DESCRIPTION, Default: 'PCAs.pdf'
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param w PARAM_DESCRIPTION, Default: 12
+#' @param h PARAM_DESCRIPTION, Default: 8
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname plotPCA_pred2
+#' @export 
+#' @importFrom cowplot plot_grid
 plotPCA_pred2 <- function(dfraw, vars2pc, labvar = "PACIENTE", plotvars=c("Condition"),
                     transform = "scale", dims=2:5, name = "PCAs.pdf", outdir="", w=12, h=8){
 

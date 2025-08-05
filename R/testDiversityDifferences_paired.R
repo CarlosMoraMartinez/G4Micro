@@ -1,3 +1,21 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param divtab PARAM_DESCRIPTION
+#' @param vars PARAM_DESCRIPTION
+#' @param groupvars PARAM_DESCRIPTION
+#' @param pairvar PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'alpha_diversity'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname testDiversityDifferences_paired
+#' @export 
 testDiversityDifferences_paired <- function(divtab, vars, groupvars, pairvar ,outdir, name="alpha_diversity"){
   library(car)
   divtab <- divtab[order(divtab[,pairvar]) , ]

@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param formulas PARAM_DESCRIPTION
+#' @param dist_method PARAM_DESCRIPTION, Default: 'bray'
+#' @param seed PARAM_DESCRIPTION, Default: 123
+#' @param outname PARAM_DESCRIPTION, Default: 'permanovas_mult.tsv'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{distance}}
+#'  \code{\link[dplyr]{arrange}}
+#' @rdname makePermanovaFormulas
+#' @export 
+#' @importFrom phyloseq distance
+#' @importFrom dplyr arrange
 makePermanovaFormulas <- function(phobj, formulas, dist_method = "bray", seed = 123,
                                   outname = "permanovas_mult.tsv"){
   ## From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova

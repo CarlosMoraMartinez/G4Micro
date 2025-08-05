@@ -1,3 +1,27 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nodeprops PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 12
+#' @param h PARAM_DESCRIPTION, Default: 6
+#' @param signif_levels PARAM_DESCRIPTION, Default: c(`***` = 0.001, `**` = 0.01, `*` = 0.05, ns = 1.1)
+#' @param correct_pvals PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#'  \code{\link[ggsignif]{stat_signif}}
+#' @rdname make_boxplot_nodeprops
+#' @export 
+#' @importFrom dplyr mutate select
+#' @importFrom ggsignif stat_signif
 make_boxplot_nodeprops <- function(nodeprops, outdir, name, w=12, h=6,
                                    signif_levels=c("***"=0.001, "**"=0.01, "*"=0.05, "ns"=1.1),
                                    correct_pvals = TRUE){

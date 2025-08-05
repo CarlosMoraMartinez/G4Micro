@@ -1,3 +1,26 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param modlist PARAM_DESCRIPTION
+#' @param model_res PARAM_DESCRIPTION
+#' @param param PARAM_DESCRIPTION, Default: 'BalancedAccuracy_l1out'
+#' @param min_val PARAM_DESCRIPTION, Default: 0
+#' @param prop PARAM_DESCRIPTION, Default: TRUE
+#' @param only_1_knn PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{filter}}
+#' @rdname make_ensemble_probs
+#' @export 
+#' @importFrom dplyr arrange filter
 make_ensemble_probs <- function(datasc, levs, modlist, model_res, param="BalancedAccuracy_l1out", #"Kappa_l1out",
                                 min_val=0, prop=TRUE,
                                 only_1_knn=FALSE){ # 0.65

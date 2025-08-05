@@ -1,3 +1,21 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param dds PARAM_DESCRIPTION
+#' @param raw_counts PARAM_DESCRIPTION
+#' @param norm_counts PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname plotCountsDeseq
+#' @export 
+#' @importFrom dplyr mutate
 plotCountsDeseq <- function(dds, raw_counts, norm_counts){
   d <- plotCounts(dds, gene=which.min(res$padj), intgroup="Condition", normalized = T,
                   returnData=TRUE)

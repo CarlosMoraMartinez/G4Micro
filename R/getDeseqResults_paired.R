@@ -1,3 +1,20 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: ''
+#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
+#' @param individual PARAM_DESCRIPTION, Default: 'pacienteID'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getDeseqResults_paired
+#' @export 
 getDeseqResults_paired <- function(phobj, opt, name="", variables = c("Condition"), individual = "pacienteID"){
   formula <- paste0("~ ", paste(variables, sep=" + ", collapse=" + "), " + ",
                     paste(individual, sep=" + ", collapse=" + ")) %>%

@@ -1,4 +1,23 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param alldf PARAM_DESCRIPTION
+#' @param groupvars PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param correct_bonferroni PARAM_DESCRIPTION, Default: F
+#' @param names_cyt PARAM_DESCRIPTION, Default: c()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname plotAgainstAllFactors_pred2
+#' @export 
 plotAgainstAllFactors_pred2<- function(alldf, groupvars, name, outdir, opt, correct_bonferroni=F, names_cyt=c()){
 
   plotlist <- list()

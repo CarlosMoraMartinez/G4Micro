@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param var PARAM_DESCRIPTION
+#' @param group PARAM_DESCRIPTION
+#' @param sep PARAM_DESCRIPTION, Default: '-'
+#' @param paired PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{arrange}}
+#' @rdname getTestsForAllCombinations
+#' @export 
+#' @importFrom dplyr arrange
 getTestsForAllCombinations <- function(var, group, sep="-", paired=F){
   comp <- combn(unique(group[!is.na(group)]), 2, simplify = F)
   res <- lapply(comp, function(combo){

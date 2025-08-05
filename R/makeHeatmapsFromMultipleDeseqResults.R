@@ -1,3 +1,29 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param deseq_results_list PARAM_DESCRIPTION
+#' @param daa_main PARAM_DESCRIPTION
+#' @param main_name PARAM_DESCRIPTION
+#' @param vars2plot PARAM_DESCRIPTION
+#' @param italics_rownames PARAM_DESCRIPTION, Default: T
+#' @param pfilt PARAM_DESCRIPTION, Default: 0.05
+#' @param pplot PARAM_DESCRIPTION, Default: 0.05
+#' @param name PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 5
+#' @param h PARAM_DESCRIPTION, Default: 4
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#' @rdname makeHeatmapsFromMultipleDeseqResults
+#' @export 
+#' @importFrom dplyr mutate select
 makeHeatmapsFromMultipleDeseqResults <- function(deseq_results_list,
                                                  daa_main,
                                                  main_name,

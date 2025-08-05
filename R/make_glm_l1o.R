@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param varnames PARAM_DESCRIPTION
+#' @param folds PARAM_DESCRIPTION, Default: c()
+#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+#' @rdname make_glm_l1o
+#' @export 
+#' @importFrom dplyr select mutate
 make_glm_l1o <- function(datasc, levs, varnames, folds= c(),
                          do_smote=FALSE,
                          smote_params=list(K=5, dup_size=2)){

@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param nvars PARAM_DESCRIPTION
+#' @param different_ks PARAM_DESCRIPTION, Default: c(1, 3, 5, 7, 9, 11, 13)
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}
+#' @rdname makeKnn
+#' @export 
+#' @importFrom dplyr select
 makeKnn <- function(datasc, levs, nvars, different_ks=c(1, 3, 5, 7, 9, 11, 13)){
   library(class)
   #library(gmodels)

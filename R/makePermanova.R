@@ -1,3 +1,26 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param dist_method PARAM_DESCRIPTION, Default: 'bray'
+#' @param seed PARAM_DESCRIPTION, Default: 123
+#' @param exclude_vars PARAM_DESCRIPTION, Default: c("sampleID")
+#' @param outname PARAM_DESCRIPTION, Default: 'permanovas.tsv'
+#' @param disp_permutations PARAM_DESCRIPTION, Default: 1000
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{distance}}, \code{\link[phyloseq]{prune_samples}}
+#'  \code{\link[dplyr]{arrange}}
+#' @rdname makePermanova
+#' @export 
+#' @importFrom phyloseq distance prune_samples
+#' @importFrom dplyr arrange
 makePermanova <- function(phobj, dist_method = "bray", seed = 123,
                           exclude_vars = c("sampleID"), outname = "permanovas.tsv", disp_permutations=1000){
   ## From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova

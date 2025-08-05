@@ -1,3 +1,16 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param cazy_tt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getCazyClass
+#' @export 
 getCazyClass <- function(cazy_tt){
   cazytypes <- c( "GT"="GlycosylTransferases",
                   "GH"="Glycoside Hydrolases",

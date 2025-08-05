@@ -1,3 +1,20 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param prevalence_lim PARAM_DESCRIPTION, Default: 0.05
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[zCompositions]{cmultRepl}}
+#' @rdname getZCompositionImputedData
+#' @export 
+#' @importFrom zCompositions cmultRepl
 getZCompositionImputedData <- function(phobj, prevalence_lim = 0.05){
   library(zCompositions)
   otutab <- otu_table(phobj)

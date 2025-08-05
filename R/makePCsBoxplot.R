@@ -1,3 +1,30 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
+#' @param pca_name PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'
+#' @param varname PARAM_DESCRIPTION, Default: 'Condition'
+#' @param w PARAM_DESCRIPTION, Default: 4
+#' @param h PARAM_DESCRIPTION, Default: 6
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}
+#'  \code{\link[tidyr]{gather}}, \code{\link[tidyr]{spread}}
+#'  \code{\link[ggsignif]{stat_signif}}
+#' @rdname makePCsBoxplot
+#' @export 
+#' @importFrom dplyr select mutate summarise
+#' @importFrom tidyr gather spread
+#' @importFrom ggsignif stat_signif
 makePCsBoxplot <- function(phname, all_model_results, opt,
                            get_pcnames_from="padj_taxa_res",
                            pca_name="padj_taxa_pcas",

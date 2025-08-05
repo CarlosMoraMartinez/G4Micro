@@ -1,3 +1,18 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param res PARAM_DESCRIPTION
+#' @param genes PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getGTTableFromRes
+#' @export 
 getGTTableFromRes <- function(res, genes, name){
   gttable <- res %>% as.data.frame() %>%
     rownames_to_column("Taxa") %>%

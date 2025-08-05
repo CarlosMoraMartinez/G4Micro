@@ -1,4 +1,30 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param xname PARAM_DESCRIPTION
+#' @param yname PARAM_DESCRIPTION
+#' @param medname PARAM_DESCRIPTION
+#' @param med_res PARAM_DESCRIPTION
+#' @param nrep PARAM_DESCRIPTION, Default: 1000
+#' @param min_n PARAM_DESCRIPTION, Default: 100
+#' @param max_n PARAM_DESCRIPTION, Default: 500
+#' @param inc_n PARAM_DESCRIPTION, Default: 20
+#' @param error PARAM_DESCRIPTION, Default: 0.1
+#' @param ncores PARAM_DESCRIPTION, Default: 12
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}
+#' @rdname makeMediationSimplePowerCurveLavaan
+#' @export 
+#' @importFrom dplyr mutate summarise
 makeMediationSimplePowerCurveLavaan <- function(df, xname, yname, medname, med_res,
                                                 nrep=1000,
                                                 min_n=100,

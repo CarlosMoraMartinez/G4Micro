@@ -1,3 +1,20 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}
+#' @rdname get_signif_components
+#' @export 
+#' @importFrom dplyr select arrange
 get_signif_components <- function(datasc, levs){
   df <- datasc %>% dplyr::select(-sample)
   varnames <- names(df)[names(df)!="class"]

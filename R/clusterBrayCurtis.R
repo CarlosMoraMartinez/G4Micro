@@ -1,3 +1,23 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
+#' @param renamestr PARAM_DESCRIPTION, Default: ''
+#' @param dist_type PARAM_DESCRIPTION, Default: 'bray'
+#' @param clust_method PARAM_DESCRIPTION, Default: 'ward.D2'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{transform_sample_counts}}, \code{\link[phyloseq]{otu_table}}, \code{\link[phyloseq]{distance}}, \code{\link[phyloseq]{sample_data}}
+#' @rdname clusterBrayCurtis
+#' @export 
+#' @importFrom phyloseq transform_sample_counts otu_table distance sample_data
 clusterBrayCurtis <- function(phobj, variable="Condition", renamestr="",
                               dist_type="bray", clust_method="ward.D2"){
   ps_rel_abund = phyloseq::transform_sample_counts(phobj, function(x){x / sum(x)})

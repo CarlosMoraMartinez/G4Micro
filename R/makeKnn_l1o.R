@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param varnames PARAM_DESCRIPTION
+#' @param different_ks PARAM_DESCRIPTION, Default: c(1, 3, 5, 7, 9, 11, 13)
+#' @param folds PARAM_DESCRIPTION, Default: c()
+#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#' @rdname makeKnn_l1o
+#' @export 
+#' @importFrom dplyr mutate select
 makeKnn_l1o <- function(datasc, levs, varnames,
                         different_ks=c(1, 3, 5, 7, 9, 11, 13),
                         folds=c(),

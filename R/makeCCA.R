@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datamat PARAM_DESCRIPTION
+#' @param tax_matrix_clr PARAM_DESCRIPTION
+#' @param metadata PARAM_DESCRIPTION
+#' @param metadatavar PARAM_DESCRIPTION, Default: 'Psoriasis'
+#' @param pcvar2retain PARAM_DESCRIPTION, Default: 0.9
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param name PARAM_DESCRIPTION, Default: 'CCA_from_CLR'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname makeCCA
+#' @export 
 makeCCA <- function(datamat, tax_matrix_clr, metadata,metadatavar="Psoriasis",
                     pcvar2retain=0.9, outdir = "", name="CCA_from_CLR"){
   library(C)

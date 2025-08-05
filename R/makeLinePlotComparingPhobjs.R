@@ -1,4 +1,25 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param models_name1 PARAM_DESCRIPTION, Default: 'padj_taxa_res'
+#' @param models_name2 PARAM_DESCRIPTION, Default: 'praw_taxa_res'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{select}}
+#'  \code{\link[ggpubr]{theme_pubr}}
+#' @rdname makeLinePlotComparingPhobjs
+#' @export 
+#' @importFrom dplyr mutate arrange select
+#' @importFrom ggpubr theme_pubr
 makeLinePlotComparingPhobjs <- function(all_model_results, opt, models_name1="padj_taxa_res", models_name2="praw_taxa_res"){
 
   all_sig_tables <- names(all_model_results) %>% map(\(name){

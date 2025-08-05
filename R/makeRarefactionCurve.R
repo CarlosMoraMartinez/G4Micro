@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phyloseq_rawdata PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param add_hlines PARAM_DESCRIPTION, Default: TRUE
+#' @param name PARAM_DESCRIPTION, Default: 'rarecurve'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}
+#' @rdname makeRarefactionCurve
+#' @export 
+#' @importFrom dplyr mutate summarise
 makeRarefactionCurve <- function(phyloseq_rawdata, opt, add_hlines=TRUE, name="rarecurve"){
   otu2rare <- otu_table(phyloseq_rawdata)
   class(otu2rare) <- "matrix"

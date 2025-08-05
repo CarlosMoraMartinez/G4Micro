@@ -1,4 +1,36 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param all_pcas PARAM_DESCRIPTION
+#' @param PCs PARAM_DESCRIPTION
+#' @param modelo_svm PARAM_DESCRIPTION
+#' @param vstdf PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param vars2pca PARAM_DESCRIPTION, Default: c("Condition")
+#' @param metadata PARAM_DESCRIPTION
+#' @param daares PARAM_DESCRIPTION
+#' @param topns PARAM_DESCRIPTION, Default: c(5, 10, 20)
+#' @param variable_plim PARAM_DESCRIPTION, Default: 0.01
+#' @param meta_vars PARAM_DESCRIPTION, Default: c()
+#' @param nfolds PARAM_DESCRIPTION, Default: 0
+#' @param xgboost_params PARAM_DESCRIPTION, Default: xgboost_params
+#' @param catboost_params PARAM_DESCRIPTION, Default: catboost_params
+#' @param randomforest_params PARAM_DESCRIPTION, Default: randomforest_params
+#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
+#' @rdname callDoAllModelsFromALLPCAsOriginalVars
+#' @export 
+#' @importFrom dplyr select mutate filter
 callDoAllModelsFromALLPCAsOriginalVars <- function(all_pcas, PCs, modelo_svm, vstdf,
                                                    name, vars2pca=c("Condition"), metadata,
                                                    daares, topns = c(5, 10, 20),

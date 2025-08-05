@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: ''
+#' @param formula PARAM_DESCRIPTION, Default: '~ Condition'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getDeseqResults_fromFormula
+#' @export 
 getDeseqResults_fromFormula <- function(phobj, opt, name="", formula= "~ Condition"){
   variables <- gsub("~", "", formula) %>% gsub(" ", "", .) %>% strsplit(split="\\+|\\*") %>% unlist
   dds <- phyloseq_to_deseq2(phobj, design= as.formula(formula))

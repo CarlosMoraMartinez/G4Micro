@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param varnames PARAM_DESCRIPTION
+#' @param folds PARAM_DESCRIPTION, Default: folds()
+#' @param xgboost_params PARAM_DESCRIPTION, Default: xgboost_params
+#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}
+#' @rdname make_xgboost_l1o
+#' @export 
+#' @importFrom dplyr select
 make_xgboost_l1o <- function(datasc, levs, varnames,
                              folds=folds(),
                              xgboost_params = xgboost_params,

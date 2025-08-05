@@ -1,3 +1,21 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param interestvar PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param tops PARAM_DESCRIPTION, Default: c(5, 10, 15, 20)
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname plotAbundanceFullPipeline
+#' @export 
 plotAbundanceFullPipeline <- function(phobj, interestvar, outdir, phname, levs, tops=c(5,10,15,20)){
   oname <- paste0(outdir, phname, "_phylumBarplot.pdf")
   g1 <- plotRelativeAbnBarsPhylum(phobj, interestvar, oname)

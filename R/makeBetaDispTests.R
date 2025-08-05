@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param dist_method PARAM_DESCRIPTION, Default: 'bray'
+#' @param exclude_vars PARAM_DESCRIPTION, Default: c("sampleID")
+#' @param outname PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{distance}}
+#' @rdname makeBetaDispTests
+#' @export 
+#' @importFrom phyloseq distance
 makeBetaDispTests<- function(phobj, dist_method = "bray",
                              exclude_vars = c("sampleID"),
                              outname){

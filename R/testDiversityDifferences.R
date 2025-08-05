@@ -1,3 +1,20 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param divtab PARAM_DESCRIPTION
+#' @param vars PARAM_DESCRIPTION
+#' @param groupvars PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'alpha_diversity'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname testDiversityDifferences
+#' @export 
 testDiversityDifferences <- function(divtab, vars, groupvars, outdir, name="alpha_diversity"){
   library(car)
   res <- data.frame()

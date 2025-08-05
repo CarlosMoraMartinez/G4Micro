@@ -1,3 +1,30 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df3 PARAM_DESCRIPTION
+#' @param asvs PARAM_DESCRIPTION
+#' @param vars2cor PARAM_DESCRIPTION
+#' @param groupvar PARAM_DESCRIPTION, Default: 'Psoriasis'
+#' @param group_levels PARAM_DESCRIPTION, Default: c("no", "yes")
+#' @param groupnames PARAM_DESCRIPTION, Default: c("Control", "Psoriasis")
+#' @param xlabel PARAM_DESCRIPTION, Default: 'log(pg/mL)'
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param name PARAM_DESCRIPTION, Default: 'regr.pdf'
+#' @param w PARAM_DESCRIPTION, Default: 7
+#' @param h PARAM_DESCRIPTION, Default: 14
+#' @param opt PARAM_DESCRIPTION, Default: list()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname plotRegressionsASV_vs_vars
+#' @export 
+#' @importFrom cowplot plot_grid
 plotRegressionsASV_vs_vars<- function(df3, asvs, vars2cor, groupvar="Psoriasis",
                                       group_levels = c("no", "yes"),
                                       groupnames = c("Control", "Psoriasis"),

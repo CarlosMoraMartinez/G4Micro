@@ -1,4 +1,24 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param modelo_svm PARAM_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param varnames PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}
+#' @rdname plotSVM
+#' @export 
+#' @importFrom dplyr select
 plotSVM<-function(modelo_svm, datasc, varnames, opt, name){
   #Sacado de: https://rpubs.com/Joaquin_AR/267926
   datos <- datasc[,varnames[1:2]]

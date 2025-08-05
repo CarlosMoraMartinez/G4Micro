@@ -1,3 +1,31 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param resdf PARAM_DESCRIPTION
+#' @param dds PARAM_DESCRIPTION
+#' @param df2plot PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'condition'
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'heatmap.pdf'
+#' @param logscale PARAM_DESCRIPTION, Default: FALSE
+#' @param ptype PARAM_DESCRIPTION, Default: 'padj'
+#' @param w PARAM_DESCRIPTION, Default: 5
+#' @param h PARAM_DESCRIPTION, Default: 4
+#' @param trim_values PARAM_DESCRIPTION, Default: FALSE
+#' @param italics_rownames PARAM_DESCRIPTION, Default: TRUE
+#' @param taxalist PARAM_DESCRIPTION, Default: c()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}
+#' @rdname makeHeatmap
+#' @export 
+#' @importFrom dplyr filter
 makeHeatmap <- function(resdf, dds, df2plot,
                         variable = "condition",
                         opt,

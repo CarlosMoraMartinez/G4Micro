@@ -1,3 +1,27 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param daalist PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param plim PARAM_DESCRIPTION, Default: 0.05
+#' @param name PARAM_DESCRIPTION, Default: ''
+#' @param cond_names PARAM_DESCRIPTION, Default: list()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
+#'  \code{\link[tidyr]{unite}}
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname makeBarplotDAA3_Int
+#' @export 
+#' @importFrom dplyr select mutate filter
+#' @importFrom tidyr unite
+#' @importFrom cowplot plot_grid
 makeBarplotDAA3_Int <- function(daalist, outdir, plim=0.05, name="",
                                 cond_names=list()){
 

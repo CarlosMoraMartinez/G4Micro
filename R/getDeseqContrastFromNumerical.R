@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param dds PARAM_DESCRIPTION
+#' @param nvarname PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getDeseqContrastFromNumerical
+#' @export 
 getDeseqContrastFromNumerical <- function(dds, nvarname, opt, name){
   res <- results(dds, name = nvarname)
   resLFC <- tryCatch(lfcShrink(dds, coef = nvarname, type="normal", lfcThreshold = log2(opt$fc)),error=\(x)data.frame() ) #apeglm gives weird results

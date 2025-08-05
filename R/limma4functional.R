@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df2 PARAM_DESCRIPTION
+#' @param metad2 PARAM_DESCRIPTION
+#' @param interestvar PARAM_DESCRIPTION, Default: 'Condition'
+#' @param covars PARAM_DESCRIPTION, Default: c()
+#' @param form PARAM_DESCRIPTION, Default: NULL
+#' @param make_all_contrasts PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}
+#' @rdname imma4functional
+#' @export 
+#' @importFrom dplyr filter
 imma4functional <- function(df2, metad2, interestvar = "Condition", covars=c(), form=NULL,
                             make_all_contrasts = FALSE){
   library(limma)

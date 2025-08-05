@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param xname PARAM_DESCRIPTION
+#' @param yname PARAM_DESCRIPTION
+#' @param medname PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{filter}}
+#'  \code{\link[lavaan]{sem}}
+#' @rdname makeMediationSimpleLavaan
+#' @export 
+#' @importFrom dplyr mutate select filter
+#' @importFrom lavaan sem
 makeMediationSimpleLavaan <- function(df, xname, yname, medname){
   library(lavaan)
 

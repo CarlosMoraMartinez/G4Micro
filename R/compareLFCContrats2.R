@@ -1,3 +1,31 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param contrastlist PARAM_DESCRIPTION
+#' @param firstContrast PARAM_DESCRIPTION
+#' @param contrastNamesOrdered PARAM_DESCRIPTION
+#' @param mainContrastName PARAM_DESCRIPTION
+#' @param plim_select PARAM_DESCRIPTION, Default: 1e-06
+#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
+#' @param name2remove PARAM_DESCRIPTION, Default: ''
+#' @param resdfname PARAM_DESCRIPTION, Default: 'resdf'
+#' @param outdir PARAM_DESCRIPTION, Default: './'
+#' @param name PARAM_DESCRIPTION, Default: 'LFC_compare'
+#' @param w PARAM_DESCRIPTION, Default: 12
+#' @param h PARAM_DESCRIPTION, Default: 8
+#' @param scale_mode PARAM_DESCRIPTION, Default: 'fixed'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}
+#' @rdname compareLFCContrats2
+#' @export 
+#' @importFrom dplyr filter mutate
 compareLFCContrats2 <- function(contrastlist, firstContrast,
                                 contrastNamesOrdered, mainContrastName,
                                 plim_select= 0.000001, plim_plot=0.05,

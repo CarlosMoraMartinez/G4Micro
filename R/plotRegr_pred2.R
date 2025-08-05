@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION
+#' @param x_var PARAM_DESCRIPTION
+#' @param wrap_var PARAM_DESCRIPTION
+#' @param col_var PARAM_DESCRIPTION
+#' @param fname PARAM_DESCRIPTION
+#' @param write PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname plotRegr_pred2
+#' @export 
+#' @importFrom cowplot plot_grid
 plotRegr_pred2 <- function(df, variable, x_var, wrap_var, col_var,
                      fname,
                      write=TRUE){

@@ -1,3 +1,16 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param otutab PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname calc_scImpute
+#' @export 
 calc_scImpute <- function(otutab){
   xx <- otutab %>% as.data.frame()
   write.table(xx, file="test_input.csv", sep=",", quote=F, row.names = T)

@@ -1,3 +1,29 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
+#' @param topn PARAM_DESCRIPTION, Default: 15
+#' @param outname PARAM_DESCRIPTION, Default: 'SpeciescolByGenusBarplot.pdf'
+#' @param height PARAM_DESCRIPTION, Default: 8
+#' @param width PARAM_DESCRIPTION, Default: 12
+#' @param docluster PARAM_DESCRIPTION, Default: T
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{transform_sample_counts}}
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{mutate_all}}
+#'  \code{\link[tidyr]{gather}}
+#' @rdname plotRelativeAbnBarsSpecies_ColByGenus
+#' @export 
+#' @importFrom phyloseq transform_sample_counts
+#' @importFrom dplyr filter arrange mutate mutate_if
+#' @importFrom tidyr gather
 plotRelativeAbnBarsSpecies_ColByGenus <- function(phobj, variable="Condition", topn = 15,
                                                   outname="SpeciescolByGenusBarplot.pdf", height=8,
                                                   width=12, docluster=T){

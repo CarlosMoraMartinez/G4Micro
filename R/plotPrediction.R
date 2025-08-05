@@ -1,4 +1,31 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param mod2plot PARAM_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
+#' @param pca_name PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'
+#' @param varname PARAM_DESCRIPTION, Default: 'Condition'
+#' @param pred_mode PARAM_DESCRIPTION, Default: 'l1o'
+#' @param w PARAM_DESCRIPTION, Default: 6
+#' @param h PARAM_DESCRIPTION, Default: 4
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#'  \code{\link[caret]{confusionMatrix}}
+#' @rdname plotPrediction
+#' @export 
+#' @importFrom dplyr mutate
+#' @importFrom caret confusionMatrix
 plotPrediction<-function(phname, mod2plot, all_model_results, opt,
                          get_pcnames_from="padj_taxa_res",
                          pca_name="padj_taxa_pcas",

@@ -1,3 +1,28 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mat1 PARAM_DESCRIPTION
+#' @param mat2 PARAM_DESCRIPTION
+#' @param cormethod PARAM_DESCRIPTION, Default: 'pearson'
+#' @param pval PARAM_DESCRIPTION, Default: 0.05
+#' @param select_asvs PARAM_DESCRIPTION, Default: c()
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param name PARAM_DESCRIPTION, Default: 'corrHeatmap'
+#' @param clust PARAM_DESCRIPTION, Default: T
+#' @param order_rows PARAM_DESCRIPTION, Default: c()
+#' @param order_cols PARAM_DESCRIPTION, Default: c()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[tidyr]{spread}}
+#' @rdname makeCorrelationHeatmap
+#' @export 
+#' @importFrom tidyr spread
 makeCorrelationHeatmap <- function(mat1, mat2, cormethod="pearson",
                                    pval=0.05, select_asvs=c(), outdir="", name="corrHeatmap",
                                    clust=T, order_rows = c(), order_cols = c()){

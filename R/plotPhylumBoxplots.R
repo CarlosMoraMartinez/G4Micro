@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param var PARAM_DESCRIPTION, Default: 'Condition'
+#' @param outname PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'
+#' @param height PARAM_DESCRIPTION, Default: 10
+#' @param width PARAM_DESCRIPTION, Default: 8
+#' @param paired PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{tax_glom}}, \code{\link[phyloseq]{taxa_names}}, \code{\link[phyloseq]{tax_table}}, \code{\link[phyloseq]{psmelt}}
+#' @rdname plotPhylumBoxplots
+#' @export 
+#' @importFrom phyloseq tax_glom taxa_names tax_table psmelt
 plotPhylumBoxplots <- function(phobj, var="Condition", outname="phylumBarplot.pdf", height=10, width=8, paired=F){
   ## Total abundance by phylum, apparently by summing over all ASVs in phylum
   ps_phylum <- phyloseq::tax_glom(phobj, "Phylum")

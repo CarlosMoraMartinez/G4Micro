@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mod1 PARAM_DESCRIPTION
+#' @param perm_disp PARAM_DESCRIPTION, Default: NULL
+#' @param ancap PARAM_DESCRIPTION, Default: NULL
+#' @param var PARAM_DESCRIPTION, Default: ''
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname adonis2table
+#' @export 
 adonis2table <- function(mod1, perm_disp=NULL, ancap=NULL, var=""){
   aux <- data.frame(
     variable = ifelse(var == "", rownames(mod1)[1], var),

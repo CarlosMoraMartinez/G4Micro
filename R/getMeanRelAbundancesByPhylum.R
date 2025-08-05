@@ -1,3 +1,16 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getMeanRelAbundancesByPhylum
+#' @export 
 getMeanRelAbundancesByPhylum <- function(phobj){
   #Mean prevalence (absolute, not relative) of ASVs by Phylum
   pre_prevalence <- getRelAbundanceTab(phobj)

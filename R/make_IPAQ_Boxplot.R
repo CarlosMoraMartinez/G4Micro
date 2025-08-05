@@ -1,3 +1,30 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param divtab PARAM_DESCRIPTION
+#' @param var PARAM_DESCRIPTION, Default: 'IPAQ_act_fisica'
+#' @param test2show PARAM_DESCRIPTION, Default: 'wilcox.test'
+#' @param alpha_indices PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param signif_levels PARAM_DESCRIPTION, Default: c(`***` = 0.001, `**` = 0.01, `*` = 0.05, ns = 1.1)
+#' @param w PARAM_DESCRIPTION, Default: 10
+#' @param h PARAM_DESCRIPTION, Default: 4
+#' @param correct_pvalues PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+#'  \code{\link[ggsignif]{stat_signif}}
+#' @rdname make_IPAQ_Boxplot
+#' @export 
+#' @importFrom dplyr filter select mutate
+#' @importFrom ggsignif stat_signif
 make_IPAQ_Boxplot <- function(divtab, var = "IPAQ_act_fisica",
                               test2show = "wilcox.test",
                               alpha_indices,

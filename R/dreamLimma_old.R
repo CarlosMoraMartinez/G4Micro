@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
+#' @param individual PARAM_DESCRIPTION, Default: 'pacienteID'
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param name PARAM_DESCRIPTION, Default: 'dream'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[variancePartition]{topTable}}
+#' @rdname dreamLimma_old
+#' @export 
+#' @importFrom variancePartition topTable
 dreamLimma_old <- function(phobj, opt, variables =  c("Condition"), individual="pacienteID", outdir = "", name = "dream"){
   formula <- paste0("~ ", paste(variables, sep=" + ", collapse=" + ")) %>%
     as.formula

@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param var1 PARAM_DESCRIPTION
+#' @param var2 PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 6
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname makeContingencyPlot
+#' @export 
 makeContingencyPlot <- function(df, var1, var2, outdir, name, w=8, h=6){
   gmos <- ggplot(data = df) +
     geom_mosaic(aes(x = product(!!sym(var1), !!sym(var2)), fill=!!sym(var1)), na.rm=T) +

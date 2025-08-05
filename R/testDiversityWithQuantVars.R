@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param divtab PARAM_DESCRIPTION
+#' @param vars PARAM_DESCRIPTION
+#' @param qvars PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'AlphaDiv_quant_vars_regressions'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate_all}}, \code{\link[dplyr]{mutate}}
+#'  \code{\link[broom]{reexports}}
+#' @rdname testDiversityWithQuantVars
+#' @export 
+#' @importFrom dplyr mutate_at mutate_all mutate
+#' @importFrom broom glance
 testDiversityWithQuantVars <- function(divtab, vars, qvars,
                                        outdir,
                                        name = "AlphaDiv_quant_vars_regressions"){

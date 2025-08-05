@@ -1,3 +1,27 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param method PARAM_DESCRIPTION, Default: 'PCoA'
+#' @param name PARAM_DESCRIPTION, Default: 'PCoAs'
+#' @param dist_type PARAM_DESCRIPTION, Default: 'bray'
+#' @param dist_name PARAM_DESCRIPTION, Default: 'Bray-Curtis'
+#' @param vars2plot PARAM_DESCRIPTION, Default: c()
+#' @param extradims PARAM_DESCRIPTION, Default: 2:5
+#' @param create_pdfs PARAM_DESCRIPTION, Default: MULTI_PAGE_PDFS
+#' @param labelsamples PARAM_DESCRIPTION, Default: 'sampleID'
+#' @param w PARAM_DESCRIPTION, Default: 12
+#' @param h PARAM_DESCRIPTION, Default: 5
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname makeAllPCoAs
+#' @export 
 makeAllPCoAs <- function(phobj, outdir,
                          method = "PCoA",
                          name="PCoAs",

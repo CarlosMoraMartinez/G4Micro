@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tab PARAM_DESCRIPTION
+#' @param contrres PARAM_DESCRIPTION
+#' @param num_model PARAM_DESCRIPTION, Default: 1
+#' @param component PARAM_DESCRIPTION, Default: 'Comp.2'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname plotPCsCorwithASVs
+#' @export 
+#' @importFrom dplyr mutate
 plotPCsCorwithASVs <- function(tab, contrres, num_model=1, component="Comp.2"){
   asvs <- strsplit(contrres$asvs_p05[num_model], "_")[[1]]
   if(length(asvs)>10) asvs <- asvs[1:10]

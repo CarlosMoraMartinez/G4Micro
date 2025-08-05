@@ -1,4 +1,27 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param depvar PARAM_DESCRIPTION
+#' @param posval PARAM_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param vars2test PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[stats]{glm}}
+#'  \code{\link[broom]{reexports}}
+#'  \code{\link[dplyr]{desc}}
+#' @rdname makeLogisticRegressions_pred2
+#' @export 
+#' @importFrom stats glm
+#' @importFrom broom glance
+#' @importFrom dplyr desc
 makeLogisticRegressions_pred2 <- function(depvar, posval, df, vars2test){
   df[, depvar] <- ifelse(df[, depvar]==posval, 1, 0)
   names(df) <- gsub("-", ".", names(df))

@@ -1,3 +1,32 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mat1 PARAM_DESCRIPTION
+#' @param mat2 PARAM_DESCRIPTION
+#' @param metadata PARAM_DESCRIPTION
+#' @param var2plot PARAM_DESCRIPTION, Default: 'Psoriasis'
+#' @param varwithnames PARAM_DESCRIPTION, Default: 'sampleID'
+#' @param cormethod PARAM_DESCRIPTION, Default: 'pearson'
+#' @param pval PARAM_DESCRIPTION, Default: 0.05
+#' @param select_asvs PARAM_DESCRIPTION, Default: c()
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param name PARAM_DESCRIPTION, Default: 'corrHeatmap'
+#' @param clust PARAM_DESCRIPTION, Default: T
+#' @param order_rows PARAM_DESCRIPTION, Default: c()
+#' @param order_cols PARAM_DESCRIPTION, Default: c()
+#' @param annot_asvs PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}
+#' @rdname makeCorrelationHeatmapByGroup
+#' @export 
+#' @importFrom dplyr select
 makeCorrelationHeatmapByGroup <- function(mat1, mat2, metadata,var2plot="Psoriasis",
                                           varwithnames = "sampleID",
                                           cormethod="pearson",

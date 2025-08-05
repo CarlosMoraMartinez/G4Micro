@@ -1,3 +1,20 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param res PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#' @rdname getSummaryTablesDeseq
+#' @export 
+#' @importFrom dplyr mutate select
 getSummaryTablesDeseq <- function(res, opt){
   namestab <- c(paste("p < ", as.character(opt$pval), sep="", collapse="") ,
                 paste("LFC > ", as.character(log2(opt$fc)), sep="", collapse="")

@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param net_obj PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{arrange}}
+#' @rdname getGraphProps
+#' @export 
+#' @importFrom dplyr mutate arrange
 getGraphProps <- function(net_obj){
   net <- net_obj$net
   gprop <- data.frame(

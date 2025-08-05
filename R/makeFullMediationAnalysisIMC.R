@@ -1,4 +1,45 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param vstdf PARAM_DESCRIPTION
+#' @param df_all PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param getVarsFunction PARAM_DESCRIPTION
+#' @param mediator_name PARAM_DESCRIPTION, Default: 'IMC'
+#' @param y_name PARAM_DESCRIPTION, Default: 'Condition_bin'
+#' @param plim PARAM_DESCRIPTION, Default: 0.05
+#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
+#' @param name PARAM_DESCRIPTION, Default: 'analysis_IMC_separateModel_vjust'
+#' @param wnet PARAM_DESCRIPTION, Default: 14
+#' @param hnet PARAM_DESCRIPTION, Default: 12
+#' @param wbars PARAM_DESCRIPTION, Default: 8
+#' @param hbars PARAM_DESCRIPTION, Default: 10
+#' @param wbars2 PARAM_DESCRIPTION, Default: 10
+#' @param hbars2 PARAM_DESCRIPTION, Default: 12
+#' @param use_color_scale PARAM_DESCRIPTION, Default: FALSE
+#' @param fix_barplot_limits PARAM_DESCRIPTION, Default: FALSE
+#' @param custom_colors PARAM_DESCRIPTION, Default: NULL
+#' @param make_boxplots PARAM_DESCRIPTION, Default: TRUE
+#' @param list2merge PARAM_DESCRIPTION, Default: NULL
+#' @param make_power_test PARAM_DESCRIPTION, Default: FALSE
+#' @param min_power PARAM_DESCRIPTION, Default: 0.9
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[assertthat]{assert_that}}
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}
+#'  \code{\link[tidyr]{unite}}
+#' @rdname makeFullMediationAnalysisIMC
+#' @export 
+#' @importFrom assertthat assert_that
+#' @importFrom dplyr filter select mutate summarise_all
+#' @importFrom tidyr unite
 makeFullMediationAnalysisIMC <- function(vstdf, df_all, opt, getVarsFunction, mediator_name="IMC", y_name="Condition_bin",
                                          plim=0.05, plim_plot=0.05, name="analysis_IMC_separateModel_vjust",
                                          wnet=14, hnet=12, wbars=8, hbars=10, wbars2=10, hbars2=12, use_color_scale=FALSE,

@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param pcoa.bray PARAM_DESCRIPTION
+#' @param evals PARAM_DESCRIPTION
+#' @param var2color PARAM_DESCRIPTION, Default: 'Condition'
+#' @param name PARAM_DESCRIPTION, Default: 'Bray-Curtis'
+#' @param extradims PARAM_DESCRIPTION, Default: 2:5
+#' @param labelsamples PARAM_DESCRIPTION, Default: 'sampleID'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname makePCoA
+#' @export 
+#' @importFrom cowplot plot_grid
 makePCoA <- function(phobj, pcoa.bray, evals, var2color="Condition", name = "Bray-Curtis", extradims= 2:5, labelsamples="sampleID"){
   gs <- lapply(extradims, FUN=function(axis){
     gg <- plot_ordination(phobj, pcoa.bray, color = var2color,

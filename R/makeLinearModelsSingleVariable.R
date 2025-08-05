@@ -1,3 +1,27 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param divtab PARAM_DESCRIPTION
+#' @param interestvar PARAM_DESCRIPTION
+#' @param extravars PARAM_DESCRIPTION
+#' @param alphaindices PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson")
+#' @param combos PARAM_DESCRIPTION, Default: 1:3
+#' @param outdir PARAM_DESCRIPTION, Default: ''
+#' @param name PARAM_DESCRIPTION, Default: 'linearmodels'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[base]{subset}}
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname makeLinearModelsSingleVariable
+#' @export 
+#' @importFrom base subset
+#' @importFrom dplyr mutate
 makeLinearModelsSingleVariable <- function(divtab,
                                            interestvar,
                                            extravars,

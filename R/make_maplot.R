@@ -1,3 +1,21 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param res PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'maplot.pdf'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[DESeq2]{plotMA}}
+#' @rdname make_maplot
+#' @export 
+#' @importFrom DESeq2 plotMA
 make_maplot<- function(res, opt, name="maplot.pdf"){
   outname <- paste(opt$out, name, sep="/", collapse="/")
   pdf(outname)

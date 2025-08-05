@@ -1,3 +1,26 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param daalist PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param plim PARAM_DESCRIPTION, Default: 0.05
+#' @param name PARAM_DESCRIPTION, Default: ''
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
+#'  \code{\link[tidyr]{unite}}
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname makeBarplotDAA2
+#' @export 
+#' @importFrom dplyr select mutate filter
+#' @importFrom tidyr unite
+#' @importFrom cowplot plot_grid
 makeBarplotDAA2 <- function(daalist, outdir, plim=0.05, name=""){
   daatab <- lapply(names(daalist), \(x){daalist[[x]]$contrast <- x; return(daalist[[x]])}) %>% bind_rows() %>%
     dplyr::select(taxon, log2FoldChangeShrink, padj, contrast) %>%

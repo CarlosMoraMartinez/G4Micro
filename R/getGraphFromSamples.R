@@ -1,3 +1,34 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param samples PARAM_DESCRIPTION
+#' @param daataxa PARAM_DESCRIPTION
+#' @param vstdf PARAM_DESCRIPTION
+#' @param net_estimator PARAM_DESCRIPTION
+#' @param net_method PARAM_DESCRIPTION
+#' @param daatab PARAM_DESCRIPTION
+#' @param daatab2 PARAM_DESCRIPTION, Default: NULL
+#' @param outdir PARAM_DESCRIPTION, Default: './'
+#' @param filter_empty PARAM_DESCRIPTION, Default: FALSE
+#' @param filt_quantile PARAM_DESCRIPTION, Default: 0.95
+#' @param name PARAM_DESCRIPTION, Default: 'testnet'
+#' @param w PARAM_DESCRIPTION, Default: 12
+#' @param h PARAM_DESCRIPTION, Default: 12
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select_all}}
+#'  \code{\link[assertthat]{assert_that}}
+#' @rdname getGraphFromSamples
+#' @export 
+#' @importFrom dplyr filter mutate select_if
+#' @importFrom assertthat assert_that
 getGraphFromSamples <- function(phobj, samples, daataxa, vstdf,
                                 net_estimator, net_method,
                                 daatab, daatab2=NULL,

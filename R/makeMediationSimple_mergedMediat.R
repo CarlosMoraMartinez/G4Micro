@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param x_name PARAM_DESCRIPTION
+#' @param y_name PARAM_DESCRIPTION
+#' @param mednames PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname makeMediationSimple_mergedMediat
+#' @export 
 makeMediationSimple_mergedMediat <- function(df, x_name, y_name, mednames){
 
   a_params <- paste("a", 1:length(mednames), sep="")

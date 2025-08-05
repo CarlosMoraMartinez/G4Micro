@@ -1,3 +1,23 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
+#' @param topn PARAM_DESCRIPTION, Default: 15
+#' @param tax_level PARAM_DESCRIPTION, Default: 'Genus'
+#' @param outname PARAM_DESCRIPTION, Default: 'GenusBarplotFx.pdf'
+#' @param height PARAM_DESCRIPTION, Default: 7
+#' @param width PARAM_DESCRIPTION, Default: 12
+#' @param wespalette PARAM_DESCRIPTION, Default: 'AsteroidCity1'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname plotRelativeAbnBars_Fantaxtic
+#' @export 
 plotRelativeAbnBars_Fantaxtic <- function(phobj, variable="Condition", topn = 15,
                                           tax_level = "Genus",
                                           outname="GenusBarplotFx.pdf", height=7, width=12,

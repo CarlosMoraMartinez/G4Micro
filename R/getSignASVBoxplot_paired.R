@@ -1,3 +1,26 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param resdf_annot PARAM_DESCRIPTION
+#' @param raw_counts PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION, Default: './'
+#' @param name PARAM_DESCRIPTION, Default: 'sign_asvs_boxplot.pdf'
+#' @param mode PARAM_DESCRIPTION, Default: 'PROP'
+#' @param max_n PARAM_DESCRIPTION, Default: 10
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate}}
+#'  \code{\link[tidyr]{gather}}
+#' @rdname getSignASVBoxplot_paired
+#' @export 
+#' @importFrom dplyr arrange mutate
+#' @importFrom tidyr gather
 getSignASVBoxplot_paired<-function(resdf_annot, raw_counts, outdir="./", name="sign_asvs_boxplot.pdf", mode="PROP", max_n=10){
   ASVs <- resdf_annot %>% dplyr::arrange(pvalue) %>% filter(pvalue < 0.05)  %>% unite("taxon2", taxon, Genus, sep=":", remove=F)
   if(nrow(ASVs) > max_n){ASVs <- ASVs[1:10,]}

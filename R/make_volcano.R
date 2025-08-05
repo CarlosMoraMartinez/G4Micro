@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param res PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param pcol PARAM_DESCRIPTION, Default: 'pvalue'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname make_volcano
+#' @export 
 make_volcano <- function(res, opt, name, pcol="pvalue"){
   outname <- paste(opt$out, name, sep="/", collapse="/")
   pdf(outname, width = 12, height = 8)

@@ -1,3 +1,30 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param res PARAM_DESCRIPTION
+#' @param vars2test PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param outname PARAM_DESCRIPTION
+#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
+#' @param use_color_scale PARAM_DESCRIPTION, Default: FALSE
+#' @param w PARAM_DESCRIPTION, Default: 14
+#' @param h PARAM_DESCRIPTION, Default: 6
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[assertthat]{assert_that}}
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#'  \code{\link[scales]{pal_gradient_n}}
+#' @rdname plotAgeMediationSimple
+#' @export 
+#' @importFrom assertthat assert_that
+#' @importFrom dplyr filter mutate select
+#' @importFrom scales gradient_n_pal
 plotAgeMediationSimple <- function(res, vars2test, outdir, outname,
                                    plim_plot = 0.05, use_color_scale=FALSE, w=14, h=6){
 

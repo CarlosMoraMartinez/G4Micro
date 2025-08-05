@@ -1,4 +1,27 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nodelist PARAM_DESCRIPTION
+#' @param linklist PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param fname PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param fontsize PARAM_DESCRIPTION, Default: 18
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#'  \code{\link[htmlwidgets]{saveWidget}}
+#' @rdname makeSankeyPlot
+#' @export 
+#' @importFrom dplyr mutate
+#' @importFrom htmlwidgets saveWidget
 makeSankeyPlot <- function(nodelist, linklist, name, fname, outdir, fontsize=18){
 
   nodelist <- nodelist %>%

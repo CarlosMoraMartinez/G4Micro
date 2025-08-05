@@ -1,3 +1,27 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
+#' @param pca_name PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'
+#' @param varname PARAM_DESCRIPTION, Default: 'Condition'
+#' @param w PARAM_DESCRIPTION, Default: 16
+#' @param h PARAM_DESCRIPTION, Default: 16
+#' @param pred_mode PARAM_DESCRIPTION, Default: 'l1o'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname plotAllModelPredictions
+#' @export 
+#' @importFrom cowplot plot_grid
 plotAllModelPredictions <- function(phname, all_model_results, opt,
                                     get_pcnames_from="padj_taxa_res",
                                     pca_name="padj_taxa_pcas",

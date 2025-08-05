@@ -1,3 +1,29 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
+#' @param topn PARAM_DESCRIPTION, Default: 15
+#' @param outname PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'
+#' @param height PARAM_DESCRIPTION, Default: 8
+#' @param width PARAM_DESCRIPTION, Default: 12
+#' @param ocluster PARAM_DESCRIPTION, Default: T
+#' @param oldlevs PARAM_DESCRIPTION, Default: c("Control", "Depression")
+#' @param wespalette PARAM_DESCRIPTION, Default: 'Darjeeling2'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}, \code{\link[dplyr]{mutate_all}}
+#'  \code{\link[tidyr]{gather}}
+#' @rdname plotRelativeAbnBarsGenus
+#' @export 
+#' @importFrom dplyr arrange summarise mutate summarise_if mutate_if
+#' @importFrom tidyr gather
 plotRelativeAbnBarsGenus <- function(phobj, variable="Condition", topn = 15,
                                      outname="phylumBarplot.pdf", height=8,
                                      width=12, ocluster=T,

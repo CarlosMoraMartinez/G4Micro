@@ -1,4 +1,18 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param classtring PARAM_DESCRIPTION
+#' @param classnames PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname get_classif
+#' @export 
 get_classif <- function(classtring, classnames=NULL){
 
   if(is.null(classnames)){

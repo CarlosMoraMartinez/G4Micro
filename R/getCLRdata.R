@@ -1,3 +1,17 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param prevalence_lim PARAM_DESCRIPTION, Default: 0.05
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getCLRdata
+#' @export 
 getCLRdata <- function(phobj, prevalence_lim = 0.05){
   library(CoDaSeq)
   #1) Imputate zeros

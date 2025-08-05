@@ -1,3 +1,21 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: ''
+#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
+#' @param formula PARAM_DESCRIPTION, Default: NULL
+#' @param doposcounts PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getDeseqResults
+#' @export 
 getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), formula=NULL, doposcounts=FALSE){
 
   if(is.null(formula)){

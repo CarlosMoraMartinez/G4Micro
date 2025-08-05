@@ -1,3 +1,25 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mat1 PARAM_DESCRIPTION
+#' @param mat2 PARAM_DESCRIPTION
+#' @param group1 PARAM_DESCRIPTION
+#' @param group2 PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param levnames PARAM_DESCRIPTION, Default: c("PSO", "CTRL")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{select}}
+#' @rdname getCorsByGroup
+#' @export 
+#' @importFrom dplyr select
 getCorsByGroup <- function(mat1, mat2, group1, group2, outdir, name, levnames=c("PSO", "CTRL")){
 
   cors <- getCorrelations(mat1, mat2)

@@ -1,3 +1,26 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
+#' @param outname PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'
+#' @param height PARAM_DESCRIPTION, Default: 8
+#' @param width PARAM_DESCRIPTION, Default: 12
+#' @param ocluster PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{transform_sample_counts}}, \code{\link[phyloseq]{plot_bar}}
+#'  \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{summarise}}
+#' @rdname plotRelativeAbnBarsPhylum
+#' @export 
+#' @importFrom phyloseq transform_sample_counts plot_bar
+#' @importFrom dplyr arrange summarise
 plotRelativeAbnBarsPhylum <- function(phobj, variable="Condition",
                                       outname="phylumBarplot.pdf",
                                       height=8, width=12, ocluster=F){

@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param modlist PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#' @rdname getTableFromConfmatrices
+#' @export 
+#' @importFrom dplyr mutate select
 getTableFromConfmatrices <- function(modlist){
   res <- map(modlist, \(mod){
     data.frame(

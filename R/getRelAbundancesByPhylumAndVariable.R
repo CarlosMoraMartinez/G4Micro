@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
+#' @param outname PARAM_DESCRIPTION, Default: 'prevalence_by_phylum.tsv'
+#' @param oldlevs PARAM_DESCRIPTION, Default: c("Control", "Depression")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}
+#'  \code{\link[tidyr]{spread}}
+#' @rdname getRelAbundancesByPhylumAndVariable
+#' @export 
+#' @importFrom dplyr summarise mutate
+#' @importFrom tidyr spread
 getRelAbundancesByPhylumAndVariable <- function(phobj, variable="Condition",
                                                 outname="prevalence_by_phylum.tsv",
                                                 oldlevs=c("Control", "Depression")){

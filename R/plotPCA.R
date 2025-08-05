@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param counts PARAM_DESCRIPTION
+#' @param design PARAM_DESCRIPTION
+#' @param genes PARAM_DESCRIPTION
+#' @param plotvar PARAM_DESCRIPTION, Default: 'Condition'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname plotPCA
+#' @export 
+#' @importFrom dplyr filter select
+#' @importFrom cowplot plot_grid
 plotPCA <- function(counts, design, genes, plotvar="Condition"){
 
   mat <- counts %>%

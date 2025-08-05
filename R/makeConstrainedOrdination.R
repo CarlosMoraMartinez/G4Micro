@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
+#' @param dist_type PARAM_DESCRIPTION, Default: 'bray'
+#' @param color_by PARAM_DESCRIPTION, Default: ''
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{distance}}
+#'  \code{\link[vegan]{scores}}
+#' @rdname makeConstrainedOrdination
+#' @export 
+#' @importFrom phyloseq distance
+#' @importFrom vegan scores
 makeConstrainedOrdination<-function(phobj, variables = c("Condition"),  dist_type="bray", color_by=""){
   phobj_not_na <- phobj
   metad <- sample_data(phobj_not_na) %>% data.frame

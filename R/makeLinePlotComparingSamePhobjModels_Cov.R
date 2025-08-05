@@ -1,4 +1,28 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param condnames PARAM_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 12
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{summarise}}
+#'  \code{\link[ggpubr]{theme_pubr}}
+#' @rdname makeLinePlotComparingSamePhobjModels_Cov
+#' @export 
+#' @importFrom dplyr mutate arrange select summarise
+#' @importFrom ggpubr theme_pubr
 makeLinePlotComparingSamePhobjModels_Cov<- function(phname, condnames,
                                                     all_model_results,
                                                     name, opt, w=8, h=12){

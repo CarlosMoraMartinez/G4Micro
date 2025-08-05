@@ -1,3 +1,23 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param dist_method PARAM_DESCRIPTION, Default: 'bray'
+#' @param seed PARAM_DESCRIPTION, Default: 123
+#' @param modlist PARAM_DESCRIPTION, Default: c()
+#' @param outname PARAM_DESCRIPTION, Default: 'permanovas_mult.RData'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{distance}}
+#' @rdname makePermanovaSeveralFactors
+#' @export 
+#' @importFrom phyloseq distance
 makePermanovaSeveralFactors <- function(phobj,
                                         dist_method = "bray",
                                         seed = 123,

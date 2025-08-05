@@ -1,3 +1,36 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phname PARAM_DESCRIPTION
+#' @param all_model_results PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 12
+#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
+#' @param plot_extra PARAM_DESCRIPTION, Default: FALSE
+#' @param plot_indiv PARAM_DESCRIPTION, Default: TRUE
+#' @param plot_normal_with_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param filter_out PARAM_DESCRIPTION, Default: c("Ensemble2")
+#' @param order_by_measure PARAM_DESCRIPTION, Default: 'Accuracy_l1out'
+#' @param from_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param name PARAM_DESCRIPTION, Default: ''
+#' @param sel_method_name PARAM_DESCRIPTION, Default: 'PCA DESeq'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{arrange}}
+#'  \code{\link[ggpubr]{theme_pubr}}
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname makeLinePlotComparingSamePhobjModels
+#' @export 
+#' @importFrom dplyr mutate filter summarise arrange
+#' @importFrom ggpubr theme_pubr
+#' @importFrom cowplot plot_grid
 makeLinePlotComparingSamePhobjModels<- function(phname, all_model_results, opt,
                                                 w=8, h=12, get_pcnames_from="padj_taxa_res", plot_extra=FALSE,
                                                 plot_indiv = TRUE, plot_normal_with_smote=FALSE,

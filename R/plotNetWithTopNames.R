@@ -1,3 +1,27 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param net_obj PARAM_DESCRIPTION
+#' @param nodeprops PARAM_DESCRIPTION
+#' @param net_class PARAM_DESCRIPTION
+#' @param ntop PARAM_DESCRIPTION, Default: 10
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param add_labels PARAM_DESCRIPTION, Default: TRUE
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 8
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{filter}}
+#' @rdname plotNetWithTopNames
+#' @export 
+#' @importFrom dplyr filter
 plotNetWithTopNames <- function(net_obj, nodeprops, net_class, ntop=10, outdir, name, add_labels=TRUE,
                                 w=8, h=8){
 

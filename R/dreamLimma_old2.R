@@ -1,3 +1,19 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
+#' @param individual PARAM_DESCRIPTION, Default: 'pacienteID'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname dreamLimma_old2
+#' @export 
 dreamLimma_old2 <- function(phobj, opt, variables =  c("Condition"), individual="pacienteID"){
   formula <- paste0("~ 0 +", paste(variables, sep=" + ", collapse=" + ")) %>%
     as.formula

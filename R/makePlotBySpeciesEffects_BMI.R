@@ -1,3 +1,31 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param bacnames PARAM_DESCRIPTION
+#' @param df_all PARAM_DESCRIPTION
+#' @param res_final PARAM_DESCRIPTION
+#' @param outdir PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 8
+#' @param h PARAM_DESCRIPTION, Default: 10
+#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
+#' @param fix_limits PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[assertthat]{assert_that}}
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{filter}}
+#'  \code{\link[cowplot]{plot_grid}}
+#' @rdname makePlotBySpeciesEffects_BMI
+#' @export 
+#' @importFrom assertthat assert_that
+#' @importFrom dplyr select mutate summarise filter
+#' @importFrom cowplot plot_grid
 makePlotBySpeciesEffects_BMI <- function(bacnames, df_all, res_final, outdir, name,
                                          w=8, h=10, plim_plot=0.05, fix_limits=FALSE){
   assertthat::assert_that(all(bacnames %in% names(df_all)))

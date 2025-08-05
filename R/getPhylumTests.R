@@ -1,3 +1,26 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param var PARAM_DESCRIPTION, Default: 'Condition'
+#' @param outname PARAM_DESCRIPTION, Default: 'phylumTests'
+#' @param paired PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{tax_glom}}, \code{\link[phyloseq]{taxa_names}}, \code{\link[phyloseq]{tax_table}}, \code{\link[phyloseq]{psmelt}}
+#'  \code{\link[dplyr]{group_map}}
+#'  \code{\link[broom]{reexports}}
+#' @rdname getPhylumTests
+#' @export 
+#' @importFrom phyloseq tax_glom taxa_names tax_table psmelt
+#' @importFrom dplyr group_modify
+#' @importFrom broom tidy
 getPhylumTests <- function(phobj, var="Condition", outname="phylumTests", paired=F){
   ## Total abundance by phylum, apparently by summing over all ASVs in phylum
   ps_phylum <- phyloseq::tax_glom(phobj, "Phylum")

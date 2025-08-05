@@ -1,3 +1,22 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION
+#' @param vars2deseq PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{filter}}
+#' @rdname deseq_full_pipeline
+#' @export 
+#' @importFrom dplyr mutate select arrange filter
 deseq_full_pipeline <- function(phobj, name, vars2deseq, opt){
   if(!dir.exists(paste0(opt$out, "DeSEQ2"))) dir.create(paste0(opt$out, "DeSEQ2"))
   outdir <- paste0(opt$out, "DeSEQ2/", name, "/")

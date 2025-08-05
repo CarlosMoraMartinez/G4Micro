@@ -1,3 +1,17 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mat1 PARAM_DESCRIPTION
+#' @param mat2 PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getCorrelations
+#' @export 
 getCorrelations <- function(mat1, mat2){
   res <- data.frame()
   sp_pmat <-matrix(nrow=ncol(mat1), ncol=ncol(mat2))

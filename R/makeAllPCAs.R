@@ -1,3 +1,24 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param counts_df PARAM_DESCRIPTION
+#' @param genes PARAM_DESCRIPTION
+#' @param vars2pca PARAM_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'PCAs'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname makeAllPCAs
+#' @export 
+#' @importFrom dplyr mutate
 makeAllPCAs <- function(phobj, counts_df, genes, vars2pca, opt, name = "PCAs"){
   design <- sample_data(phobj)
   design<- data.frame(design)

@@ -1,4 +1,21 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param vars2venn PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'VennDiagram'
+#' @param outdir PARAM_DESCRIPTION
+#' @param w PARAM_DESCRIPTION, Default: 5
+#' @param h PARAM_DESCRIPTION, Default: 5
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname makeVennLocal
+#' @export 
 makeVennLocal <- function(vars2venn, name="VennDiagram", outdir, w=5, h=5){
 
   gv <- ggvenn(

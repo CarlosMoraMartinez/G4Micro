@@ -1,3 +1,23 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param phobj PARAM_DESCRIPTION
+#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
+#' @param dist_type PARAM_DESCRIPTION, Default: 'bray'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[phyloseq]{distance}}
+#'  \code{\link[vegan]{scores}}
+#' @rdname makeConstrainedOrdinationSingleVar
+#' @export 
+#' @importFrom phyloseq distance
+#' @importFrom vegan scores
 makeConstrainedOrdinationSingleVar<-function(phobj, variables = c("Condition"),  dist_type="bray"){
   phobj_not_na <- phobj
   metad <- data.frame(sample_data(phobj_not_na))

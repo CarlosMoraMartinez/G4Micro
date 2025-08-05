@@ -1,3 +1,18 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param s_meta PARAM_DESCRIPTION
+#' @param vname PARAM_DESCRIPTION
+#' @param p_lim PARAM_DESCRIPTION, Default: 0.05
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname detectOutliers
+#' @export 
 detectOutliers <- function(s_meta, vname, p_lim=0.05){
   library(outliers)
   aux <- s_meta %>%

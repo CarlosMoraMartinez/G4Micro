@@ -1,3 +1,32 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param xname PARAM_DESCRIPTION
+#' @param yname PARAM_DESCRIPTION
+#' @param medname PARAM_DESCRIPTION
+#' @param param_estimates PARAM_DESCRIPTION, Default: c(a = 0.1, b = 0.1, cp = 0.1)
+#' @param nboot PARAM_DESCRIPTION, Default: 1000
+#' @param nrep PARAM_DESCRIPTION, Default: 1000
+#' @param nboot_curve PARAM_DESCRIPTION, Default: 100
+#' @param nrep_curve PARAM_DESCRIPTION, Default: 100
+#' @param min_n PARAM_DESCRIPTION, Default: 100
+#' @param max_n PARAM_DESCRIPTION, Default: 500
+#' @param inc_n PARAM_DESCRIPTION, Default: 20
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[bmemLavaan]{power.bmem}}
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname makeMediationSimplePowerCurve
+#' @export 
+#' @importFrom bmemLavaan power.bmem
+#' @importFrom dplyr mutate
 makeMediationSimplePowerCurve <- function(df, xname, yname, medname, param_estimates = c(a=0.1, b=0.1, cp=0.1),
                                           nboot=1000, nrep=1000, nboot_curve=100, nrep_curve=100,
                                           min_n=100, max_n=500, inc_n=20){
@@ -20,7 +49,6 @@ makeMediationSimplePowerCurve <- function(df, xname, yname, medname, param_estim
   #Condition_bin ~ b*start(5)*IMC_log + cp*start(0.1)*Actinomyces_naeslundii
   #IMC_log ~ a*start(0.2)*Actinomyces_naeslundii
   #ab := a*b
-  #'
 
   power_res <- bmemLavaan::power.bmem(model = eqs,
                                       nobs = nrow(df),

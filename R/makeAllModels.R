@@ -1,3 +1,32 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param plim PARAM_DESCRIPTION, Default: 0.01
+#' @param opt PARAM_DESCRIPTION
+#' @param name PARAM_DESCRIPTION, Default: 'Condition'
+#' @param nfolds PARAM_DESCRIPTION, Default: 0
+#' @param xgboost_params PARAM_DESCRIPTION, Default: xgboost_params
+#' @param catboost_params PARAM_DESCRIPTION, Default: catboost_params
+#' @param randomforest_params PARAM_DESCRIPTION, Default: randomforest_params
+#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param smote_params PARAM_DESCRIPTION, Default: smote_params
+#' @param ensemble_param PARAM_DESCRIPTION, Default: 'BalancedAccuracy_l1out'
+#' @param ensemble_minval PARAM_DESCRIPTION, Default: 0
+#' @param ensemble_1knn PARAM_DESCRIPTION, Default: FALSE
+#' @param do_ensemble_probs PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[readr]{write_delim}}
+#' @rdname makeAllModels
+#' @export 
+#' @importFrom readr write_tsv
 makeAllModels <- function(datasc, plim=0.01, opt, name="Condition", nfolds=0,
                           xgboost_params = xgboost_params,
                           catboost_params = catboost_params,

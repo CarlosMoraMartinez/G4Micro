@@ -1,4 +1,22 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tab PARAM_DESCRIPTION
+#' @param contrres PARAM_DESCRIPTION
+#' @param num_model PARAM_DESCRIPTION, Default: 1
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{mutate}}
+#' @rdname plotPCsCorwithASVs_PSO
+#' @export 
+#' @importFrom dplyr mutate
 plotPCsCorwithASVs_PSO <- function(tab, contrres, num_model=1){
   asvs <- strsplit(contrres$asvs_p05[num_model], "_")[[1]]
   #if(length(asvs)>10) asvs <- asvs[1:10]
