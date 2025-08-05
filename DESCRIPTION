@@ -9,10 +9,10 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Remotes:
-  ggloor/CoDaSeq/CoDaSeq,
-  zhouhj1994/LinDA,
-  gmteunisse/fantaxtic,
-  omixer/omixer-rpmR
+    github::ggloor/CoDaSeq/CoDaSeq,
+    github::zhouhj1994/LinDA,
+    github::gmteunisse/fantaxtic,
+    github::omixer/omixer-rpmR,
 Depends:
     dplyr,
     forcats,
