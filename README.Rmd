@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/CarlosMoraMartinez/G4Micro/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CarlosMoraMartinez/G4Micro/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of G4Micro is to ...
+G4Micro contains functions used to analyze microbiome data in the Mora-Martinez, Molina-Mendoza et al. paper. 
 
 ## Installation
 
