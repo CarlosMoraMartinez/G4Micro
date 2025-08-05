@@ -44,21 +44,6 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-      - name: Install Bioconductor and GitHub-only packages
-        run: |
-          options(repos = c(CRAN = "https://cloud.r-project.org"))
-          install.packages("BiocManager")
-          BiocManager::install(c("CoDaSeq", "DESeq2", "scImpute"), ask = FALSE)
-
-          install.packages("remotes")
-          remotes::install_github('catboost/catboost', subdir = 'catboost/R-package')
-          remotes::install_github("ggloor/CoDaSeq/CoDaSeq")
-          remotes::install_github("zhouhj1994/LinDA")
-          remotes::install_github("gmteunisse/fantaxtic")
-          remotes::install_github("omixer/omixer-rpmR")
-          remotes::install_github("paobranco/UBL",ref="master")
-          remotes::install_github("Vivianstats/scImpute")
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

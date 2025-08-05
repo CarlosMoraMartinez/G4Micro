@@ -13,6 +13,7 @@ Remotes:
     github::zhouhj1994/LinDA,
     github::gmteunisse/fantaxtic,
     github::omixer/omixer-rpmR,
+    bioc::DESeq2,
 Depends:
     dplyr,
     forcats,
