@@ -20,11 +20,12 @@ Depends:
     ggplot2,
     phyloseq,
     purrr,
+    R (>= 3.5),
     readr,
     stats,
     stringr,
     tibble,
-    tidyr,
+    tidyr
 Imports: 
     ANCOMBC,
     assertthat,
@@ -107,3 +108,4 @@ Imports:
     wesanderson,
     xgboost,
     zCompositions
+LazyData: true
