@@ -1,29 +1,42 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
-#' @param topn PARAM_DESCRIPTION, Default: 15
-#' @param outname PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'
-#' @param height PARAM_DESCRIPTION, Default: 8
-#' @param width PARAM_DESCRIPTION, Default: 12
-#' @param ocluster PARAM_DESCRIPTION, Default: T
-#' @param oldlevs PARAM_DESCRIPTION, Default: c("Control", "Depression")
-#' @param wespalette PARAM_DESCRIPTION, Default: 'Darjeeling2'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Barplot of Relative Abundance by Genus
+#'
+#' @description
+#' Generates stacked barplots of genus-level relative abundances from a phyloseq object,
+#' stratified by a sample metadata variable. The plot includes only the top N most prevalent genera.
+#'
+#' @param phobj A \code{phyloseq} object containing microbiome data.
+#' @param variable A character string indicating the name of the variable in sample metadata
+#'                 used for grouping samples, Default: 'Condition'.
+#' @param topn Integer; number of top genera to include in the barplot based on total relative prevalence, Default: 15.
+#' @param outname Output filename for the plot in PDF format, Default: 'phylumBarplot.pdf'.
+#' @param height Height of the saved PDF plot in inches, Default: 8.
+#' @param width Width of the saved PDF plot in inches, Default: 12.
+#' @param ocluster Logical; whether to cluster samples by genus abundance profile, Default: TRUE.
+#' @param oldlevs A character vector indicating the original levels of the grouping variable. Must be of length 2, Default: c("Control", "Depression").
+#' @param wespalette Character string specifying a palette name from \code{wesanderson}, used for coloring the genera, Default: 'Darjeeling2'.
+#'
+#' @return A \code{ggplot} object representing the stacked barplot of genus-level relative abundances.
+#'
+#' @details
+#' This function identifies the top \code{topn} most prevalent genera across all samples,
+#' computes their relative abundances per sample, and visualizes them in a stacked barplot.
+#' The samples can be ordered by hierarchical clustering or by abundance of the most prevalent genus.
+#' The palette is generated using \code{wesanderson::wes_palette} and must support enough colors for \code{topn} genera.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  plotRelativeAbnBarsGenus(phobj, variable = "Group", topn = 10)
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}, \code{\link[dplyr]{mutate_all}}
 #'  \code{\link[tidyr]{gather}}
 #' @rdname plotRelativeAbnBarsGenus
-#' @export 
+#' @export
 #' @importFrom dplyr arrange summarise mutate summarise_if mutate_if
 #' @importFrom tidyr gather
+#' @importFrom wesanderson wes_palette
 plotRelativeAbnBarsGenus <- function(phobj, variable="Condition", topn = 15,
                                      outname="phylumBarplot.pdf", height=8,
                                      width=12, ocluster=T,
@@ -48,7 +61,7 @@ plotRelativeAbnBarsGenus <- function(phobj, variable="Condition", topn = 15,
     dplyr::mutate(Genus = ifelse(is.na(Genus), "Other", Genus)) %>%
     group_by(Genus) %>%
     dplyr::summarise_if(is.numeric, sum) %>%
-    filter(Genus != "Other") %>%
+    dplyr::filter(Genus != "Other") %>%
     dplyr::mutate(
       Phylum = gendata$Phylum[match(Genus, gendata$Genus)],
       Family = gendata$Family[match(Genus, gendata$Genus)],
@@ -85,7 +98,7 @@ plotRelativeAbnBarsGenus <- function(phobj, variable="Condition", topn = 15,
 
   #cols <- brewer.pal(n=nrow(ranked_genera), name="Set2") # No more colors than those in palette
   #mycolors <- colorRampPalette(brewer.pal(8, "Spectral"))(nrow(ranked_genera))
-  mycolors <- colorRampPalette(wes_palette(wespalette))(nrow(ranked_genera))
+  mycolors <- colorRampPalette(wesanderson::wes_palette(wespalette))(nrow(ranked_genera))
   facet_form <- paste0( ". ~ ", variable) %>% as.formula
 
   g1 <-ggplot(df_merged, aes(x=sampleID, y=Abundance, color = Genus,

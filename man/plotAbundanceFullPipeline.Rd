@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotAbundanceFullPipeline.R
 \name{plotAbundanceFullPipeline}
 \alias{plotAbundanceFullPipeline}
-\title{FUNCTION_TITLE}
+\title{Run All Taxon Abundance Plotting Functions}
 \usage{
 plotAbundanceFullPipeline(
   phobj,
@@ -14,31 +14,65 @@ plotAbundanceFullPipeline(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbial abundance and sample metadata.}
 
-\item{interestvar}{PARAM_DESCRIPTION}
+\item{interestvar}{A character string specifying the sample variable of interest (e.g., condition or group) for grouping and comparisons.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{A directory path where the output files (PDFs and TSVs) will be saved.}
 
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{A short name or prefix to include in all output file names.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A named vector of factor levels to use for the grouping variable (e.g., to enforce group order).}
 
-\item{tops}{PARAM_DESCRIPTION, Default: c(5, 10, 15, 20)}
+\item{tops}{A numeric vector specifying how many top genera to visualize. Default: \code{c(5, 10, 15, 20)}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list containing:
+\itemize{
+\item \code{prev_vs_abn}: A ggplot object showing prevalence vs abundance.
+\item \code{sp_col_by_gen}: A ggplot object of ASVs colored by Genus.
+\item \code{prevalence_tab_genus}: A data frame of genus-level prevalence.
+\item \code{prevalence_tab_phylum}: A data frame of phylum-level prevalence.
+\item \code{top_genus_plots}: A list of ggplot objects showing relative abundances by genus for different top-N thresholds.
+\item \code{phylum_abundance_tests}: A data frame with test results comparing phylum abundances between groups.
+\item \code{phylum_boxplots}: A ggplot object with phylum-level boxplots.
+\item \code{phylum_rel_bars}: A ggplot object with relative abundance barplots at the phylum level.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Executes a complete pipeline to generate multiple visualizations and summary tables of microbial taxonomic abundances at different levels (Phylum, Genus, ASV), saving plots and tables to the specified output directory.
 }
 \details{
-DETAILS
+This function runs several plotting and analysis functions:
+\itemize{
+\item Barplots and boxplots for phylum-level abundances.
+\item Prevalence and abundance summaries at phylum and genus levels.
+\item Genus-level barplots for multiple top-N values.
+\item ASV-level barplots colored by genus.
+\item Prevalence vs abundance scatterplot.
+}
+All outputs are written to the given directory using filenames that incorporate \code{phname}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ plotAbundanceFullPipeline(
+    phobj = ps_data,
+    interestvar = "Group",
+    outdir = "results/",
+    phname = "gut_microbiome",
+    levs = c("Control", "TreatmentA", "TreatmentB")
+  )
  }
 }
+}
+\seealso{
+\code{\link{plotRelativeAbnBarsPhylum}},
+\code{\link{plotPhylumBoxplots}},
+\code{\link{getPhylumTests}},
+\code{\link{getRelAbundancesByPhylumAndVariable}},
+\code{\link{plotRelativeAbnBarsGenus}},
+\code{\link{getRelAbundancesByGenusAndVariable}},
+\code{\link{plotRelativeAbnBars_Fantaxtic}},
+\code{\link{plotPrevalenceVsAbundance}}
 }

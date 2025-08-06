@@ -2,7 +2,7 @@
 % Please edit documentation in R/getRelAbundancesByPhylumAndVariable.R
 \name{getRelAbundancesByPhylumAndVariable}
 \alias{getRelAbundancesByPhylumAndVariable}
-\title{FUNCTION_TITLE}
+\title{Phylum-Level Abundance and Prevalence Summary by Group}
 \usage{
 getRelAbundancesByPhylumAndVariable(
   phobj,
@@ -12,22 +12,28 @@ getRelAbundancesByPhylumAndVariable(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbiome data.}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{variable}{A character string indicating the sample metadata variable to group by. Default: 'Condition'}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'prevalence_by_phylum.tsv'}
+\item{outname}{Filename to save the output summary table. Set to "" to avoid saving. Default: 'prevalence_by_phylum.tsv'}
 
-\item{oldlevs}{PARAM_DESCRIPTION, Default: c("Control", "Depression")}
+\item{oldlevs}{A character vector of two values representing the original levels of the grouping variable, in order. These will be relabeled as 'no' and 'yes'. Default: c("Control", "Depression")}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame summarizing phylum-level statistics, including abundance, prevalence, and ASV prevalence per condition and overall.
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes relative abundance and prevalence of phyla across a binary variable (e.g., condition). Outputs and returns a table with detailed summary statistics.
 }
 \details{
-DETAILS
+This function:
+\itemize{
+\item Converts the input variable (e.g., "Condition") to binary labels "no" and "yes"
+\item Calculates phylum-level abundance and prevalence per sample and condition
+\item Computes ASV-level prevalence per phylum
+\item Outputs a table with summary statistics such as total prevalence, relative prevalence, and mean ASV prevalence
+}
 }
 \examples{
 \dontrun{

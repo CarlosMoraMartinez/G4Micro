@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotRelativeAbnBarsGenus.R
 \name{plotRelativeAbnBarsGenus}
 \alias{plotRelativeAbnBarsGenus}
-\title{FUNCTION_TITLE}
+\title{Barplot of Relative Abundance by Genus}
 \usage{
 plotRelativeAbnBarsGenus(
   phobj,
@@ -17,37 +17,42 @@ plotRelativeAbnBarsGenus(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbiome data.}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{variable}{A character string indicating the name of the variable in sample metadata
+used for grouping samples, Default: 'Condition'.}
 
-\item{topn}{PARAM_DESCRIPTION, Default: 15}
+\item{topn}{Integer; number of top genera to include in the barplot based on total relative prevalence, Default: 15.}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'}
+\item{outname}{Output filename for the plot in PDF format, Default: 'phylumBarplot.pdf'.}
 
-\item{height}{PARAM_DESCRIPTION, Default: 8}
+\item{height}{Height of the saved PDF plot in inches, Default: 8.}
 
-\item{width}{PARAM_DESCRIPTION, Default: 12}
+\item{width}{Width of the saved PDF plot in inches, Default: 12.}
 
-\item{ocluster}{PARAM_DESCRIPTION, Default: T}
+\item{ocluster}{Logical; whether to cluster samples by genus abundance profile, Default: TRUE.}
 
-\item{oldlevs}{PARAM_DESCRIPTION, Default: c("Control", "Depression")}
+\item{oldlevs}{A character vector indicating the original levels of the grouping variable. Must be of length 2, Default: c("Control", "Depression").}
 
-\item{wespalette}{PARAM_DESCRIPTION, Default: 'Darjeeling2'}
+\item{wespalette}{Character string specifying a palette name from \code{wesanderson}, used for coloring the genera, Default: 'Darjeeling2'.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object representing the stacked barplot of genus-level relative abundances.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates stacked barplots of genus-level relative abundances from a phyloseq object,
+stratified by a sample metadata variable. The plot includes only the top N most prevalent genera.
 }
 \details{
-DETAILS
+This function identifies the top \code{topn} most prevalent genera across all samples,
+computes their relative abundances per sample, and visualizes them in a stacked barplot.
+The samples can be ordered by hierarchical clustering or by abundance of the most prevalent genus.
+The palette is generated using \code{wesanderson::wes_palette} and must support enough colors for \code{topn} genera.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ plotRelativeAbnBarsGenus(phobj, variable = "Group", topn = 10)
  }
 }
 }

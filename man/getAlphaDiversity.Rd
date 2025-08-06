@@ -2,7 +2,11 @@
 % Please edit documentation in R/getAlphaDiversity.R
 \name{getAlphaDiversity}
 \alias{getAlphaDiversity}
-\title{FUNCTION_TITLE}
+\title{Plot and Analyze Alpha Diversity
+#' @description
+This function computes and visualizes alpha diversity indices from a phyloseq object,
+testing for significant differences across qualitative and quantitative metadata variables.
+It generates boxplots or scatter plots for each variable and saves the results as figures.}
 \usage{
 getAlphaDiversity(
   phseq_obj,
@@ -20,43 +24,54 @@ getAlphaDiversity(
 )
 }
 \arguments{
-\item{phseq_obj}{PARAM_DESCRIPTION}
+\item{phseq_obj}{A \code{phyloseq} object containing microbiome data.}
 
-\item{vars}{PARAM_DESCRIPTION}
+\item{vars}{A character vector with the names of qualitative variables (factors) to compare.}
 
-\item{qvars}{PARAM_DESCRIPTION, Default: c()}
+\item{qvars}{A character vector with names of quantitative variables to test via regression. Default: \code{c()}}
 
-\item{opt}{PARAM_DESCRIPTION, Default: list()}
+\item{opt}{A list of options. Must contain at least the output directory as \code{opt$out}. Default: \code{list()}}
 
-\item{indices}{PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}
+\item{indices}{A character vector with the diversity indices to calculate. Default: \code{c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'AlphaDiversity'}
+\item{name}{A string used as a prefix for saved plots and output files. Default: \code{"AlphaDiversity"}}
 
-\item{signif_levels}{PARAM_DESCRIPTION, Default: c(\verb{***} = 0.001, \verb{**} = 0.01, \code{*} = 0.05, ns = 1.1)}
+\item{signif_levels}{Named numeric vector specifying thresholds for significance stars (e.g., "\emph{\strong{", "}", "}", "ns"). Default: \code{c("***"=0.001, "**"=0.01, "*"=0.05, "ns"=1.1)}}
 
-\item{correct_pvalues}{PARAM_DESCRIPTION, Default: TRUE}
+\item{correct_pvalues}{Logical; if \code{TRUE}, p-values are Bonferroni corrected across all comparisons. Default: \code{TRUE}}
 
-\item{correct_pvalues_indices}{PARAM_DESCRIPTION, Default: FALSE}
+\item{correct_pvalues_indices}{Logical; if \code{TRUE}, additional correction is applied across diversity indices. Default: \code{FALSE}}
 
-\item{test2show}{PARAM_DESCRIPTION, Default: 'wilcox.test'}
+\item{test2show}{A string specifying the test function to use for group comparisons (e.g., \code{"wilcox.test"}). Default: \code{"wilcox.test"}}
 
-\item{w}{PARAM_DESCRIPTION, Default: 8}
+\item{w}{Width of the saved plots in inches. Default: \code{8}}
 
-\item{h}{PARAM_DESCRIPTION, Default: 4}
+\item{h}{Height of the saved plots in inches. Default: \code{4}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list of ggplot2 objects corresponding to each plotted variable.
+Plots are also saved to disk in the specified output folder.
 }
 \description{
-FUNCTION_DESCRIPTION
+Plot and Analyze Alpha Diversity
+#' @description
+This function computes and visualizes alpha diversity indices from a phyloseq object,
+testing for significant differences across qualitative and quantitative metadata variables.
+It generates boxplots or scatter plots for each variable and saves the results as figures.
 }
 \details{
-DETAILS
+This function handles both categorical and continuous metadata variables to assess their
+relationship with alpha diversity. Boxplots and statistical tests (e.g., Wilcoxon) are used
+for categorical variables, while linear regressions and scatter plots are used for continuous ones.
+The function also applies optional multiple testing corrections and automatically filters
+variables with only one level.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ plots <- getAlphaDiversity(phseq_obj, vars = c("Group", "Sex"), qvars = c("Age"),
+                              opt = list(out = "results/"))
+  plots$Group  # Access plot for "Group"
  }
 }
 }
@@ -65,4 +80,6 @@ if(interactive()){
 \code{\link[phyloseq]{prune_samples}}
 \code{\link[ggsignif]{stat_signif}}
 \code{\link[dplyr]{mutate}}
+\code{\link[ggpmisc]{stat_poly_eq}},
+\code{\link[phyloseq]{plot_richness}}
 }

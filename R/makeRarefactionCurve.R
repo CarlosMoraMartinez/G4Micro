@@ -1,22 +1,29 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phyloseq_rawdata PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param add_hlines PARAM_DESCRIPTION, Default: TRUE
-#' @param name PARAM_DESCRIPTION, Default: 'rarecurve'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title makeRarefactionCurve
+#' @description Calculates a rarefaction curve for a phyloseq object
+#' @param phyloseq_rawdata Input phyloseq object
+#' @param opt Option list, including a field named 'out' with an existing output directory.
+#' @param add_hlines If TRUE, plot horizontal lines with the depth of each sample, Default: TRUE
+#' @param name name of the output files, including tables, R objects and plots saved to opt$out, Default: 'rarecurve'
+#' @return A list with the following elements:
+#' `plot`: ggplot object with the rarefaction curve
+#' `df`: DataFrame with the rarefaction curve data (number of taxa detected for each number of reads for each sample)
+#' `df_max`: DataFrame with the number of reads of each sample
+#' `min_reads_all`: Overall minimum number of reads
+#' `intersection2`: DataFrame with the number of taxa at the overall minimum number of reads, extrapolated from the curve
+#' @details Calculates a rarefaction curve for a phyloseq object using the vegan \code{rarecurve()} function
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}
+#' @seealso
+#'  \code{\link[vegan]{rarecurve}},
+#'  \code{\link[dplyr]{mutate}},
+#'  \code{\link[dplyr]{summarise}}
 #' @rdname makeRarefactionCurve
-#' @export 
-#' @importFrom dplyr mutate summarise
+#' @export
+#' @importFrom vegan rarecurve
 makeRarefactionCurve <- function(phyloseq_rawdata, opt, add_hlines=TRUE, name="rarecurve"){
   otu2rare <- otu_table(phyloseq_rawdata)
   class(otu2rare) <- "matrix"

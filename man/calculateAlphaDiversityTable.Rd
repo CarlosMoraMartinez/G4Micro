@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculateAlphaDiversityTable.R
 \name{calculateAlphaDiversityTable}
 \alias{calculateAlphaDiversityTable}
-\title{FUNCTION_TITLE}
+\title{calculateAlphaDiversityTable}
 \usage{
 calculateAlphaDiversityTable(
   phseq_obj,
@@ -12,22 +12,23 @@ calculateAlphaDiversityTable(
 )
 }
 \arguments{
-\item{phseq_obj}{PARAM_DESCRIPTION}
+\item{phseq_obj}{Phyloseq object}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{Output directory. The results table will be saved here.}
 
-\item{indices}{PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}
+\item{indices}{List of diversity indices to calculate, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}
 
 \item{name}{PARAM_DESCRIPTION, Default: 'diversity'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A Data Frame with all the metadata and a variable for each diversity index
 }
 \description{
-FUNCTION_DESCRIPTION
+Calculates several alpha-diversity indices.
 }
 \details{
-DETAILS
+alculates several alpha-diversity indices for each sample in a phyloseq object,
+using the phyloseq \code{estimate_richness()} function.
 }
 \examples{
 \dontrun{

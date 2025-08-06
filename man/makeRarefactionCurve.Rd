@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeRarefactionCurve.R
 \name{makeRarefactionCurve}
 \alias{makeRarefactionCurve}
-\title{FUNCTION_TITLE}
+\title{makeRarefactionCurve}
 \usage{
 makeRarefactionCurve(
   phyloseq_rawdata,
@@ -12,22 +12,27 @@ makeRarefactionCurve(
 )
 }
 \arguments{
-\item{phyloseq_rawdata}{PARAM_DESCRIPTION}
+\item{phyloseq_rawdata}{Input phyloseq object}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{Option list, including a field named 'out' with an existing output directory.}
 
-\item{add_hlines}{PARAM_DESCRIPTION, Default: TRUE}
+\item{add_hlines}{If TRUE, plot horizontal lines with the depth of each sample, Default: TRUE}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'rarecurve'}
+\item{name}{name of the output files, including tables, R objects and plots saved to opt$out, Default: 'rarecurve'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with the following elements:
+\code{plot}: ggplot object with the rarefaction curve
+\code{df}: DataFrame with the rarefaction curve data (number of taxa detected for each number of reads for each sample)
+\code{df_max}: DataFrame with the number of reads of each sample
+\code{min_reads_all}: Overall minimum number of reads
+\code{intersection2}: DataFrame with the number of taxa at the overall minimum number of reads, extrapolated from the curve
 }
 \description{
-FUNCTION_DESCRIPTION
+Calculates a rarefaction curve for a phyloseq object
 }
 \details{
-DETAILS
+Calculates a rarefaction curve for a phyloseq object using the vegan \code{rarecurve()} function
 }
 \examples{
 \dontrun{
@@ -37,5 +42,7 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}
+\code{\link[vegan]{rarecurve}},
+\code{\link[dplyr]{mutate}},
+\code{\link[dplyr]{summarise}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_IPAQ_Boxplot.R
 \name{make_IPAQ_Boxplot}
 \alias{make_IPAQ_Boxplot}
-\title{FUNCTION_TITLE}
+\title{Generate Boxplots of Alpha Diversity by IPAQ Activity Levels}
 \usage{
 make_IPAQ_Boxplot(
   divtab,
@@ -18,39 +18,60 @@ make_IPAQ_Boxplot(
 )
 }
 \arguments{
-\item{divtab}{PARAM_DESCRIPTION}
+\item{divtab}{A data frame containing alpha diversity indices, sample metadata, and a column with IPAQ activity levels (e.g., "Low", "Mid", "High").}
 
-\item{var}{PARAM_DESCRIPTION, Default: 'IPAQ_act_fisica'}
+\item{var}{A character string indicating the name of the column in \code{divtab} that contains IPAQ activity levels. Default is \code{"IPAQ_act_fisica"}.}
 
-\item{test2show}{PARAM_DESCRIPTION, Default: 'wilcox.test'}
+\item{test2show}{The statistical test to use for comparing groups (e.g., \code{"wilcox.test"} or \code{"t.test"}). Default is \code{"wilcox.test"}.}
 
-\item{alpha_indices}{PARAM_DESCRIPTION}
+\item{alpha_indices}{A character vector with the names of the alpha diversity indices to plot (e.g., \code{"Shannon"}, \code{"Chao1"}).}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{A character string indicating the path to the output directory where PDF files will be saved.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A character string used to personalize output file names (e.g., a cohort or experiment name).}
 
-\item{signif_levels}{PARAM_DESCRIPTION, Default: c(\verb{***} = 0.001, \verb{**} = 0.01, \code{*} = 0.05, ns = 1.1)}
+\item{signif_levels}{A named numeric vector indicating the significance thresholds for p-values to be displayed on the plots (e.g., \code{c("***"=0.001, "**"=0.01, "*"=0.05, "ns"=1.1)}). Default matches this example.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 10}
+\item{w}{Width (in inches) of the output PDF plots. Default is 10.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 4}
+\item{h}{Height (in inches) of the single-row plot. The condition-specific plot is twice this height. Default is 4.}
 
-\item{correct_pvalues}{PARAM_DESCRIPTION, Default: TRUE}
+\item{correct_pvalues}{Logical; if \code{TRUE}, p-values are corrected for multiple testing using the Bonferroni method. Default is \code{TRUE}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing two ggplot2 objects:
+\describe{
+\item{g1}{Boxplot of alpha diversity indices by IPAQ activity level (all samples pooled).}
+\item{g2}{Boxplot of alpha diversity indices by IPAQ activity level split by condition.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function generates boxplots of selected alpha diversity indices
+across different physical activity levels based on the IPAQ
+(International Physical Activity Questionnaire).
+It returns two plots: one aggregated across all samples,
+and another split by condition. It also performs pairwise significance
+testing and annotates the plots accordingly.
 }
 \details{
-DETAILS
+This function prepares the input table by filtering missing values in the
+IPAQ activity column and reshaping it into long format.
+Then, it creates two faceted boxplots for the provided alpha diversity
+indices, using the \code{ggsignif} package to overlay statistical significance of
+pairwise comparisons between IPAQ levels. P-values can be optionally corrected
+using the Bonferroni method depending on the number of comparisons. The plots are
+saved as PDF files in the specified output directory.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ data <- read.csv("diversity_table.csv")
+  make_IPAQ_Boxplot(
+    divtab = data,
+    alpha_indices = c("Shannon", "Chao1"),
+    outdir = "results/plots",
+    name = "Cohort1"
+  )
  }
 }
 }

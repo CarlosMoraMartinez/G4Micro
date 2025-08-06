@@ -1,22 +1,53 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param divtab PARAM_DESCRIPTION
-#' @param vars PARAM_DESCRIPTION
-#' @param groupvars PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: 'alpha_diversity'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title testDiversityDifferences
+#' @description Test Differences in Alpha Diversity Indices Across Grouping Variables
+#' @param divtab A data frame containing alpha diversity indices (or other numeric variables) as columns
+#' @param vars A character vector of column names in \code{divtab} corresponding to the alpha diversity indices
+#' @param groupvars A character vector of column names in \code{divtab} representing the categorical variables
+#' @param outdir ath to the output directory where the results table will be saved.
+#' @param name Prefix for the output filename (TSV table), Default: 'alpha_diversity'
+#' @return A data frame containing the results of the statistical tests for each combination
+#' of variable and grouping variable. Includes ANOVA F-statistics and p-values, t-test and
+#' Wilcoxon p-values (when applicable), Shapiro-Wilk normality test, and Bartlett and Levene
+#' tests for homogeneity of variance. Also includes Benjamini-Hochberg corrected p-values
+#' for t-tests and Wilcoxon tests
+#' @details For each continuous variable in \code{vars} and each grouping variable in \code{groupvars},
+#' the function:
+#'
+#' 1. Tests for overall differences using one-way ANOVA.
+#' 2. If the grouping variable has exactly two levels:
+#'    - Performs a Student's t-test and a Wilcoxon rank-sum test.
+#' 3. Applies diagnostic tests:
+#'    - Shapiro-Wilk test for normality.
+#'    - Bartlett’s and Levene’s tests for homogeneity of variances.
+#' 4. If the grouping variable has more than two levels:
+#'    - Performs all pairwise comparisons between groups using t-tests and Wilcoxon tests
+#'      via the helper function \code{getTestsForAllCombinations()}.
+#'
+#' The output is saved as a TSV file and also returned as a data frame.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  res <- testDiversityDifferences(
+#'     divtab = alpha_div_table,
+#'     vars = c("Shannon", "Chao1"),
+#'     groupvars = c("Sex", "Treatment"),
+#'     outdir = "results/",
+#'     name = "diversity_stats"
+#'   )
 #'  }
 #' }
+#' @seealso
+#'  \code{\link[stats]{aov}},
+#'  \code{\link[stats]{t.test}},
+#'  \code{\link[stats]{wilcox.test}},
+#'  \code{\link[stats]{shapiro.test}},
+#'  \code{\link[stats]{bartlett.test}},
+#'  \code{\link[car]{leveneTest}},
+#'  \code{\link[stats]{p.adjust}}
 #' @rdname testDiversityDifferences
-#' @export 
+#' @export
+#' @importFrom car leveneTest
 testDiversityDifferences <- function(divtab, vars, groupvars, outdir, name="alpha_diversity"){
-  library(car)
   res <- data.frame()
   for (v in vars){
     if(length(unique(divtab[, v])) < 2 ) next
@@ -33,7 +64,7 @@ testDiversityDifferences <- function(divtab, vars, groupvars, outdir, name="alph
       wres <- tryCatch(ifelse(num_groups==2, wilcox.test(form, divtab)$p.value, NA), error=function(x)return(NA))
       swres <- shapiro.test(divtab[, v])$p.value
       bt <-  bartlett.test(form, divtab)[[3]]
-      levt <-  leveneTest(form, divtab)[1, 3]
+      levt <-  car::leveneTest(form, divtab)[1, 3]
       aux <- data.frame(
         variable = v,
         groups = g,

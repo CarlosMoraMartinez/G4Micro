@@ -1,23 +1,26 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param var PARAM_DESCRIPTION, Default: 'Condition'
-#' @param outname PARAM_DESCRIPTION, Default: 'phylumTests'
-#' @param paired PARAM_DESCRIPTION, Default: F
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Perform Wilcoxon Tests on Phylum Abundances
+#' @description Conducts pairwise Wilcoxon rank-sum tests on phylum-level abundance data extracted from a phyloseq object. Returns and saves a table with p-values and adjusted p-values (FDR).
+#' @param phobj A \code{phyloseq} object containing microbiome data.
+#' @param var A character string indicating the sample variable to group by for comparisons. Default: 'Condition'
+#' @param outname Output filename for the results table. Default: 'phylumTests'
+#' @param paired Logical. Should the test be paired? Default: FALSE
+#' @return A data frame with Wilcoxon test results for each phylum, including adjusted p-values.
+#' @details This function performs non-parametric testing for differential abundance at the phylum level. It uses Wilcoxon rank-sum tests (or signed-rank if \code{paired=TRUE}) and adjusts p-values using the Benjamini-Hochberg method.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
-#'  \code{\link[phyloseq]{tax_glom}}, \code{\link[phyloseq]{taxa_names}}, \code{\link[phyloseq]{tax_table}}, \code{\link[phyloseq]{psmelt}}
+#' @seealso
+#'  \code{\link[phyloseq]{tax_glom}},
+#'  \code{\link[phyloseq]{taxa_names}},
+#'  \code{\link[phyloseq]{tax_table}},
+#'  \code{\link[phyloseq]{psmelt}}
 #'  \code{\link[dplyr]{group_map}}
 #'  \code{\link[broom]{reexports}}
 #' @rdname getPhylumTests
-#' @export 
+#' @export
 #' @importFrom phyloseq tax_glom taxa_names tax_table psmelt
 #' @importFrom dplyr group_modify
 #' @importFrom broom tidy

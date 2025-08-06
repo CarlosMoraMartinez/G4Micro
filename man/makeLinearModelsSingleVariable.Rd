@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeLinearModelsSingleVariable.R
 \name{makeLinearModelsSingleVariable}
 \alias{makeLinearModelsSingleVariable}
-\title{FUNCTION_TITLE}
+\title{makeLinearModelsSingleVariable}
 \usage{
 makeLinearModelsSingleVariable(
   divtab,
@@ -15,28 +15,54 @@ makeLinearModelsSingleVariable(
 )
 }
 \arguments{
-\item{divtab}{PARAM_DESCRIPTION}
+\item{divtab}{DataFrame containing metadata and alpha diversity indices, as returned by \code{calculateAlphaDiversityTable()}}
 
-\item{interestvar}{PARAM_DESCRIPTION}
+\item{interestvar}{Main variable to test for differences in alpha diversity indices (for instance, sex or disease status).}
 
-\item{extravars}{PARAM_DESCRIPTION}
+\item{extravars}{Vector of covariates to include in the analysis. Also, differences in alpha diversity indices will be tested for these covariates.}
 
-\item{alphaindices}{PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson")}
+\item{alphaindices}{Alpha diversity indices present in the divtab DataFrame, Default: c("Observed", "Chao1", "Shannon", "InvSimpson")}
 
-\item{combos}{PARAM_DESCRIPTION, Default: 1:3}
+\item{combos}{Vector of integers. Linear models will be built with all the groups of covariates (with and without the main variable) of sizes included in this argument, Default: 1:3}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{ath to the output directory where the results table will be saved, Default: ''}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'linearmodels'}
+\item{name}{Prefix for the output file names (TSV tables, .RData), Default: 'linearmodels'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with three elements:
+\code{single_anovas}: a DataFrame with the result of testing differences for individual variables (both interestvar and extravars)
+\code{anovas}: a DataFrame with the results of linear models including interstvar + groups of covariates, or only groups of covariates.
+\code{models}
 }
 \description{
-FUNCTION_DESCRIPTION
+Linear models to test differences in alpha diversity indices.
 }
 \details{
-DETAILS
+This function performs linear modeling to assess differences in alpha diversity indices
+across levels of a main variable of interest (e.g., disease status), optionally adjusting
+for one or more covariates (e.g., age, sex). It fits two sets of models:
+\enumerate{
+\item \strong{Single-variable testing}: Each variable (both the main variable and covariates) is tested individually
+against each specified alpha diversity index using a simple linear model.
+\item \strong{Multiple-variable modeling}: For each alpha diversity index, the function builds multivariable linear models
+combining the main variable and groups of covariates. All combinations of covariates are generated based on the
+sizes specified in the \code{combos} argument (e.g., combinations of 1 to 3 covariates). For each model, the function
+compares a full model (main variable + covariates) against a reduced model (covariates only) using ANOVA.
+}
+
+The output includes:
+\itemize{
+\item A summary table with statistics from individual variable models (\code{single_anovas}).
+\item A summary table with statistics from multivariable models including covariates and the variable of interest (\code{anovas}).
+}
+
+All models are returned in a named list (\code{models}), and results are saved to disk in both RData and TSV format
+in the output directory.
+
+Variables with fewer than two levels are automatically excluded from the analysis.
+P-values are adjusted using the Benjamini-Hochberg (BH) method across all models (\code{padj_all})
+and within models sharing the same variable structure (\code{padj_bymodel}).
 }
 \examples{
 \dontrun{

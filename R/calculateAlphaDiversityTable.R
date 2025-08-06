@@ -1,23 +1,24 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phseq_obj PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param indices PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")
+#' @title calculateAlphaDiversityTable
+#' @description Calculates several alpha-diversity indices.
+#' @param phseq_obj Phyloseq object
+#' @param outdir Output directory. The results table will be saved here.
+#' @param indices List of diversity indices to calculate, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")
 #' @param name PARAM_DESCRIPTION, Default: 'diversity'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @return A Data Frame with all the metadata and a variable for each diversity index
+#' @details alculates several alpha-diversity indices for each sample in a phyloseq object,
+#' using the phyloseq \code{estimate_richness()} function.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname calculateAlphaDiversityTable
-#' @export 
+#' @export
 calculateAlphaDiversityTable <- function(phseq_obj, outdir,
                                          indices = c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher"),
                                          name="diversity"){
-  library(ggpmisc) #Add regression formula
+  #library(ggpmisc) #Add regression formula
   div <- estimate_richness(phseq_obj,
                            measures = indices)
   div$sampleID <- gsub("^X", "", rownames(div))

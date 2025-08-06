@@ -54,4 +54,4 @@ C_POS_EFF = pal1[2]
 C_NEG_EFF = pal[4]
 
 ##
-
+mycols <- grDevices::colorRampPalette( wesanderson::wes_palette("Royal1"))(5)

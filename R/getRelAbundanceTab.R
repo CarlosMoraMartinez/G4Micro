@@ -1,19 +1,30 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Get Relative Abundance and Prevalence Table
+#' @description Calculates prevalence and total abundance of taxa from a phyloseq object and returns a data frame with taxonomy information.
+#' @param phobj A phyloseq object containing microbiome count data and taxonomy.
+#' @return A data frame with columns:
+#' \itemize{
+#'   \item Prevalence: number of samples where taxa is present (count > 0)
+#'   \item TotalAbundance: sum of counts across all samples
+#'   \item Taxonomy columns from the phyloseq object's tax_table
+#'   \item relative_prevalence: prevalence divided by total number of samples
+#' }
+#' @details
+#' Prevalence is calculated as the count of samples in which each taxon has a non-zero abundance.
+#' Total abundance is the sum of counts across all samples.
+#' Relative prevalence is the proportion of samples where the taxon is present.
+#' This function works for phyloseq objects with taxa as rows or columns.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
-#'  \code{\link[phyloseq]{otu_table}}, \code{\link[phyloseq]{taxa_sums}}
+#' @seealso
+#'  \code{\link[phyloseq]{otu_table}},
+#'  \code{\link[phyloseq]{taxa_sums}}
 #' @rdname getRelAbundanceTab
-#' @export 
-#' @importFrom phyloseq otu_table taxa_sums
+#' @export
+#' @importFrom phyloseq otu_table taxa_sums tax_table nsamples taxa_are_rows
 getRelAbundanceTab <- function(phobj){
   ottmp <- phyloseq::otu_table(phobj)
 

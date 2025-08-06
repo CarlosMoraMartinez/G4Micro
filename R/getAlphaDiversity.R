@@ -1,23 +1,38 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phseq_obj PARAM_DESCRIPTION
-#' @param vars PARAM_DESCRIPTION
-#' @param qvars PARAM_DESCRIPTION, Default: c()
-#' @param opt PARAM_DESCRIPTION, Default: list()
-#' @param indices PARAM_DESCRIPTION, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")
-#' @param name PARAM_DESCRIPTION, Default: 'AlphaDiversity'
-#' @param signif_levels PARAM_DESCRIPTION, Default: c(`***` = 0.001, `**` = 0.01, `*` = 0.05, ns = 1.1)
-#' @param correct_pvalues PARAM_DESCRIPTION, Default: TRUE
-#' @param correct_pvalues_indices PARAM_DESCRIPTION, Default: FALSE
-#' @param test2show PARAM_DESCRIPTION, Default: 'wilcox.test'
-#' @param w PARAM_DESCRIPTION, Default: 8
-#' @param h PARAM_DESCRIPTION, Default: 4
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title Plot and Analyze Alpha Diversity
+#' #' @description
+#' This function computes and visualizes alpha diversity indices from a phyloseq object,
+#' testing for significant differences across qualitative and quantitative metadata variables.
+#' It generates boxplots or scatter plots for each variable and saves the results as figures.
+#'
+#' @param phseq_obj A \code{phyloseq} object containing microbiome data.
+#' @param vars A character vector with the names of qualitative variables (factors) to compare.
+#' @param qvars A character vector with names of quantitative variables to test via regression. Default: \code{c()}
+#' @param opt A list of options. Must contain at least the output directory as \code{opt$out}. Default: \code{list()}
+#' @param indices A character vector with the diversity indices to calculate. Default: \code{c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}
+#' @param name A string used as a prefix for saved plots and output files. Default: \code{"AlphaDiversity"}
+#' @param signif_levels Named numeric vector specifying thresholds for significance stars (e.g., "***", "**", "*", "ns"). Default: \code{c("***"=0.001, "**"=0.01, "*"=0.05, "ns"=1.1)}
+#' @param correct_pvalues Logical; if \code{TRUE}, p-values are Bonferroni corrected across all comparisons. Default: \code{TRUE}
+#' @param correct_pvalues_indices Logical; if \code{TRUE}, additional correction is applied across diversity indices. Default: \code{FALSE}
+#' @param test2show A string specifying the test function to use for group comparisons (e.g., \code{"wilcox.test"}). Default: \code{"wilcox.test"}
+#' @param w Width of the saved plots in inches. Default: \code{8}
+#' @param h Height of the saved plots in inches. Default: \code{4}
+#'
+#' @return A named list of ggplot2 objects corresponding to each plotted variable.
+#' Plots are also saved to disk in the specified output folder.
+#'
+#' @details
+#' This function handles both categorical and continuous metadata variables to assess their
+#' relationship with alpha diversity. Boxplots and statistical tests (e.g., Wilcoxon) are used
+#' for categorical variables, while linear regressions and scatter plots are used for continuous ones.
+#' The function also applies optional multiple testing corrections and automatically filters
+#' variables with only one level.
+#'
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  plots <- getAlphaDiversity(phseq_obj, vars = c("Group", "Sex"), qvars = c("Age"),
+#'                               opt = list(out = "results/"))
+#'   plots$Group  # Access plot for "Group"
 #'  }
 #' }
 #' @seealso
@@ -25,11 +40,14 @@
 #'  \code{\link[phyloseq]{prune_samples}}
 #'  \code{\link[ggsignif]{stat_signif}}
 #'  \code{\link[dplyr]{mutate}}
+#'  \code{\link[ggpmisc]{stat_poly_eq}},
+#'  \code{\link[phyloseq]{plot_richness}}
 #' @rdname getAlphaDiversity
 #' @export
 #' @importFrom phyloseq prune_samples
 #' @importFrom ggsignif stat_signif
-#' @importFrom dplyr mutate
+#' @importFrom ggpmisc stat_poly_eq use_label
+#' @importFrom ggpubr theme_pubclean
 getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
                               opt = list(),
                               indices=c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher"),
@@ -85,7 +103,7 @@ getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
       #scale_color_lancet() +
       #scale_fill_lancet() +
       labs(title = v, x = '') +
-      theme_pubclean() +
+      ggpubr::theme_pubclean() +
       mytheme +
       ggsignif::stat_signif(test=test2show, na.rm=T, comparisons = comp,
                             step_increase=0.06,
@@ -111,7 +129,7 @@ getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
                                 color = v,
                                 measures = c("Observed", "Chao1", "Shannon", "InvSimpson")) +
       geom_point(aes_string(fill = v), alpha = 0.7) +
-      stat_poly_eq(use_label(c("R2", "p")), #c("eq", "R2", "f", "p", "n")
+      ggpmisc::stat_poly_eq(use_label(c("R2", "p")), #c("eq", "R2", "f", "p", "n")
                    method="lm", small.p=T, small.r=F, label.y=0.99)+
       #stat_poly_line(method = "lm") +
       geom_smooth(method="lm", fullrange = TRUE, linetype=1) +
@@ -120,7 +138,7 @@ getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
       labs(title = v, x = '') +
       #geom_text(data=auxtext, aes(y=3, x = 20, labels=text)) +
 
-      theme_pubclean() +
+      ggpubr::theme_pubclean() +
       mytheme
     theme(plot.title = element_text(hjust = 0.5)) +
       #theme(axis.text.x = element_blank())

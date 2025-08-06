@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotPhylumBoxplots.R
 \name{plotPhylumBoxplots}
 \alias{plotPhylumBoxplots}
-\title{FUNCTION_TITLE}
+\title{Plot Boxplots of Phylum-Level Abundances}
 \usage{
 plotPhylumBoxplots(
   phobj,
@@ -14,34 +14,46 @@ plotPhylumBoxplots(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data.}
 
-\item{var}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{var}{A sample metadata variable used to group the boxplots, Default: 'Condition'}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'}
+\item{outname}{Name of the output PDF file, Default: 'phylumBarplot.pdf'}
 
-\item{height}{PARAM_DESCRIPTION, Default: 10}
+\item{height}{Height (in inches) of the output PDF, Default: 10}
 
-\item{width}{PARAM_DESCRIPTION, Default: 8}
+\item{width}{Width (in inches) of the output PDF, Default: 8}
 
-\item{paired}{PARAM_DESCRIPTION, Default: F}
+\item{paired}{Logical indicating if paired Wilcoxon tests should be used, Default: FALSE}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 object representing the boxplots.
 }
 \description{
-FUNCTION_DESCRIPTION
+Plots boxplots of phylum-level abundances using a phyloseq object, faceted by phylum,
+with optional paired comparisons between groups. Significance is assessed using Wilcoxon tests.
 }
 \details{
-DETAILS
+This function summarizes abundances at the phylum level, then creates boxplots grouped by the
+specified metadata variable. Significance comparisons between groups are performed using
+\code{stat_compare_means} from the ggpubr package.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ plotPhylumBoxplots(my_phyloseq_object)
  }
 }
 }
 \seealso{
-\code{\link[phyloseq]{tax_glom}}, \code{\link[phyloseq]{taxa_names}}, \code{\link[phyloseq]{tax_table}}, \code{\link[phyloseq]{psmelt}}
+\code{\link[phyloseq]{tax_glom}},
+\code{\link[phyloseq]{taxa_names}},
+\code{\link[phyloseq]{tax_table}},
+\code{\link[phyloseq]{psmelt}}
+\code{\link[ggpubr]{stat_compare_means}},
+\code{\link[ggplot2]{ggplot}},
+\code{\link[ggplot2]{geom_boxplot}},
+\code{\link[ggplot2]{geom_jitter}},
+\code{\link[ggplot2]{geom_line}},
+\code{\link[ggplot2]{facet_wrap}}
 }

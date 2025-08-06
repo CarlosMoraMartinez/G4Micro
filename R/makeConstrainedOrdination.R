@@ -6,17 +6,17 @@
 #' @param color_by PARAM_DESCRIPTION, Default: ''
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[phyloseq]{distance}}
 #'  \code{\link[vegan]{scores}}
 #' @rdname makeConstrainedOrdination
-#' @export 
+#' @export
 #' @importFrom phyloseq distance
 #' @importFrom vegan scores
 makeConstrainedOrdination<-function(phobj, variables = c("Condition"),  dist_type="bray", color_by=""){
@@ -32,7 +32,7 @@ makeConstrainedOrdination<-function(phobj, variables = c("Condition"),  dist_typ
   bray_not_na <- phyloseq::distance(physeq = phobj_not_na, method = dist_type)
 
   # CAP ordinate
-  cap_ord <<- ordinate(
+  cap_ord <- ordinate(
     physeq = phobj_not_na,
     method = "CAP",
     distance = bray_not_na,

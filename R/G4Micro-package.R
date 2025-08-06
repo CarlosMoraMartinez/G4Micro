@@ -12,6 +12,7 @@
 #' @import stats
 #' @import grDevices
 #' @import graphics
+#' @import utils
 "_PACKAGE"
 
 ## usethis namespace: start

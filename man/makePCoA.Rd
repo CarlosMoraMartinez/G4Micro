@@ -2,7 +2,7 @@
 % Please edit documentation in R/makePCoA.R
 \name{makePCoA}
 \alias{makePCoA}
-\title{FUNCTION_TITLE}
+\title{Generate PCoA Plots for a Single Metadata Variable}
 \usage{
 makePCoA(
   phobj,
@@ -15,28 +15,32 @@ makePCoA(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing the microbiome data.}
 
-\item{pcoa.bray}{PARAM_DESCRIPTION}
+\item{pcoa.bray}{The ordination result (e.g., output from \code{ordinate()}).}
 
-\item{evals}{PARAM_DESCRIPTION}
+\item{evals}{Eigenvalues extracted from the ordination result (typically \code{pcoa.bray$values$Eigenvalues}).}
 
-\item{var2color}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{var2color}{Name of the metadata variable to use for coloring the plots. Default: \code{"Condition"}}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'Bray-Curtis'}
+\item{name}{Title to be displayed on the plots, typically the distance name. Default: \code{"Bray-Curtis"}}
 
-\item{extradims}{PARAM_DESCRIPTION, Default: 2:5}
+\item{extradims}{Numeric vector of additional axes (besides Axis 1) to plot. Default: \code{2:5}}
 
-\item{labelsamples}{PARAM_DESCRIPTION, Default: 'sampleID'}
+\item{labelsamples}{Name of the metadata column to use for labeling samples. Default: \code{"sampleID"}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A combined \code{ggplot2} object (via \code{cowplot::plot_grid}) with one plot per extra axis specified in \code{extradims}.
 }
 \description{
-FUNCTION_DESCRIPTION
+This function generates PCoA (or other ordination) plots for a given phyloseq object and ordination result.
+It creates scatter plots of the first PCoA axis (Axis 1) against additional axes specified in \code{extradims},
+colored by a given metadata variable, and returns them combined as a single figure using \code{cowplot::plot_grid}.
 }
 \details{
-DETAILS
+This function is designed to be used internally within \code{\link{makeAllPCoAs}}.
+For each axis in \code{extradims}, it creates a 2D plot using the first axis and the extra one.
+Each plot includes ellipses (95\% confidence), sample points, and sample labels.
 }
 \examples{
 \dontrun{
@@ -47,4 +51,6 @@ if(interactive()){
 }
 \seealso{
 \code{\link[cowplot]{plot_grid}}
+\code{\link[phyloseq]{ordinate}},
+\code{\link[phyloseq]{plot_ordination}},
 }

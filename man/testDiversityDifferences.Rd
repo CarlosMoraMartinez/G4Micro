@@ -2,7 +2,7 @@
 % Please edit documentation in R/testDiversityDifferences.R
 \name{testDiversityDifferences}
 \alias{testDiversityDifferences}
-\title{FUNCTION_TITLE}
+\title{testDiversityDifferences}
 \usage{
 testDiversityDifferences(
   divtab,
@@ -13,29 +13,68 @@ testDiversityDifferences(
 )
 }
 \arguments{
-\item{divtab}{PARAM_DESCRIPTION}
+\item{divtab}{A data frame containing alpha diversity indices (or other numeric variables) as columns}
 
-\item{vars}{PARAM_DESCRIPTION}
+\item{vars}{A character vector of column names in \code{divtab} corresponding to the alpha diversity indices}
 
-\item{groupvars}{PARAM_DESCRIPTION}
+\item{groupvars}{A character vector of column names in \code{divtab} representing the categorical variables}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{ath to the output directory where the results table will be saved.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'alpha_diversity'}
+\item{name}{Prefix for the output filename (TSV table), Default: 'alpha_diversity'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame containing the results of the statistical tests for each combination
+of variable and grouping variable. Includes ANOVA F-statistics and p-values, t-test and
+Wilcoxon p-values (when applicable), Shapiro-Wilk normality test, and Bartlett and Levene
+tests for homogeneity of variance. Also includes Benjamini-Hochberg corrected p-values
+for t-tests and Wilcoxon tests
 }
 \description{
-FUNCTION_DESCRIPTION
+Test Differences in Alpha Diversity Indices Across Grouping Variables
 }
 \details{
-DETAILS
+For each continuous variable in \code{vars} and each grouping variable in \code{groupvars},
+the function:
+\enumerate{
+\item Tests for overall differences using one-way ANOVA.
+\item If the grouping variable has exactly two levels:
+\itemize{
+\item Performs a Student's t-test and a Wilcoxon rank-sum test.
+}
+\item Applies diagnostic tests:
+\itemize{
+\item Shapiro-Wilk test for normality.
+\item Bartlett’s and Levene’s tests for homogeneity of variances.
+}
+\item If the grouping variable has more than two levels:
+\itemize{
+\item Performs all pairwise comparisons between groups using t-tests and Wilcoxon tests
+via the helper function \code{getTestsForAllCombinations()}.
+}
+}
+
+The output is saved as a TSV file and also returned as a data frame.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ res <- testDiversityDifferences(
+    divtab = alpha_div_table,
+    vars = c("Shannon", "Chao1"),
+    groupvars = c("Sex", "Treatment"),
+    outdir = "results/",
+    name = "diversity_stats"
+  )
  }
 }
+}
+\seealso{
+\code{\link[stats]{aov}},
+\code{\link[stats]{t.test}},
+\code{\link[stats]{wilcox.test}},
+\code{\link[stats]{shapiro.test}},
+\code{\link[stats]{bartlett.test}},
+\code{\link[car]{leveneTest}},
+\code{\link[stats]{p.adjust}}
 }

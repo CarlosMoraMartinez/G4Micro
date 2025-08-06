@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotPrevalenceVsAbundance.R
 \name{plotPrevalenceVsAbundance}
 \alias{plotPrevalenceVsAbundance}
-\title{FUNCTION_TITLE}
+\title{Plot Prevalence vs Abundance by Phylum}
 \usage{
 plotPrevalenceVsAbundance(
   phobj,
@@ -12,22 +12,22 @@ plotPrevalenceVsAbundance(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data.}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'phylumBarplot.pdf'}
+\item{outname}{File name for the output PDF plot. Default: 'phylumBarplot.pdf'}
 
-\item{height}{PARAM_DESCRIPTION, Default: 10}
+\item{height}{Height of the output PDF plot in inches. Default: 10}
 
-\item{width}{PARAM_DESCRIPTION, Default: 12}
+\item{width}{Width of the output PDF plot in inches. Default: 12}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object showing prevalence vs abundance faceted by Phylum.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates a scatter plot of total abundance vs relative prevalence for taxa grouped by Phylum using data from a phyloseq object.
 }
 \details{
-DETAILS
+The plot displays taxa's total abundance (log scale) against their prevalence across samples, with a horizontal reference line at 0.05 prevalence.
 }
 \examples{
 \dontrun{
@@ -35,4 +35,7 @@ if(interactive()){
  #EXAMPLE1
  }
 }
+}
+\seealso{
+\code{\link{getRelAbundanceTab}}
 }

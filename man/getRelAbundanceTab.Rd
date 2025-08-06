@@ -2,21 +2,30 @@
 % Please edit documentation in R/getRelAbundanceTab.R
 \name{getRelAbundanceTab}
 \alias{getRelAbundanceTab}
-\title{FUNCTION_TITLE}
+\title{Get Relative Abundance and Prevalence Table}
 \usage{
 getRelAbundanceTab(phobj)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome count data and taxonomy.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with columns:
+\itemize{
+\item Prevalence: number of samples where taxa is present (count > 0)
+\item TotalAbundance: sum of counts across all samples
+\item Taxonomy columns from the phyloseq object's tax_table
+\item relative_prevalence: prevalence divided by total number of samples
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Calculates prevalence and total abundance of taxa from a phyloseq object and returns a data frame with taxonomy information.
 }
 \details{
-DETAILS
+Prevalence is calculated as the count of samples in which each taxon has a non-zero abundance.
+Total abundance is the sum of counts across all samples.
+Relative prevalence is the proportion of samples where the taxon is present.
+This function works for phyloseq objects with taxa as rows or columns.
 }
 \examples{
 \dontrun{
@@ -26,5 +35,6 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[phyloseq]{otu_table}}, \code{\link[phyloseq]{taxa_sums}}
+\code{\link[phyloseq]{otu_table}},
+\code{\link[phyloseq]{taxa_sums}}
 }

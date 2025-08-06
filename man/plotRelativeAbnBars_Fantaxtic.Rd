@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotRelativeAbnBars_Fantaxtic.R
 \name{plotRelativeAbnBars_Fantaxtic}
 \alias{plotRelativeAbnBars_Fantaxtic}
-\title{FUNCTION_TITLE}
+\title{Barplot of Top Taxa Using fantaxtic}
 \usage{
 plotRelativeAbnBars_Fantaxtic(
   phobj,
@@ -16,30 +16,35 @@ plotRelativeAbnBars_Fantaxtic(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbiome data.}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{variable}{Character string indicating the sample metadata variable used to facet the barplots (e.g., "Condition"). Default: 'Condition'}
 
-\item{topn}{PARAM_DESCRIPTION, Default: 15}
+\item{topn}{Integer indicating the number of top abundant taxa to include in the plot. Remaining taxa are grouped as "Other". Default: 15}
 
-\item{tax_level}{PARAM_DESCRIPTION, Default: 'Genus'}
+\item{tax_level}{Taxonomic level to aggregate by (e.g., "Genus", "Family", etc.). Default: 'Genus'}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'GenusBarplotFx.pdf'}
+\item{outname}{Output file name for saving the plot as a PDF. Default: 'GenusBarplotFx.pdf'}
 
-\item{height}{PARAM_DESCRIPTION, Default: 7}
+\item{height}{Height of the output PDF plot in inches. Default: 7}
 
-\item{width}{PARAM_DESCRIPTION, Default: 12}
+\item{width}{Width of the output PDF plot in inches. Default: 12}
 
-\item{wespalette}{PARAM_DESCRIPTION, Default: 'AsteroidCity1'}
+\item{wespalette}{Name of the Wes Anderson color palette (from \code{wesanderson} package) to use for coloring the taxa. Default: 'AsteroidCity1'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot2} object representing the stacked barplot of relative abundances.
 }
 \description{
-FUNCTION_DESCRIPTION
+Plots a barplot of the top \code{n} most abundant taxa at a given taxonomic level using the \code{fantaxtic} package, optionally grouped by a sample variable and colored with a custom Wes Anderson palette.
 }
 \details{
-DETAILS
+This function uses \code{fantaxtic} to prepare and plot relative abundance data of the top
+taxa across sample groups. The top \code{n} taxa are
+extracted using \code{get_top_taxa}, and "Other" groups all remaining taxa.
+The final barplot is faceted by the \code{variable}, and colored using a selected palette
+from the \code{wesanderson} package. The plot is saved to PDF and also returned as a \code{ggplot}
+object for further manipulation.
 }
 \examples{
 \dontrun{

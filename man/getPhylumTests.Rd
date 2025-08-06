@@ -2,27 +2,27 @@
 % Please edit documentation in R/getPhylumTests.R
 \name{getPhylumTests}
 \alias{getPhylumTests}
-\title{FUNCTION_TITLE}
+\title{Perform Wilcoxon Tests on Phylum Abundances}
 \usage{
 getPhylumTests(phobj, var = "Condition", outname = "phylumTests", paired = F)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbiome data.}
 
-\item{var}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{var}{A character string indicating the sample variable to group by for comparisons. Default: 'Condition'}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'phylumTests'}
+\item{outname}{Output filename for the results table. Default: 'phylumTests'}
 
-\item{paired}{PARAM_DESCRIPTION, Default: F}
+\item{paired}{Logical. Should the test be paired? Default: FALSE}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with Wilcoxon test results for each phylum, including adjusted p-values.
 }
 \description{
-FUNCTION_DESCRIPTION
+Conducts pairwise Wilcoxon rank-sum tests on phylum-level abundance data extracted from a phyloseq object. Returns and saves a table with p-values and adjusted p-values (FDR).
 }
 \details{
-DETAILS
+This function performs non-parametric testing for differential abundance at the phylum level. It uses Wilcoxon rank-sum tests (or signed-rank if \code{paired=TRUE}) and adjusts p-values using the Benjamini-Hochberg method.
 }
 \examples{
 \dontrun{
@@ -32,7 +32,10 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[phyloseq]{tax_glom}}, \code{\link[phyloseq]{taxa_names}}, \code{\link[phyloseq]{tax_table}}, \code{\link[phyloseq]{psmelt}}
+\code{\link[phyloseq]{tax_glom}},
+\code{\link[phyloseq]{taxa_names}},
+\code{\link[phyloseq]{tax_table}},
+\code{\link[phyloseq]{psmelt}}
 \code{\link[dplyr]{group_map}}
 \code{\link[broom]{reexports}}
 }
