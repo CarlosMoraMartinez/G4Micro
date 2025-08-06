@@ -1,19 +1,21 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param dds PARAM_DESCRIPTION
-#' @param nvarname PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Perform Differential Expression for a Numerical Variable Contrast
+#' @description Computes DESeq2 differential expression analysis for a numerical variable contrast and generates multiple shrinkage results.
+#' @param dds A DESeqDataSet object.
+#' @param nvarname A character string with the name of the numerical variable (coefficient) in the design to test.
+#' @param opt A list of options including output directory and log2 fold-change threshold.
+#' @param name A string to prefix output file names.
+#' @return A list containing DESeq2 result objects and their corresponding data frames.
+#' @details This function performs multiple shrinkage approaches using \code{lfcShrink} ("normal", "apeglm", and "ashr") and writes the results to disk.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname getDeseqContrastFromNumerical
-#' @export 
+#' @export
+#' @importFrom DESeq2 results lfcShrink
 getDeseqContrastFromNumerical <- function(dds, nvarname, opt, name){
   res <- results(dds, name = nvarname)
   resLFC <- tryCatch(lfcShrink(dds, coef = nvarname, type="normal", lfcThreshold = log2(opt$fc)),error=\(x)data.frame() ) #apeglm gives weird results

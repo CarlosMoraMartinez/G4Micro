@@ -2,32 +2,38 @@
 % Please edit documentation in R/getDeseqContrastFromCategorical.R
 \name{getDeseqContrastFromCategorical}
 \alias{getDeseqContrastFromCategorical}
-\title{FUNCTION_TITLE}
+\title{Perform Differential Expression for a Categorical Contrast}
 \usage{
 getDeseqContrastFromCategorical(dds, lev_combin, opt, name)
 }
 \arguments{
-\item{dds}{PARAM_DESCRIPTION}
+\item{dds}{A DESeqDataSet object.}
 
-\item{lev_combin}{PARAM_DESCRIPTION}
+\item{lev_combin}{A character vector with 3 elements: the variable name, the reference level, and the test level.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options including output directory and log2 fold-change threshold.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A string to prefix output file names.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing DESeq2 result objects and their corresponding data frames.
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes DESeq2 differential expression analysis for a categorical variable contrast and generates multiple shrinkage results.
 }
 \details{
-DETAILS
+This function performs multiple shrinkage approaches using \code{lfcShrink} ("normal", "apeglm", and "ashr") and writes the results to disk.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Example usage:
+  results <- getDeseqContrastFromCategorical(dds, c("Condition", "Control", "Treated"), opt, "test1")
 }
+}
+}
+\seealso{
+\code{\link[DESeq2]{results}},
+\code{\link[DESeq2]{lfcShrink}},
+\code{\link{defWriteDEAResults}}
 }

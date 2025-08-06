@@ -2,30 +2,34 @@
 % Please edit documentation in R/defWriteMatAsDF.R
 \name{defWriteMatAsDF}
 \alias{defWriteMatAsDF}
-\title{FUNCTION_TITLE}
+\title{Write Matrix as Data Frame and Save as TSV File}
 \usage{
 defWriteMatAsDF(mat, opt, name)
 }
 \arguments{
-\item{mat}{PARAM_DESCRIPTION}
+\item{mat}{A \code{DESeqResults} object, typically returned by \code{DESeq2::results()}, containing differential expression results.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options containing an output directory path in \code{opt$out}.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A character string specifying the output file name.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with the original matrix data and a "gene" column containing row names.
 }
 \description{
-FUNCTION_DESCRIPTION
+Converts a matrix to a data frame with row names as a column, writes it to a TSV file, and returns the data frame.
 }
 \details{
-DETAILS
+This function converts the input matrix to a data frame, adds a "gene" column with the original row names, writes the data frame to a tab-separated file in the specified output directory, and returns the data frame.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ library(DESeq2)
+  # assume dds is a DESeqDataSet already created and DESeq run
+  res <- results(dds)
+  opt <- list(out = tempdir())
+  df <- defWriteMatAsDF(res, opt, "DE_results.tsv")
  }
 }
 }

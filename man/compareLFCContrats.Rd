@@ -2,7 +2,7 @@
 % Please edit documentation in R/compareLFCContrats.R
 \name{compareLFCContrats}
 \alias{compareLFCContrats}
-\title{FUNCTION_TITLE}
+\title{Compare Log Fold Changes Across Multiple Contrasts}
 \usage{
 compareLFCContrats(
   contrastlist,
@@ -21,46 +21,53 @@ compareLFCContrats(
 )
 }
 \arguments{
-\item{contrastlist}{PARAM_DESCRIPTION}
+\item{contrastlist}{A named list of contrast results objects, each containing a data frame with DESeq2 results (e.g. "resdf").}
 
-\item{firstContrast}{PARAM_DESCRIPTION}
+\item{firstContrast}{A DESeq2 contrast results object used as the reference or main contrast.}
 
-\item{contrastNamesOrdered}{PARAM_DESCRIPTION}
+\item{contrastNamesOrdered}{A character vector defining the order of contrast names in the plot.}
 
-\item{mainContrastName}{PARAM_DESCRIPTION}
+\item{mainContrastName}{Character string name for the main contrast (used for labeling).}
 
-\item{plim_select}{PARAM_DESCRIPTION, Default: 1e-06}
+\item{plim_select}{Numeric cutoff for adjusted p-value to select taxa to plot. Default is 1e-06 (in any of the contrasts).}
 
-\item{plim_plot}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim_plot}{Numeric cutoff for adjusted p-value to determine significance coloring in the plot. Default is 0.05.}
 
-\item{name2remove}{PARAM_DESCRIPTION, Default: ''}
+\item{name2remove}{Character string pattern to remove from contrast names in the plot legend. Default is "".}
 
-\item{resdfname}{PARAM_DESCRIPTION, Default: 'resdf'}
+\item{resdfname}{Character string name of the results data frame within each contrast list element. Default is "resdf".}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: './'}
+\item{outdir}{Directory path to save the plot PDF. Default is "./".}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'LFC_compare'}
+\item{name}{Filename prefix for the saved plot PDF. Default is "LFC_compare".}
 
-\item{w}{PARAM_DESCRIPTION, Default: 12}
+\item{w}{Numeric width of the saved plot in inches. Default is 12.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 8}
+\item{h}{Numeric height of the saved plot in inches. Default is 8.}
 
-\item{scale_mode}{PARAM_DESCRIPTION, Default: 'fixed'}
+\item{scale_mode}{Character specifying facet scale mode: "fixed" or "free". Default is "fixed".}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 object representing the comparison barplot.
 }
 \description{
-FUNCTION_DESCRIPTION
+Visualizes and compares log2 fold changes (LFC) from multiple DESeq2 contrast results,
+filtering by significance and ordering taxa for clear comparison.
 }
 \details{
-DETAILS
+The function combines multiple DESeq2 contrast result data frames, filters taxa by adjusted p-value,
+and visualizes log2 fold changes with significance coloring across contrasts.
+Taxa names are cleaned to replace underscores with spaces for better readability.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Example: assuming contrastlist and firstContrast have proper DESeq2 result dfs
+  plot <- compareLFCContrats(contrastlist, firstContrast,
+                            contrastNamesOrdered = c("Contrast1", "Contrast2"),
+                            mainContrastName = "MainContrast")
+  print(plot)
+}
 }
 }
 \seealso{

@@ -2,27 +2,27 @@
 % Please edit documentation in R/getDeseqContrastFromNumerical.R
 \name{getDeseqContrastFromNumerical}
 \alias{getDeseqContrastFromNumerical}
-\title{FUNCTION_TITLE}
+\title{Perform Differential Expression for a Numerical Variable Contrast}
 \usage{
 getDeseqContrastFromNumerical(dds, nvarname, opt, name)
 }
 \arguments{
-\item{dds}{PARAM_DESCRIPTION}
+\item{dds}{A DESeqDataSet object.}
 
-\item{nvarname}{PARAM_DESCRIPTION}
+\item{nvarname}{A character string with the name of the numerical variable (coefficient) in the design to test.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options including output directory and log2 fold-change threshold.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A string to prefix output file names.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing DESeq2 result objects and their corresponding data frames.
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes DESeq2 differential expression analysis for a numerical variable contrast and generates multiple shrinkage results.
 }
 \details{
-DETAILS
+This function performs multiple shrinkage approaches using \code{lfcShrink} ("normal", "apeglm", and "ashr") and writes the results to disk.
 }
 \examples{
 \dontrun{

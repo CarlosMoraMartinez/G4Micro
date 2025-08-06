@@ -1,21 +1,51 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: ''
-#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
-#' @param formula PARAM_DESCRIPTION, Default: NULL
-#' @param doposcounts PARAM_DESCRIPTION, Default: FALSE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Run DESeq2 Differential Abundance Analysis
+#' @description This function prepares and runs DESeq2 differential expression analysis from a `phyloseq` object,
+#' handling design formulas and multiple contrasts.
+#' @param phobj A `phyloseq` object containing count data and sample metadata.
+#' @param opt A list of options including output path (`out`),
+#' filtering thresholds (`mincount`, `minsampleswithcount`, and optionally `minfreq` (which, if specified, overrides `minsampleswithcount`)).
+#' @param name Optional string used as a prefix for output files. Default: ''.
+#' @param variables A character vector with variables to use in the design formula (e.g., conditions to compare). Default: c("Condition").
+#' @param formula A custom formula to override automatic construction from `variables`. Default: NULL.
+#' @param doposcounts Logical; whether to force the use of the `poscounts` normalization method. Default: FALSE.
+#' @return A named list with components:
+#' \itemize{
+#'   \item \code{dds}: DESeq2 object.
+#'   \item \code{raw_counts}, \code{norm_counts}: Raw and normalized count matrices.
+#'   \item \code{res}, \code{resLFC}, \code{resLFC_ape}, \code{resLFC_ashr}: Main DESeq2 results and shrinkage estimates.
+#'   \item \code{resdf}, \code{resdf_ape}, \code{resdf_shr}: Results as data frames.
+#'   \item \code{raw_df}, \code{norm_counts_df}, \code{vst_counts_df}: Count matrices written to files.
+#'   \item \code{vstds}: Variance-stabilized transformed data.
+#'   \item \code{all_contrasts}: List of all contrast results.
+#'   \item \code{all_combos_done}: Logical flag. Indicates whether all the possible contrasts were performed or not.
+#'   \item \code{options}: A list summarizing filtering parameters and whether pseudocounts were used.
+#' }
+#' @details The function supports both categorical and numeric variables.
+#' It automatically generates pairwise contrasts between factor levels or handles numeric
+#' predictors using likelihood ratio tests. If all count rows contain zeros for some samples, `poscounts` normalization
+#' is applied even when the \code{doposcounts} argument is set to \code{FALSE}.
+#' Intermediate and final results are written to files using a naming pattern defined by `name`.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  opt <- list(out="results/", mincount=10, minsampleswithcount=3, minfreq=0.001)
+#'  getDeseqResults(phobj, opt, name="comparison1", variables=c("Treatment"))
 #'  }
 #' }
+#' @seealso
+#'   \code{\link{getDeseqContrastFromNumerical}},
+#'   \code{\link{getDeseqContrastFromCategorical}},
+#'   \code{\link{defWriteMatAsDF}},
+#'   \code{\link[DESeq2]{DESeq}},
+#'   \code{\link[DESeq2]{counts}},
+#'   \code{\link[DESeq2]{results}},
+#'   \code{\link[DESeq2]{resultsNames}},
+#'   \code{\link[DESeq2]{varianceStabilizingTransformation}},
+#'   \code{\link[phyloseq]{phyloseq_to_deseq2}}
 #' @rdname getDeseqResults
-#' @export 
+#' @export
+#' @importFrom phyloseq phyloseq_to_deseq2
+#' @importFrom DESeq2 DESeq counts results resultsNames varianceStabilizingTransformation
 getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), formula=NULL, doposcounts=FALSE){
 
   if(is.null(formula)){

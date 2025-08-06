@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDeseqResults.R
 \name{getDeseqResults}
 \alias{getDeseqResults}
-\title{FUNCTION_TITLE}
+\title{Run DESeq2 Differential Abundance Analysis}
 \usage{
 getDeseqResults(
   phobj,
@@ -14,31 +14,60 @@ getDeseqResults(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing count data and sample metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options including output path (\code{out}),
+filtering thresholds (\code{mincount}, \code{minsampleswithcount}, and optionally \code{minfreq} (which, if specified, overrides \code{minsampleswithcount})).}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{Optional string used as a prefix for output files. Default: ''.}
 
-\item{variables}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{variables}{A character vector with variables to use in the design formula (e.g., conditions to compare). Default: c("Condition").}
 
-\item{formula}{PARAM_DESCRIPTION, Default: NULL}
+\item{formula}{A custom formula to override automatic construction from \code{variables}. Default: NULL.}
 
-\item{doposcounts}{PARAM_DESCRIPTION, Default: FALSE}
+\item{doposcounts}{Logical; whether to force the use of the \code{poscounts} normalization method. Default: FALSE.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list with components:
+\itemize{
+\item \code{dds}: DESeq2 object.
+\item \code{raw_counts}, \code{norm_counts}: Raw and normalized count matrices.
+\item \code{res}, \code{resLFC}, \code{resLFC_ape}, \code{resLFC_ashr}: Main DESeq2 results and shrinkage estimates.
+\item \code{resdf}, \code{resdf_ape}, \code{resdf_shr}: Results as data frames.
+\item \code{raw_df}, \code{norm_counts_df}, \code{vst_counts_df}: Count matrices written to files.
+\item \code{vstds}: Variance-stabilized transformed data.
+\item \code{all_contrasts}: List of all contrast results.
+\item \code{all_combos_done}: Logical flag. Indicates whether all the possible contrasts were performed or not.
+\item \code{options}: A list summarizing filtering parameters and whether pseudocounts were used.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function prepares and runs DESeq2 differential expression analysis from a \code{phyloseq} object,
+handling design formulas and multiple contrasts.
 }
 \details{
-DETAILS
+The function supports both categorical and numeric variables.
+It automatically generates pairwise contrasts between factor levels or handles numeric
+predictors using likelihood ratio tests. If all count rows contain zeros for some samples, \code{poscounts} normalization
+is applied even when the \code{doposcounts} argument is set to \code{FALSE}.
+Intermediate and final results are written to files using a naming pattern defined by \code{name}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ opt <- list(out="results/", mincount=10, minsampleswithcount=3, minfreq=0.001)
+ getDeseqResults(phobj, opt, name="comparison1", variables=c("Treatment"))
  }
 }
+}
+\seealso{
+\code{\link{getDeseqContrastFromNumerical}},
+\code{\link{getDeseqContrastFromCategorical}},
+\code{\link{defWriteMatAsDF}},
+\code{\link[DESeq2]{DESeq}},
+\code{\link[DESeq2]{counts}},
+\code{\link[DESeq2]{results}},
+\code{\link[DESeq2]{resultsNames}},
+\code{\link[DESeq2]{varianceStabilizingTransformation}},
+\code{\link[phyloseq]{phyloseq_to_deseq2}}
 }

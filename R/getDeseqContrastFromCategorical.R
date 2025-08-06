@@ -1,19 +1,26 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param dds PARAM_DESCRIPTION
-#' @param lev_combin PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Perform Differential Expression for a Categorical Contrast
+#' @description Computes DESeq2 differential expression analysis for a categorical variable contrast and generates multiple shrinkage results.
+#' @param dds A DESeqDataSet object.
+#' @param lev_combin A character vector with 3 elements: the variable name, the reference level, and the test level.
+#' @param opt A list of options including output directory and log2 fold-change threshold.
+#' @param name A string to prefix output file names.
+#' @return A list containing DESeq2 result objects and their corresponding data frames.
+#' @details This function performs multiple shrinkage approaches using \code{lfcShrink} ("normal", "apeglm", and "ashr") and writes the results to disk.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Example usage:
+#'   results <- getDeseqContrastFromCategorical(dds, c("Condition", "Control", "Treated"), opt, "test1")
 #' }
+#' }
+#' @seealso
+#'   \code{\link[DESeq2]{results}},
+#'   \code{\link[DESeq2]{lfcShrink}},
+#'   \code{\link{defWriteDEAResults}}
 #' @rdname getDeseqContrastFromCategorical
-#' @export 
+#' @export
+#' @importFrom DESeq2 results lfcShrink
+#' @importFrom stringr str_replace_all
 getDeseqContrastFromCategorical <- function(dds, lev_combin, opt, name){
   contrastvec <- c(lev_combin[1], lev_combin[3], lev_combin[2])
   contrast_name <- paste0(lev_combin[1],'_', lev_combin[3], '_vs_', lev_combin[2]) %>% gsub(" ", ".", .)
