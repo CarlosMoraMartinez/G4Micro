@@ -3,14 +3,14 @@
 #' This function performs PERMANOVA, as implemented in the vegan::adonis2 function,
 #' for all the variables included in the metadata of a phyloseq object,
 #' except for those included in the 'exclude_vars' argument. Based on:
-#' @param phobj Phyloseq Object
-#' @param dist_method Distance method to pass to the phyloseq::distance function, Default: 'bray'
-#' @param seed Random seed, Default: 123
-#' @param exclude_vars PARAM_DESCRIPTION, Default: c("sampleID")
-#' @param outname PARAM_DESCRIPTION, Default: 'permanovas.tsv'
-#' @param disp_permutations PARAM_DESCRIPTION, Default: 1000
-#' @return A DataFrame object with the PERMANOVA results for each variable in the phyloseq object metadata
-#' @references
+#' @param phobj A \code{phyloseq} object containing OTU/ASV table and sample metadata.
+#' @param dist_method Dissimilarity method to use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to \code{\link[phyloseq]{distance}}. Default: 'bray'
+#' @param seed Random seed for reproducibility of adonis2. Default: 123.
+#' @param exclude_vars Character vector of metadata variable names to exclude from PERMANOVA testing. Default: \code{c("sampleID")}.
+#' @param outname File name to write results table to (.tsv). Default: \code{"permanovas.tsv"}.
+#' @param disp_permutations Number of permutations to use in PERMANOVA and dispersion tests. Default: \code{1000}.
+#' @return A \code{data.frame} with PERMANOVA results, optionally including dispersion, capscale test p-values and adjusted p-values (FDR).
+#'@references
 #' From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
 #' @details DETAILS
 #' @examples
@@ -28,7 +28,7 @@
 #' @rdname makePermanova
 #' @export
 #' @importFrom vegan permutest adonis2 betadisper capscale anova.cca
-#' @importFrom phyloseq distance prune_samples
+#' @importFrom phyloseq distance prune_samples sample_data
 #' @importFrom dplyr arrange
 #' @importFrom stringi stri_trans_general
 makePermanova <- function(phobj, dist_method = "bray", seed = 123,

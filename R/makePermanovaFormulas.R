@@ -1,29 +1,51 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param formulas PARAM_DESCRIPTION
-#' @param dist_method PARAM_DESCRIPTION, Default: 'bray'
-#' @param seed PARAM_DESCRIPTION, Default: 123
-#' @param outname PARAM_DESCRIPTION, Default: 'permanovas_mult.tsv'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Run Multiple PERMANOVAs Using Custom Formulas
+#' @description
+#' Applies multiple PERMANOVA tests using a list of formulas on the sample metadata of a phyloseq object.
+#'
+#' @param phobj A \code{phyloseq} object containing OTU/ASV table and sample metadata.
+#' @param formulas A character vector of formulas (e.g., \code{"~ Condition"}, \code{"~ Condition + Time"}).
+#' @param dist_method Dissimilarity method to use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to \code{\link[phyloseq]{distance}}. Default: "bray".
+#' @param seed Random seed for reproducibility of adonis2. Default: 123.
+#' @param outname File name to save the summary table as a TSV file. Default: "permanovas_mult.tsv".
+#'
+#' @return A list with two elements:
+#' \itemize{
+#'   \item \code{res}: A data frame with PERMANOVA results (including p-values and adjusted p-values).
+#'   \item \code{modelos}: A named list of \code{adonis2} model objects for each formula.
+#' }
+#'
+#' @details
+#' This function runs PERMANOVA tests using the \code{adonis2} function from \pkg{vegan}.
+#' Sample metadata column names are normalized by removing accents and replacing spaces with underscores.
+#' A summary table of results is saved as a TSV file. P-values are adjusted using the Benjamini-Hochberg method.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  library(phyloseq)
+#'   data(GlobalPatterns)
+#'   makePermanovaFormulas(GlobalPatterns,
+#'                          formulas = c("~ SampleType", "~ SampleType + Country"))
 #'  }
 #' }
-#' @seealso 
-#'  \code{\link[phyloseq]{distance}}
-#'  \code{\link[dplyr]{arrange}}
+#' @seealso
+#'  \code{\link[phyloseq]{distance}},
+#'  \code{\link[vegan]{adonis2}},
+#'  \code{\link[dplyr]{arrange}},
+#'  \code{\link[stringi]{stri_trans_general}},
+#'  \code{\link[readr]{write_tsv}},
+#'  \code{\link[stats]{p.adjust}}
+#'  \code{\link{adonis2table}}
+#'
 #' @rdname makePermanovaFormulas
-#' @export 
+#' @export
 #' @importFrom phyloseq distance
 #' @importFrom dplyr arrange
+#' @importFrom stringi stri_trans_general
+#' @importFrom vegan adonis2
 makePermanovaFormulas <- function(phobj, formulas, dist_method = "bray", seed = 123,
                                   outname = "permanovas_mult.tsv"){
   ## From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
-  library(stringi)
 
   meta <- sample_data(phobj)
   braydist <- phyloseq::distance(phobj, method = dist_method)

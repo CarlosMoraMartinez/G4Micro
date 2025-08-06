@@ -2,7 +2,7 @@
 % Please edit documentation in R/makePermanovaFormulas.R
 \name{makePermanovaFormulas}
 \alias{makePermanovaFormulas}
-\title{FUNCTION_TITLE}
+\title{Run Multiple PERMANOVAs Using Custom Formulas}
 \usage{
 makePermanovaFormulas(
   phobj,
@@ -13,33 +13,47 @@ makePermanovaFormulas(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing OTU/ASV table and sample metadata.}
 
-\item{formulas}{PARAM_DESCRIPTION}
+\item{formulas}{A character vector of formulas (e.g., \code{"~ Condition"}, \code{"~ Condition + Time"}).}
 
-\item{dist_method}{PARAM_DESCRIPTION, Default: 'bray'}
+\item{dist_method}{Dissimilarity method to use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to \code{\link[phyloseq]{distance}}. Default: "bray".}
 
-\item{seed}{PARAM_DESCRIPTION, Default: 123}
+\item{seed}{Random seed for reproducibility of adonis2. Default: 123.}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'permanovas_mult.tsv'}
+\item{outname}{File name to save the summary table as a TSV file. Default: "permanovas_mult.tsv".}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\itemize{
+\item \code{res}: A data frame with PERMANOVA results (including p-values and adjusted p-values).
+\item \code{modelos}: A named list of \code{adonis2} model objects for each formula.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Applies multiple PERMANOVA tests using a list of formulas on the sample metadata of a phyloseq object.
 }
 \details{
-DETAILS
+This function runs PERMANOVA tests using the \code{adonis2} function from \pkg{vegan}.
+Sample metadata column names are normalized by removing accents and replacing spaces with underscores.
+A summary table of results is saved as a TSV file. P-values are adjusted using the Benjamini-Hochberg method.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ library(phyloseq)
+  data(GlobalPatterns)
+  makePermanovaFormulas(GlobalPatterns,
+                         formulas = c("~ SampleType", "~ SampleType + Country"))
  }
 }
 }
 \seealso{
-\code{\link[phyloseq]{distance}}
-\code{\link[dplyr]{arrange}}
+\code{\link[phyloseq]{distance}},
+\code{\link[vegan]{adonis2}},
+\code{\link[dplyr]{arrange}},
+\code{\link[stringi]{stri_trans_general}},
+\code{\link[readr]{write_tsv}},
+\code{\link[stats]{p.adjust}}
+\code{\link{adonis2table}}
 }

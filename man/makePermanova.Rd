@@ -14,20 +14,20 @@ makePermanova(
 )
 }
 \arguments{
-\item{phobj}{Phyloseq Object}
+\item{phobj}{A \code{phyloseq} object containing OTU/ASV table and sample metadata.}
 
-\item{dist_method}{Distance method to pass to the phyloseq::distance function, Default: 'bray'}
+\item{dist_method}{Dissimilarity method to use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to \code{\link[phyloseq]{distance}}. Default: 'bray'}
 
-\item{seed}{Random seed, Default: 123}
+\item{seed}{Random seed for reproducibility of adonis2. Default: 123.}
 
-\item{exclude_vars}{PARAM_DESCRIPTION, Default: c("sampleID")}
+\item{exclude_vars}{Character vector of metadata variable names to exclude from PERMANOVA testing. Default: \code{c("sampleID")}.}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'permanovas.tsv'}
+\item{outname}{File name to write results table to (.tsv). Default: \code{"permanovas.tsv"}.}
 
-\item{disp_permutations}{PARAM_DESCRIPTION, Default: 1000}
+\item{disp_permutations}{Number of permutations to use in PERMANOVA and dispersion tests. Default: \code{1000}.}
 }
 \value{
-A DataFrame object with the PERMANOVA results for each variable in the phyloseq object metadata
+A \code{data.frame} with PERMANOVA results, optionally including dispersion, capscale test p-values and adjusted p-values (FDR).
 }
 \description{
 This function performs PERMANOVA, as implemented in the vegan::adonis2 function,

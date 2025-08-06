@@ -2,32 +2,52 @@
 % Please edit documentation in R/adonis2table.R
 \name{adonis2table}
 \alias{adonis2table}
-\title{FUNCTION_TITLE}
+\title{Format PERMANOVA and Dispersion Results into a Summary Table}
 \usage{
 adonis2table(mod1, perm_disp = NULL, ancap = NULL, var = "")
 }
 \arguments{
-\item{mod1}{PARAM_DESCRIPTION}
+\item{mod1}{A result object from \code{\link[vegan]{adonis2}}.}
 
-\item{perm_disp}{PARAM_DESCRIPTION, Default: NULL}
+\item{perm_disp}{(Optional) A result object from \code{\link[vegan]{permutest}} applied to a \code{\link[vegan]{betadisper}} model. Default: \code{NULL}}
 
-\item{ancap}{PARAM_DESCRIPTION, Default: NULL}
+\item{ancap}{(Optional) A result object from \code{\link[vegan]{anova.cca}} applied to a \code{\link[vegan]{capscale}} model. Default: \code{NULL}}
 
-\item{var}{PARAM_DESCRIPTION, Default: ''}
+\item{var}{A string representing the name of the variable tested. Default: \code{""}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{data.frame} with the following columns:
+\itemize{
+\item \code{variable}: Name of the tested variable
+\item \code{DF_var}, \code{DF_Residual}, \code{DF_Total}: Degrees of freedom
+\item \code{SumOfSQs_var}, \code{SumOfSQs_Residual}, \code{SumOfSQs_Total}: Sum of squares
+\item \code{R2_var}, \code{R2_Residual}, \code{R2_Total}: R-squared values
+\item \code{F_statistic}, \code{P}: PERMANOVA F and p-values
+\item \code{perm_disp_F}, \code{perm_disp_P}, \code{perm_disp_npermuts}: Dispersion test results (if provided)
+\item \code{capscaleanopva_F}, \code{capscaleanova_P}: CAP scale ANOVA results (if provided)
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function takes the output of \code{\link[vegan]{adonis2}}, and optionally
+the results from \code{\link[vegan]{permutest}} on \code{\link[vegan]{betadisper}}
+and \code{\link[vegan]{anova.cca}} on \code{\link[vegan]{capscale}}, to return a
+summary table with relevant statistics for each tested variable.
+
+It is designed to support automated PERMANOVA workflows across multiple variables.
 }
 \details{
-DETAILS
+This function is typically used inside a loop that runs PERMANOVA tests
+across multiple metadata variables, to format and consolidate results for reporting.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+  data("GlobalPatterns", package = "phyloseq")
+  GP <- GlobalPatterns
+  dist <- phyloseq::distance(GP, method = "bray")
+  meta <- as.data.frame(sample_data(GP))
+  mod <- vegan::adonis2(dist ~ SampleType, data = meta)
+  adonis2table(mod, var = "SampleType")
  }
 }
 }
