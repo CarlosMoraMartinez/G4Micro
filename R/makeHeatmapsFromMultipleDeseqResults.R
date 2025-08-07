@@ -1,23 +1,41 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param deseq_results_list PARAM_DESCRIPTION
-#' @param daa_main PARAM_DESCRIPTION
-#' @param main_name PARAM_DESCRIPTION
-#' @param vars2plot PARAM_DESCRIPTION
-#' @param italics_rownames PARAM_DESCRIPTION, Default: T
-#' @param pfilt PARAM_DESCRIPTION, Default: 0.05
-#' @param pplot PARAM_DESCRIPTION, Default: 0.05
-#' @param name PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param w PARAM_DESCRIPTION, Default: 5
-#' @param h PARAM_DESCRIPTION, Default: 4
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title Generate Heatmaps from Multiple DESeq2 Results
+#' @description Creates heatmaps visualizing significance levels (-10*log10 p-values and adjusted p-values)
+#' across multiple differential abundance analysis (DAA) results, combining results from multiple contrasts.
+#' Saves merged DAA tables and heatmaps to specified output directory.
+#' @param deseq_results_list A named list of data frames, each containing DESeq2 results for a different variable/contrast.
+#' @param daa_main A data frame containing the main DESeq2 results to highlight.
+#' @param main_name Character. The name/key in the list to assign to the main DESeq2 results.
+#' @param vars2plot Character vector of variable names indicating which DESeq2 results in the list to include in the heatmaps.
+#' @param italics_rownames Logical, default TRUE. Whether to display row names (taxa) in italics on the heatmap.
+#' @param pfilt Numeric, default 0.05. P-value cutoff for filtering taxa to display in the heatmaps.
+#' @param pplot Numeric, default 0.05. P-value cutoff threshold above which p-values are replaced with NA for visualization.
+#' @param name Character. Base name used for output files.
+#' @param outdir Character. Output directory path where results and heatmaps will be saved.
+#' @param w Numeric, default 5. Base width (in inches) of the output heatmap PDF.
+#' @param h Numeric, default 4. Base height (in inches) of the output heatmap PDF.
+#' @return None. The function saves heatmaps as PDF files and writes a merged DAA results TSV file.
+#' @details
+#' This function merges multiple DESeq2 results data frames by taxa, transforms p-values for visualization,
+#' filters taxa by significance, and generates heatmaps showing p-values and adjusted p-values across contrasts.
+#' Row names can be displayed in italics for better readability of taxon names.
+#' Heatmaps are saved as PDF files with dynamically adjusted dimensions based on matrix size.
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Assume deseq_list is a named list of DESeq2 results,
+#'   # daa_main is a main DESeq2 result data.frame,
+#'   # vars_to_plot is a vector of contrasts to include
+#'   makeHeatmapsFromMultipleDeseqResults(
+#'     deseq_results_list = deseq_list,
+#'     daa_main = daa_main,
+#'     main_name = "main_contrast",
+#'     vars2plot = vars_to_plot,
+#'     name = "output_heatmaps",
+#'     outdir = "results/",
+#'     pfilt = 0.05,
+#'     pplot = 0.01
+#'   )
+#' }
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
@@ -25,6 +43,12 @@
 #' @export
 #' @importFrom pheatmap pheatmap
 #' @importFrom dplyr mutate select
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom tidyr pivot_wider
+#' @importFrom readr write_tsv
+#' @importFrom purrr map
+#' @importFrom stringr str_replace
+#' @importFrom stats setNames
 makeHeatmapsFromMultipleDeseqResults <- function(deseq_results_list,
                                                  daa_main,
                                                  main_name,

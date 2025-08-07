@@ -2,39 +2,56 @@
 % Please edit documentation in R/makeAllPCAs.R
 \name{makeAllPCAs}
 \alias{makeAllPCAs}
-\title{FUNCTION_TITLE}
+\title{Generate and Save Multiple PCA Plots}
 \usage{
 makeAllPCAs(phobj, counts_df, genes, vars2pca, opt, name = "PCAs")
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing sample metadata and the OTU table.}
 
-\item{counts_df}{PARAM_DESCRIPTION}
+\item{counts_df}{A data frame or matrix with normalized counts (e.g., variance-stabilized or log-transformed counts).}
 
-\item{genes}{PARAM_DESCRIPTION}
+\item{genes}{A vector of gene/taxa names, corresponding to rownames of \code{counts_df} to include in the PCA.}
 
-\item{vars2pca}{PARAM_DESCRIPTION}
+\item{vars2pca}{A character vector with the names of metadata variables to use for PCA visualization (e.g., treatment groups, batches).}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing an \code{out} element, which specifies the output directory path.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'PCAs'}
+\item{name}{A character string to use as the output file name prefix, Default: 'PCAs'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list of PCA plot objects (one per variable in \code{vars2pca}). Also writes \code{.RData}, \code{.tsv}, and \code{.pdf} files to disk.
 }
 \description{
-FUNCTION_DESCRIPTION
+This function computes and saves PCA plots for a set of specified metadata variables, using count data and gene selection. It also exports PCA components and rotations.
 }
 \details{
-DETAILS
+This function uses the sample metadata and the normalized count matrix to compute PCA and generate plots colored by metadata variables.
+It also appends a log10 transformed total read count (\code{reads_log10_current}) to the metadata and includes it in the PCA plot list, to visually check for depth biases.
+
+PCA computation and plotting are delegated to a helper function \code{plotPCA}, which must return a list with components \verb{$pca} (containing the PCA object) and \verb{$plots} (a ggplot2 object).
+If plotting fails for a specific variable, a fallback null plot is generated using \code{getNullPlot}.
+
+Outputs:
+\itemize{
+\item A PDF with all PCA plots.
+\item A \code{.RData} file with all PCA objects.
+\item TSV tables with PCA coordinates and rotations for the first variable.
+}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  pcas <- makeAllPCAs(phobj, counts_df, genes, vars2pca = c("group", "sex"), opt = list(out = "results/"))
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{mutate}},
+\code{\link[phyloseq]{sample_data}},
+\code{\link[phyloseq]{otu_table}},
+\code{\link[readr]{write_tsv}},
+\code{\link[stats]{prcomp}},
+\code{\link{plotPCA}},
+\code{\link{getNullPlot}}
 }

@@ -2,37 +2,50 @@
 % Please edit documentation in R/makeKmeans.R
 \name{makeKmeans}
 \alias{makeKmeans}
-\title{FUNCTION_TITLE}
+\title{K-means Clustering with Confusion Matrix Evaluation}
 \usage{
 makeKmeans(datasc, levs, varnames, SEED = 123, folds = c())
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the dataset. Must include a factor column \code{class} with true class labels, and \code{sample}.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector specifying the class levels (clusters) to identify; determines number of clusters and factor levels.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector of column names in \code{datasc} to use as features for clustering.}
 
-\item{SEED}{PARAM_DESCRIPTION, Default: 123}
+\item{SEED}{An integer seed for reproducibility of clustering results. Default is 123.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{Currently not used in the function; reserved for compatibility. Default is an empty vector.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\describe{
+\item{confmat_no_l1o}{Confusion matrix comparing K-means cluster assignments to true class labels.}
+\item{mod}{The fitted \code{kmeans} clustering model object.}
+\item{predicted}{Factor vector of cluster assignments labeled by class levels.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs K-means clustering on the given dataset using specified variables,
+then evaluates cluster assignments against true class labels via a confusion matrix.
 }
 \details{
-DETAILS
+The function performs K-means clustering with the number of clusters equal to the number of class levels.
+The cluster labels are mapped to the factor levels of the true classes to generate a confusion matrix.
+Note that cluster labels are arbitrary and may not correspond to actual class labels in order.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  data(iris)
+  iris$class <- factor(ifelse(iris$Species == "setosa", "A", "B"))
+  iris$sample <- 1:nrow(iris)
+  result <- makeKmeans(iris, levs=c("A", "B"), varnames=colnames(iris)[1:4])
+  print(result$confmat_no_l1o)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
+\code{\link[stats]{kmeans}}, \code{\link[caret]{confusionMatrix}}, \code{\link[dplyr]{select}}
 }

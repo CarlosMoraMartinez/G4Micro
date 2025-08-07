@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeLinePlotComparingSamePhobjModels.R
 \name{makeLinePlotComparingSamePhobjModels}
 \alias{makeLinePlotComparingSamePhobjModels}
-\title{FUNCTION_TITLE}
+\title{Compare Model Accuracies from Several Feature Selection Strategies}
 \usage{
 makeLinePlotComparingSamePhobjModels(
   phname,
@@ -22,42 +22,57 @@ makeLinePlotComparingSamePhobjModels(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Name of the phyloseq object (used to subset the \code{all_model_results} list)}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{A named list of model results, containing sublists for different feature selection strategies
+(e.g., 'padj_taxa_res' and 'praw_taxa_res'), each with a \code{modummary} data frame.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing output options, specifically \code{opt$out} for the output directory path.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 8}
+\item{w}{Width of output PDF file, in inches. Default: 8}
 
-\item{h}{PARAM_DESCRIPTION, Default: 12}
+\item{h}{Height of output PDF file, in inches. Default: 12}
 
-\item{get_pcnames_from}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{get_pcnames_from}{Name of the feature selection strategy to extract variable names and model summary from. Default is \code{"padj_taxa_res"}.}
 
-\item{plot_extra}{PARAM_DESCRIPTION, Default: FALSE}
+\item{plot_extra}{Whether to include additional models (e.g., LinDA) in the comparison plots. Default is \code{FALSE}.}
 
-\item{plot_indiv}{PARAM_DESCRIPTION, Default: TRUE}
+\item{plot_indiv}{Whether to include individual species models in the comparison. Default is \code{TRUE}.}
 
-\item{plot_normal_with_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{plot_normal_with_smote}{Whether to also plot SMOTE-enhanced models for comparison. Default is \code{FALSE}.}
 
-\item{filter_out}{PARAM_DESCRIPTION, Default: c("Ensemble2")}
+\item{filter_out}{Vector of model names to exclude from plots (e.g., "Ensemble2"). Default is \code{c("Ensemble2")}.}
 
-\item{order_by_measure}{PARAM_DESCRIPTION, Default: 'Accuracy_l1out'}
+\item{order_by_measure}{The metric used to order models and selection strategies (e.g., \code{"Accuracy_l1out"}). Default is \code{"Accuracy_l1out"}.}
 
-\item{from_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{from_smote}{Whether the models being processed are already from SMOTE-based selection. Adjusts which object names are used. Default is \code{FALSE}.}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{String prefix used for naming the output folder and files. Default is empty string \code{""}.}
 
-\item{sel_method_name}{PARAM_DESCRIPTION, Default: 'PCA DESeq'}
+\item{sel_method_name}{Label to assign to the main selection strategy (used in plots). Default is \code{"PCA DESeq"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+This function saves multiple PDF files with comparison plots of model metrics, as well as a TSV file
+summarizing the combined model results. It returns no R object.
 }
 \description{
-FUNCTION_DESCRIPTION
+This function compares model performance across two feature selection strategies, each performed on features selected from different phyloseq objects.
+(e.g., padj-selected and raw p-value-selected taxa). It extracts accuracy results from model summaries,
+merges them, and generates a faceted line plot comparing model performances for each group.
+The resulting data and figure are saved to disk.
 }
 \details{
-DETAILS
+This function is useful when comparing different sets of selected features on the same dataset,
+especially when assessing feature selection strategies such as raw vs. adjusted p-value filters.
+It supports optional inclusion of LinDA-based selections and SMOTE-augmented models.
+
+The following plots are generated and saved:
+\itemize{
+\item Bar plots of Accuracy across models.
+\item Line plots for Accuracy, Sensitivity, Specificity, Kappa, Balanced Accuracy, and AUC.
+\item Several combined panels in different layout configurations (e.g., 2- or 4-panel plots).
+}
+All files are written to a subfolder named based on \code{phname} and \code{name} in the output directory.
 }
 \examples{
 \dontrun{

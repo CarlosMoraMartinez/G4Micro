@@ -89,6 +89,7 @@ Imports:
     readxl,
     reticulate,
     rjson,
+    rlang,
     scales,
     scico,
     scImpute,

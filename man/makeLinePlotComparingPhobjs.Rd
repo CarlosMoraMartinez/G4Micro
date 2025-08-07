@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeLinePlotComparingPhobjs.R
 \name{makeLinePlotComparingPhobjs}
 \alias{makeLinePlotComparingPhobjs}
-\title{FUNCTION_TITLE}
+\title{Compare Model Accuracies from Two Feature Selection Strategies Across Phyloseq Objects}
 \usage{
 makeLinePlotComparingPhobjs(
   all_model_results,
@@ -12,22 +12,26 @@ makeLinePlotComparingPhobjs(
 )
 }
 \arguments{
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{A named list of model results, each containing sublists for different feature selection strategies
+(e.g., 'padj_taxa_res' and 'praw_taxa_res'), each with a \code{modummary} data frame.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing output options, specifically \code{opt$out} for the output directory path.}
 
-\item{models_name1}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{models_name1}{Character string specifying the name of the first model result type to compare (typically adjusted p-value taxa), Default: 'padj_taxa_res'}
 
-\item{models_name2}{PARAM_DESCRIPTION, Default: 'praw_taxa_res'}
+\item{models_name2}{Character string specifying the name of the second model result type to compare (typically raw p-value taxa), Default: 'praw_taxa_res'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot object containing the faceted accuracy comparison line plot.
 }
 \description{
-FUNCTION_DESCRIPTION
+This function compares model performance across two feature selection strategies, each performed on features selected from different phyloseq objects.
+(e.g., padj-selected and raw p-value-selected taxa). It extracts accuracy results from model summaries,
+merges them, and generates a faceted line plot comparing model performances for each group.
+The resulting data and figure are saved to disk.
 }
 \details{
-DETAILS
+This function assumes that each element in \code{all_model_results} contains two elements named by \code{models_name1} and \code{models_name2}, each of which includes a \code{modummary} data frame with at least the columns \code{model} and \code{Accuracy_l1out}. The plot compares accuracies for each selection method (padj vs raw) across input data sets and models.
 }
 \examples{
 \dontrun{

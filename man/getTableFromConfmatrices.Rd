@@ -2,21 +2,23 @@
 % Please edit documentation in R/getTableFromConfmatrices.R
 \name{getTableFromConfmatrices}
 \alias{getTableFromConfmatrices}
-\title{FUNCTION_TITLE}
+\title{Extract Classification Metrics from Model List}
 \usage{
 getTableFromConfmatrices(modlist)
 }
 \arguments{
-\item{modlist}{PARAM_DESCRIPTION}
+\item{modlist}{A named list of models as returned by the training and evaluation pipeline. Each model must contain the confusion matrices (\code{confmat} for cross-validated results and \code{confmat_no_l1o} for non-cross-validated results) and optionally the ROC AUC (\code{roc_auc}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame containing performance metrics (Accuracy, Kappa, AUC, Sensitivity, Specificity, etc.) for each model, both with and without cross-validation.
 }
 \description{
-FUNCTION_DESCRIPTION
+Takes a list of trained classification models and extracts key evaluation metrics
+(e.g., Accuracy, Kappa, AUC, Precision, Recall, etc.) from their confusion matrices and ROC AUC results.
+It summarizes them in a tidy data frame for easy comparison.
 }
 \details{
-DETAILS
+This function extracts evaluation metrics from a list of classification model objects and returns a summary table. Each model in the list must include confusion matrix results (both with cross-validation and without), as well as ROC AUC values, if available. This is typically used after performing K-fold cross-validation (not limited to leave-one-out) on classification models. The function requires that each element of the list is named and that all model results are structured consistently.
 }
 \examples{
 \dontrun{

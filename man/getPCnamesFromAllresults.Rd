@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPCnamesFromAllresults.R
 \name{getPCnamesFromAllresults}
 \alias{getPCnamesFromAllresults}
-\title{FUNCTION_TITLE}
+\title{Generate Named Principal Component Labels with Explained Variance Percentages}
 \usage{
 getPCnamesFromAllresults(
   phname,
@@ -13,24 +13,32 @@ getPCnamesFromAllresults(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Character. Name of the phyloseq object or dataset key to extract results from.}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{Nested list containing all model and PCA results organized by phyloseq object names and condition names.}
 
-\item{get_pcnames_from}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{get_pcnames_from}{Character. Name of the list element containing the PC names to extract. Default is \code{"padj_taxa_res"}.}
 
-\item{pca_name}{PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'}
+\item{pca_name}{Character. Name of the list element containing PCA objects with variance summaries. Default is \code{"padj_taxa_pcas"}.}
 
-\item{varname}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{varname}{Character. Variable name inside the PCA list to use for accessing the PCA object. Default is \code{"Condition"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+Named character vector of PC names, where each name is appended with the percentage of variance explained in parentheses.
 }
 \description{
-FUNCTION_DESCRIPTION
+Extracts principal component (PC) names and attaches the percentage of variance explained
+by each PC based on PCA results stored within a nested results list.
+
+This function is useful for labeling PCs in plots or tables with their variance contribution.
 }
 \details{
-DETAILS
+The function accesses the PC names stored in \code{all_model_results[[phname]][[get_pcnames_from]]$varnames} and
+the PCA importance (variance explained) summary stored in
+\code{all_model_results[[phname]][[pca_name]][[varname]]$pca}. It calculates the percentage of variance explained
+by each PC and appends this to the PC name to generate labels like "PC1 (45.2\%)".
+
+These labeled PCs can be used to annotate plots or tables for easier interpretation of PCA results.
 }
 \examples{
 \dontrun{

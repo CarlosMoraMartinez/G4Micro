@@ -1,19 +1,26 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param modlist PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Extract Classification Metrics from Model List
+#' @description Takes a list of trained classification models and extracts key evaluation metrics
+#' (e.g., Accuracy, Kappa, AUC, Precision, Recall, etc.) from their confusion matrices and ROC AUC results.
+#' It summarizes them in a tidy data frame for easy comparison.
+#'
+#' @param modlist A named list of models as returned by the training and evaluation pipeline. Each model must contain the confusion matrices (`confmat` for cross-validated results and `confmat_no_l1o` for non-cross-validated results) and optionally the ROC AUC (`roc_auc`).
+#'
+#' @return A data frame containing performance metrics (Accuracy, Kappa, AUC, Sensitivity, Specificity, etc.) for each model, both with and without cross-validation.
+#'
+#' @details This function extracts evaluation metrics from a list of classification model objects and returns a summary table. Each model in the list must include confusion matrix results (both with cross-validation and without), as well as ROC AUC values, if available. This is typically used after performing K-fold cross-validation (not limited to leave-one-out) on classification models. The function requires that each element of the list is named and that all model results are structured consistently.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
 #' @rdname getTableFromConfmatrices
-#' @export 
+#' @export
 #' @importFrom dplyr mutate select
+#' @importFrom caret confusionMatrix
 getTableFromConfmatrices <- function(modlist){
   res <- map(modlist, \(mod){
     data.frame(

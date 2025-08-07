@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotAllModelPredictions.R
 \name{plotAllModelPredictions}
 \alias{plotAllModelPredictions}
-\title{FUNCTION_TITLE}
+\title{Plot All Model Predictions on PCA Components for a Phenotype}
 \usage{
 plotAllModelPredictions(
   phname,
@@ -17,32 +17,46 @@ plotAllModelPredictions(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Character. Name of the phenotype or dataset subset to analyze.}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{List. Nested list containing PCA results, model predictions, and metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{List. Options list containing at least the output directory path as \code{opt$out}.}
 
-\item{get_pcnames_from}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{get_pcnames_from}{Character. Name of the sublist in \code{all_model_results} to get PCA variable names and models from. Default is "padj_taxa_res".}
 
-\item{pca_name}{PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'}
+\item{pca_name}{Character. Name of the PCA results list in \code{all_model_results}. Default is "padj_taxa_pcas".}
 
-\item{varname}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{varname}{Character. Name of the metadata variable to use for grouping/condition. Default is "Condition".}
 
-\item{w}{PARAM_DESCRIPTION, Default: 16}
+\item{w}{Numeric. Width of the saved combined plot PDF in inches. Default is 16.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 16}
+\item{h}{Numeric. Height of the saved combined plot PDF in inches. Default is 16.}
 
-\item{pred_mode}{PARAM_DESCRIPTION, Default: 'l1o'}
+\item{pred_mode}{Character. Prediction mode to use: "l1o" (leave-one-out) or other mode. Default is "l1o".}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\item{cw}{A \code{ggplot} object representing the combined grid of all model prediction plots.}
+\item{plots}{A named list of individual \code{ggplot} objects or empty lists (if a plot failed).}
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates and saves combined plots of predictions from multiple models
+for a given phenotype/dataset over PCA components.
+The models are ordered by accuracy and plotted using \code{plotPrediction}.
+The combined plot is saved as a PDF.
 }
 \details{
-DETAILS
+The function:
+\itemize{
+\item Creates an output directory if it does not exist.
+\item Extracts all model names and orders them by their accuracy.
+\item Calls \code{plotPrediction} for each model, safely capturing errors.
+\item Combines successful plots into a grid using \code{cowplot::plot_grid}.
+\item Saves the combined plot as a PDF file.
+\item Returns the combined plot object and the list of individual plots.
+}
+If no plots are successfully generated, a message is printed instead.
 }
 \examples{
 \dontrun{
@@ -53,4 +67,5 @@ if(interactive()){
 }
 \seealso{
 \code{\link[cowplot]{plot_grid}}
+\code{\link{plotPrediction}}
 }

@@ -1,35 +1,58 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param all_pcas PARAM_DESCRIPTION
-#' @param PCs PARAM_DESCRIPTION
-#' @param modelo_svm PARAM_DESCRIPTION
-#' @param vstdf PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @param vars2pca PARAM_DESCRIPTION, Default: c("Condition")
-#' @param metadata PARAM_DESCRIPTION
-#' @param daares PARAM_DESCRIPTION
-#' @param topns PARAM_DESCRIPTION, Default: c(5, 10, 20)
-#' @param variable_plim PARAM_DESCRIPTION, Default: 0.01
-#' @param meta_vars PARAM_DESCRIPTION, Default: c()
-#' @param nfolds PARAM_DESCRIPTION, Default: 0
-#' @param xgboost_params PARAM_DESCRIPTION, Default: xgboost_params
-#' @param catboost_params PARAM_DESCRIPTION, Default: catboost_params
-#' @param randomforest_params PARAM_DESCRIPTION, Default: randomforest_params
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Train models using selected PCA rotations and DA results
+#' @description
+#' This function selects important taxa from PCA loadings and differential abundance results (e.g., DESeq2),
+#' and trains predictive models (XGBoost, CatBoost, Random Forest, optionally with SMOTE) using subsets
+#' of features. It supports general K-fold cross-validation.
+#'
+#' The input data must contain a column named `'sample'` to match sample-level metadata.
+#'
+#' @param all_pcas A list of PCA results, each with an entry `$pca` (result from `prcomp`).
+#' @param PCs Vector with the two principal components to use for ranking taxa (e.g., c(1,2)).
+#' @param modelo_svm SVM model trained on PCA-transformed data; used to compute class separation direction.
+#' @param vstdf Data frame with variance-stabilized abundance data. Must contain a column named `gene`.
+#' @param name Character name used as prefix for saved model names.
+#' @param vars2pca Character vector of variable names from metadata used to train models. Default: `"Condition"`.
+#' @param metadata Data frame with sample-level metadata. Must contain a `sampleID` column.
+#' @param daares Data frame with differential abundance results. Must contain columns `taxon` and `padj`.
+#' @param topns Numeric vector of how many top-ranked taxa to use for model training. Default: c(5, 10, 20).
+#' @param variable_plim Numeric threshold for filtering variables by p-value. Default: 0.01.
+#' @param meta_vars Character vector of additional metadata variables to include in modeling. Default: empty.
+#' @param nfolds Number of folds to use for cross-validation. Use `nfolds = 0` for no cross-validation. Default: 0.
+#' @param xgboost_params List of parameters for XGBoost training. Default: `xgboost_params_default`.
+#'   A typical default might be:
+#'   ```
+#'   list(
+#'     learning_rate = 0.3, max_depth = 2, nrounds = 30, min_child_weight = 1,
+#'     subsample = 1, colsample_bytree = 0.6, reg_lambda = 1, reg_alpha = 0,
+#'     nthread = 1, objective = "multi:softprob", num_class = 4, balance_weights = TRUE
+#'   )
+#'   ```
+#' @param catboost_params List of parameters for CatBoost training. Default: `catboost_params_default`.
+#' @param randomforest_params List of parameters for Random Forest training. Default: `randomforest_params_default`.
+#' @param do_smote Logical, whether to apply SMOTE for class balancing before training. Default: FALSE.
+#' @param smote_params List with SMOTE configuration. Default: `smote_params_default`.
+#'
+#' @return A list with:
+#' \itemize{
+#'   \item `fullresults`: A named list of model objects for each (score, topn) combination.
+#'   \item `allmodsum`: A summary data frame of model performances and used taxa.
+#' }
+#'
+#' @details
+#' Taxa are ranked based on their contribution to PCA components and optionally the direction of the SVM decision boundary.
+#' Models are trained on top-N taxa using different scoring strategies.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
 #' @rdname callDoAllModelsFromALLPCAsOriginalVars
-#' @export 
+#' @export
 #' @importFrom dplyr select mutate filter
 callDoAllModelsFromALLPCAsOriginalVars <- function(all_pcas, PCs, modelo_svm, vstdf,
                                                    name, vars2pca=c("Condition"), metadata,
@@ -37,11 +60,11 @@ callDoAllModelsFromALLPCAsOriginalVars <- function(all_pcas, PCs, modelo_svm, vs
                                                    variable_plim=0.01,
                                                    meta_vars = c() ,
                                                    nfolds = 0,
-                                                   xgboost_params = xgboost_params,
-                                                   catboost_params = catboost_params,
-                                                   randomforest_params = randomforest_params,
+                                                   xgboost_params = xgboost_params_default,
+                                                   catboost_params = catboost_params_default,
+                                                   randomforest_params = randomforest_params_default,
                                                    do_smote=FALSE,
-                                                   smote_params=list(K=5, dup_size="balance")){
+                                                   smote_params=smote_params_default){
 
   pcts <- summary(all_pcas[[1]]$pca)$importance[2, PCs]
   pcslope <- pcts[1]/pcts[2]

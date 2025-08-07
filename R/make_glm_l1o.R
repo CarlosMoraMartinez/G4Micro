@@ -1,27 +1,53 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param datasc PARAM_DESCRIPTION
-#' @param levs PARAM_DESCRIPTION
-#' @param varnames PARAM_DESCRIPTION
-#' @param folds PARAM_DESCRIPTION, Default: c()
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Generalized GLM Cross-Validation with Optional SMOTE
+#' @description
+#' Performs logistic regression with cross-validation based on user-defined folds,
+#' optionally using SMOTE to address class imbalance in the training data.
+#' Returns predictions, performance metrics, and ROC curves for both the cross-validated and the full-model fits.
+#'
+#' @param datasc A data frame containing the `sample`, `class`, and feature variables.
+#' @param levs A character vector with two levels defining the factor levels for the classification task.
+#' @param varnames A character vector with the names of predictor variables to use in the model.
+#' @param folds A numeric vector specifying row indices for the test set in each iteration of cross-validation. Defaults to leave-one-out: `1:nrow(datasc)`.
+#' @param do_smote Logical, whether to apply SMOTE to the training data. Default: `FALSE`.
+#' @param smote_params A list with SMOTE parameters: `K` (number of neighbors) and `dup_size` (oversampling rate). Default: `list(K = 5, dup_size = 2)`.
+#'
+#' @return A list containing confusion matrices, predictions, prediction probabilities, ROC objects, and AUC values for both the cross-validated and full models.
+#'
+#' @details
+#' This function builds a logistic regression model using the specified variables and cross-validation strategy.
+#' If `do_smote = TRUE`, SMOTE is applied to the training set at each iteration.
+#' The function returns metrics such as accuracy, sensitivity, specificity, and AUC for both the cross-validated predictions and the model trained on the full dataset.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   res <- make_glm_l1o(datasc, levs = c("Control", "Case"),
+#'                      varnames = c("feature1", "feature2"),
+#'                      folds = 1:10,
+#'                      do_smote = TRUE)
+#'   print(res$confmat)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+#' }
+#'
+#' @seealso
+#'  \code{\link[dplyr]{select}},
+#'  \code{\link[dplyr]{mutate}},
+#'  \code{\link[UBL]{SmoteClassif}},
+#'  \code{\link[stats]{glm}},
+#'  \code{\link[stats]{predict}},
+#'  \code{\link[pROC]{roc}},
+#'  \code{\link[caret]{confusionMatrix}}
+#'
 #' @rdname make_glm_l1o
-#' @export 
+#' @export
 #' @importFrom dplyr select mutate
+#' @importFrom UBL SmoteClassif
+#' @importFrom stats glm predict as.formula
+#' @importFrom pROC roc
+#' @importFrom caret confusionMatrix
 make_glm_l1o <- function(datasc, levs, varnames, folds= c(),
                          do_smote=FALSE,
-                         smote_params=list(K=5, dup_size=2)){
+                         smote_params=smote_params_default){
   predict_glm1 <- c()
   df <- datasc %>% dplyr::select(-sample) %>% dplyr::select(class, all_of(varnames))
   formula <- paste0("class ~ ", paste(varnames, sep="+", collapse="+")) %>% as.formula()

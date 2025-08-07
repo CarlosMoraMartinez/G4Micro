@@ -2,49 +2,98 @@
 % Please edit documentation in R/make_xgboost_l1o.R
 \name{make_xgboost_l1o}
 \alias{make_xgboost_l1o}
-\title{FUNCTION_TITLE}
+\title{Train and Evaluate XGBoost Model with Cross-Validation and Optional SMOTE Oversampling}
 \usage{
 make_xgboost_l1o(
   datasc,
   levs,
   varnames,
   folds = folds(),
-  xgboost_params = xgboost_params,
+  xgboost_params = xgboost_params_default,
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = "balance")
+  smote_params = smote_params_default
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the dataset with predictors, a \code{class} factor column, and optionally a \code{sample} column.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector of factor levels for the target classification variable \code{class}.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector specifying the names of predictor variables to be used.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: folds()}
+\item{folds}{Integer vector specifying which samples to leave out for L1O; default uses all samples (leave-one-out).}
 
-\item{xgboost_params}{PARAM_DESCRIPTION, Default: xgboost_params}
+\item{xgboost_params}{A named list of parameters to control XGBoost model training (e.g., max_depth, learning_rate, nrounds, etc.). Default: \code{list(
+  learning_rate = 0.3,
+  max_depth = 2,
+  nrounds = 30,
+  min_child_weight = 1,
+  subsample = 1,
+  colsample_bytree = 0.6,
+  reg_lambda = 1,
+  gamma = 0,
+  reg_alpha = 0,
+  nthread = 1,
+  objective = "binary:logistic",
+  balance_weights = TRUE
+)}}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical indicating whether to perform SMOTE oversampling on training data folds; default is FALSE.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{smote_params}{A named list of parameters for SMOTE (e.g., K = 5, dup_size = "balance").}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\item{confmat}{Confusion matrix from CV predictions}
+\item{confmat_no_l1o}{Confusion matrix from model trained on full dataset}
+\item{mod}{XGBoost model trained on full dataset}
+\item{preds}{Predicted classes from CV}
+\item{pred_probs}{Predicted probabilities from CV}
+\item{preds_no_l1o}{Predicted classes from model trained on full dataset}
+\item{roc_obj_no_l1o}{ROC object from full dataset model predictions (currently NULL)}
+\item{roc_auc_no_l1o}{ROC AUC from full dataset model (currently NULL)}
+\item{roc_obj}{ROC object from CV predictions}
+\item{roc_auc}{ROC AUC from CV predictions}
+\item{xgboost_params}{Parameters used for XGBoost training}
+\item{smoteData}{Last SMOTE dataset generated (or NULL if not used)}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function trains an XGBoost classification model using generalised cross-validation.
+It supports optional class balancing via weights and optional SMOTE oversampling.
+The function returns performance metrics including confusion matrices and ROC curves.
 }
 \details{
-DETAILS
+\itemize{
+\item This function uses leave-one-out cross-validation by default (each sample is left out once).
+\item SMOTE can be enabled for oversampling the minority class in training folds.
+\item Class balancing weights are automatically calculated if enabled.
+\item Currently, ROC objects for the model trained on the full dataset are not computed.
+}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  data(iris)
+  iris <- iris[iris$Species != "setosa", ]
+  iris$class <- factor(iris$Species)
+  iris$sample <- 1:nrow(iris)
+  params <- list(max_depth = 3, learning_rate = 0.1, nrounds = 50,
+                 min_child_weight = 1, subsample = 0.8, colsample_bytree = 0.8,
+                 gamma = 0, reg_lambda = 1, reg_alpha = 0, nthread = 1,
+                 objective = "binary:logistic", balance_weights = TRUE)
+  result <- make_xgboost_l1o(iris, levs = levels(iris$class),
+                             varnames = names(iris)[1:4],
+                             xgboost_params = params,
+                             do_smote = FALSE)
+  print(result$confmat)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
+\code{\link[dplyr]{select}},
+\code{\link[xgboost]{xgboost}},
+\code{\link[pROC]{roc}},
+\code{\link[caret]{confusionMatrix}},
+\code{\link[UBL]{SmoteClassif}},
 }

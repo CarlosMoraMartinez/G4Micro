@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_glm_l1o.R
 \name{make_glm_l1o}
 \alias{make_glm_l1o}
-\title{FUNCTION_TITLE}
+\title{Generalized GLM Cross-Validation with Optional SMOTE}
 \usage{
 make_glm_l1o(
   datasc,
@@ -10,38 +10,53 @@ make_glm_l1o(
   varnames,
   folds = c(),
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = 2)
+  smote_params = smote_params_default
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the \code{sample}, \code{class}, and feature variables.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector with two levels defining the factor levels for the classification task.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector with the names of predictor variables to use in the model.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{A numeric vector specifying row indices for the test set in each iteration of cross-validation. Defaults to leave-one-out: \code{1:nrow(datasc)}.}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical, whether to apply SMOTE to the training data. Default: \code{FALSE}.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)}
+\item{smote_params}{A list with SMOTE parameters: \code{K} (number of neighbors) and \code{dup_size} (oversampling rate). Default: \code{list(K = 5, dup_size = 2)}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing confusion matrices, predictions, prediction probabilities, ROC objects, and AUC values for both the cross-validated and full models.
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs logistic regression with cross-validation based on user-defined folds,
+optionally using SMOTE to address class imbalance in the training data.
+Returns predictions, performance metrics, and ROC curves for both the cross-validated and the full-model fits.
 }
 \details{
-DETAILS
+This function builds a logistic regression model using the specified variables and cross-validation strategy.
+If \code{do_smote = TRUE}, SMOTE is applied to the training set at each iteration.
+The function returns metrics such as accuracy, sensitivity, specificity, and AUC for both the cross-validated predictions and the model trained on the full dataset.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  res <- make_glm_l1o(datasc, levs = c("Control", "Case"),
+                     varnames = c("feature1", "feature2"),
+                     folds = 1:10,
+                     do_smote = TRUE)
+  print(res$confmat)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{select}},
+\code{\link[dplyr]{mutate}},
+\code{\link[UBL]{SmoteClassif}},
+\code{\link[stats]{glm}},
+\code{\link[stats]{predict}},
+\code{\link[pROC]{roc}},
+\code{\link[caret]{confusionMatrix}}
 }

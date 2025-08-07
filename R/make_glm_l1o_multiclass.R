@@ -1,30 +1,60 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param datasc PARAM_DESCRIPTION
-#' @param levs PARAM_DESCRIPTION
-#' @param varnames PARAM_DESCRIPTION
-#' @param folds PARAM_DESCRIPTION, Default: c()
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Multinomial GLM with Custom Fold Cross-Validation and Optional SMOTE
+#' @description Trains a multinomial logistic regression model using user-defined folds (e.g., leave-one-out or k-fold) with optional SMOTE resampling to handle class imbalance.
+#' @param datasc A data frame containing the classification variable `class`, a `sample` column, and predictor variables.
+#' @param levs Character vector with the class levels to use in the factor definition of the response variable.
+#' @param varnames Character vector indicating the names of the predictor variables to include in the model.
+#' @param folds Integer vector of row indices defining the test folds. If empty (default), performs leave-one-out cross-validation.
+#' @param do_smote Logical indicating whether to apply SMOTE resampling to balance the training data, Default: FALSE
+#' @param smote_params A list with parameters for SMOTE: `K` (number of neighbors) and `dup_size` (duplication factor), Default: list(K = 5, dup_size = 2)
+#' @return A list containing:
+#' \itemize{
+#'   \item \code{confmat}: Confusion matrix from fold-based prediction.
+#'   \item \code{confmat_no_l1o}: Confusion matrix from the full model.
+#'   \item \code{mod}: Fitted model using all data.
+#'   \item \code{preds}: Class predictions from cross-validation.
+#'   \item \code{preds_no_l1o}: Class predictions from the full model.
+#'   \item \code{roc_obj}: Multiclass ROC object from fold-based prediction.
+#'   \item \code{roc_auc}: AUC from the cross-validation model.
+#'   \item \code{roc_obj_no_l1o}: List of ROC objects per class from the full model.
+#'   \item \code{roc_auc_no_l1o}: Mean AUC of ROC objects from the full model.
+#' }
+#' @details
+#' This function supports multi-class classification using a multinomial generalized linear model (GLM).
+#' It allows the user to define custom folds for cross-validation (e.g., leave-one-out if \code{folds = 1:nrow(datasc)}).
+#' Optional SMOTE resampling can be applied to each training fold to correct for class imbalance.
+#' Performance is assessed via confusion matrices and multiclass ROC curves.
+#'
+#' Requires that `class` is a factor and that `datasc` contains a `sample` column (which is removed internally).
+#'
+#' The ROC objects returned are computed using `pROC::multiclass.roc`, which provides an aggregate AUC estimate for multi-class settings.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'  datasc <- my_data_frame
+#'  levels <- c("A", "B", "C")
+#'  vars <- c("gene1", "gene2", "gene3")
+#'  result <- make_glm_l1o_multiclass(datasc, levs = levels, varnames = vars)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
-#'  \code{\link[assertthat]{assert_that}}
+#' }
+#' @seealso
+#'  \code{\link[dplyr]{select}},
+#'  \code{\link[dplyr]{mutate}},
+#'  \code{\link[assertthat]{assert_that}},
+#'  \code{\link[pROC]{multiclass.roc}},
+#'  \code{\link[nnet]{multinom}},
+#'  \code{\link[UBL]{SmoteClassif}},
+#'  \code{\link[caret]{confusionMatrix}}
 #' @rdname make_glm_l1o_multiclass
-#' @export 
+#' @export
 #' @importFrom dplyr select mutate
 #' @importFrom assertthat assert_that
+#' @importFrom pROC multiclass.roc
+#' @importFrom caret confusionMatrix
+#' @importFrom UBL SmoteClassif
+#' @importFrom nnet multinom
 make_glm_l1o_multiclass <- function(datasc, levs, varnames, folds=c(),
                                     do_smote=FALSE,
-                                    smote_params=list(K=5, dup_size=2)){
-  library(nnet)
+                                    smote_params=smote_params_default){
   predict_glm1 <- c()
   df <- datasc %>% dplyr::select(-sample) %>% dplyr::select(class, all_of(varnames))
   formula <- paste0("class ~ ", paste(varnames, sep="+", collapse="+")) %>% as.formula()
@@ -41,7 +71,7 @@ make_glm_l1o_multiclass <- function(datasc, levs, varnames, folds=c(),
     if(do_smote){
       form <- as.formula(paste0("class ~ ", paste(varnames, sep="+", collapse= "+")))
       smote_df <- datasc[-i, ] %>% select(class, all_of(varnames))
-      smoteData <- SmoteClassif(form, smote_df,
+      smoteData <- UBL::SmoteClassif(form, smote_df,
                                 C.perc = smote_params$dup_size,
                                 k = smote_params$K, repl = FALSE,
                                 dist = "Euclidean", p = 2)
@@ -50,7 +80,7 @@ make_glm_l1o_multiclass <- function(datasc, levs, varnames, folds=c(),
       smoteData = NULL
     }
 
-    mod_glm <- multinom(formula, data=train_df)
+    mod_glm <- nnet::multinom(formula, data=train_df)
     newpred <- predict(mod_glm, test_df, type="prob")
     predict_glm1 <- rbind(predict_glm1, newpred)
 
@@ -63,7 +93,7 @@ make_glm_l1o_multiclass <- function(datasc, levs, varnames, folds=c(),
   roc1 <- multiclass.roc(response=datasc$class, predictor=predict_glm1)
   roc_auc <- as.numeric(roc1$auc)
 
-  mod_all <- multinom(formula, data=datasc, family = binomial)
+  mod_all <- nnet::multinom(formula, data=datasc, family = binomial)
   predict2 <- predict(mod_all, df, type="probs")
   classes2 <- colnames(predict2)[apply(predict2, MAR=1, \(x)which(x==max(x)))] %>% factor
   confmat2 <- confusionMatrix(classes2, factor(datasc$class))

@@ -2,32 +2,43 @@
 % Please edit documentation in R/make_volcano.R
 \name{make_volcano}
 \alias{make_volcano}
-\title{FUNCTION_TITLE}
+\title{Create and Save a Volcano Plot from Differential Expression Results}
 \usage{
 make_volcano(res, opt, name, pcol = "pvalue")
 }
 \arguments{
-\item{res}{PARAM_DESCRIPTION}
+\item{res}{A data frame or matrix containing differential expression results,
+including \code{log2FoldChange} and p-value columns.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list or object containing analysis options, including:
+\itemize{
+\item \code{pval}: numeric, significance threshold for p-values.
+\item \code{fc}: numeric, fold-change cutoff.
+\item \code{out}: character, output directory to save the plot PDF.
+}}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Character. Filename for the output PDF volcano plot.}
 
-\item{pcol}{PARAM_DESCRIPTION, Default: 'pvalue'}
+\item{pcol}{Character. Name of the p-value column to use for significance (default \code{"pvalue"}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+The \code{EnhancedVolcano} plot object (invisibly returned after saving the PDF).
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates a volcano plot using the \code{EnhancedVolcano} package based on
+differential expression results, and saves the plot as a PDF file.
 }
 \details{
-DETAILS
+The function attempts to create a volcano plot with labeled points from the row names
+of \code{res}. It highlights significant genes or taxa based on p-value and fold-change
+thresholds provided in \code{opt}. The plot is saved to a PDF file in the specified
+output directory.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  opt <- list(pval = 0.05, fc = 2, out = "results")
+  make_volcano(res = my_results, opt = opt, name = "volcano_plot.pdf")
+}
 }
 }

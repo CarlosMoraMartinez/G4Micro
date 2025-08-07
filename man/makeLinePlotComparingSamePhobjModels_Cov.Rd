@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeLinePlotComparingSamePhobjModels_Cov.R
 \name{makeLinePlotComparingSamePhobjModels_Cov}
 \alias{makeLinePlotComparingSamePhobjModels_Cov}
-\title{FUNCTION_TITLE}
+\title{Compare Model Accuracies Across Multiple Conditions for a Single Phyloseq Object}
 \usage{
 makeLinePlotComparingSamePhobjModels_Cov(
   phname,
@@ -15,28 +15,38 @@ makeLinePlotComparingSamePhobjModels_Cov(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Name of the phyloseq object (used to subset \code{all_model_results}).}
 
-\item{condnames}{PARAM_DESCRIPTION}
+\item{condnames}{Character vector with the names of different feature selection conditions or experimental groups to compare.}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{A nested list of model results. The top-level list is indexed by phyloseq object names,
+and the second level is indexed by condition names (e.g., "padj_taxa_res", "raw_taxa_res"), each containing a \code{modummary} data frame.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Prefix used to name the output plot file.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing output options. Must include the \code{opt$out} directory path.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 8}
+\item{w}{Width of the output PDF file in inches. Default is 8.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 12}
+\item{h}{Height of the output PDF file in inches. Default is 12.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 object representing the accuracy comparison plot. Additionally, a TSV file and a PDF plot are saved to disk.
 }
 \description{
-FUNCTION_DESCRIPTION
+This function compares classification model accuracies across several conditions
+(e.g., groups of selected features or experimental groups) for a given phyloseq object.
+It aggregates model summaries from a list of results, formats them, and generates a line plot of accuracies.
+A TSV file with all model summaries is also saved.
 }
 \details{
-DETAILS
+The function loops through the specified conditions, extracts the model accuracy summaries for each,
+appends metadata for plotting, merges all results into a single table, and generates a line plot
+showing accuracy (Accuracy_l1out) across different models and conditions.
+
+The y-axis shows accuracy, the x-axis shows model type, and lines/points are grouped by condition.
+
+Output files are saved in a subdirectory named after the \code{phname}, within the path specified by \code{opt$out}.
 }
 \examples{
 \dontrun{

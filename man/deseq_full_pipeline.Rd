@@ -2,35 +2,45 @@
 % Please edit documentation in R/deseq_full_pipeline.R
 \name{deseq_full_pipeline}
 \alias{deseq_full_pipeline}
-\title{FUNCTION_TITLE}
+\title{Full DESeq2 Differential Expression Analysis Pipeline}
 \usage{
 deseq_full_pipeline(phobj, name, vars2deseq, opt)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing count data and taxonomy information.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A character string used as a prefix for output directories and files.}
 
-\item{vars2deseq}{PARAM_DESCRIPTION}
+\item{vars2deseq}{Character vector of variable names to use in the DESeq2 design formula.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options controlling output directories, filtering thresholds, p-value cutoffs, and other parameters.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing DESeq2 result data frames and associated objects produced by \code{getDeseqResults}.
 }
 \description{
-FUNCTION_DESCRIPTION
+Runs a comprehensive differential expression analysis pipeline on a phyloseq object,
+including filtering, DESeq2 result generation, annotation, visualization (MA plots, volcano plots, heatmaps),
+and saving of annotated results.
 }
 \details{
-DETAILS
+This function creates output directories if needed, computes the minimum number of samples with counts based on frequency thresholds,
+executes differential expression analysis through \code{getDeseqResults()}, annotates results with genus-level taxonomy,
+saves annotated tables as TSV files, and generates diagnostic and visualization plots such as MA plots, volcano plots, and heatmaps.
+It also performs intersection of taxa lists across contrasts when applicable.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  opt <- list(out = "results/", minfreq = 0.01, pval = 0.05)
+  vars <- c("Condition", "Batch")
+  res <- deseq_full_pipeline(physeq_object, "MyExperiment", vars, opt)
+}
 }
 }
 \seealso{
+\code{\link{getDeseqResults}}, \code{\link{make_maplot}}, \code{\link{make_volcano}},
+\code{\link{makeHeatmap}}, \code{\link{getSummaryTablesDeseq}}
+\code{\link[DESeq2]{DESeq}}, \code{\link[DESeq2]{results}}, \code{\link[DESeq2]{plotDispEsts}},
 \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{filter}}
 }

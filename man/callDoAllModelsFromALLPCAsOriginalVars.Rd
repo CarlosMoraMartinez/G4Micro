@@ -2,7 +2,7 @@
 % Please edit documentation in R/callDoAllModelsFromALLPCAsOriginalVars.R
 \name{callDoAllModelsFromALLPCAsOriginalVars}
 \alias{callDoAllModelsFromALLPCAsOriginalVars}
-\title{FUNCTION_TITLE}
+\title{Train models using selected PCA rotations and DA results}
 \usage{
 callDoAllModelsFromALLPCAsOriginalVars(
   all_pcas,
@@ -17,56 +17,73 @@ callDoAllModelsFromALLPCAsOriginalVars(
   variable_plim = 0.01,
   meta_vars = c(),
   nfolds = 0,
-  xgboost_params = xgboost_params,
-  catboost_params = catboost_params,
-  randomforest_params = randomforest_params,
+  xgboost_params = xgboost_params_default,
+  catboost_params = catboost_params_default,
+  randomforest_params = randomforest_params_default,
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = "balance")
+  smote_params = smote_params_default
 )
 }
 \arguments{
-\item{all_pcas}{PARAM_DESCRIPTION}
+\item{all_pcas}{A list of PCA results, each with an entry \verb{$pca} (result from \code{prcomp}).}
 
-\item{PCs}{PARAM_DESCRIPTION}
+\item{PCs}{Vector with the two principal components to use for ranking taxa (e.g., c(1,2)).}
 
-\item{modelo_svm}{PARAM_DESCRIPTION}
+\item{modelo_svm}{SVM model trained on PCA-transformed data; used to compute class separation direction.}
 
-\item{vstdf}{PARAM_DESCRIPTION}
+\item{vstdf}{Data frame with variance-stabilized abundance data. Must contain a column named \code{gene}.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Character name used as prefix for saved model names.}
 
-\item{vars2pca}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{vars2pca}{Character vector of variable names from metadata used to train models. Default: \code{"Condition"}.}
 
-\item{metadata}{PARAM_DESCRIPTION}
+\item{metadata}{Data frame with sample-level metadata. Must contain a \code{sampleID} column.}
 
-\item{daares}{PARAM_DESCRIPTION}
+\item{daares}{Data frame with differential abundance results. Must contain columns \code{taxon} and \code{padj}.}
 
-\item{topns}{PARAM_DESCRIPTION, Default: c(5, 10, 20)}
+\item{topns}{Numeric vector of how many top-ranked taxa to use for model training. Default: c(5, 10, 20).}
 
-\item{variable_plim}{PARAM_DESCRIPTION, Default: 0.01}
+\item{variable_plim}{Numeric threshold for filtering variables by p-value. Default: 0.01.}
 
-\item{meta_vars}{PARAM_DESCRIPTION, Default: c()}
+\item{meta_vars}{Character vector of additional metadata variables to include in modeling. Default: empty.}
 
-\item{nfolds}{PARAM_DESCRIPTION, Default: 0}
+\item{nfolds}{Number of folds to use for cross-validation. Use \code{nfolds = 0} for no cross-validation. Default: 0.}
 
-\item{xgboost_params}{PARAM_DESCRIPTION, Default: xgboost_params}
+\item{xgboost_params}{List of parameters for XGBoost training. Default: \code{xgboost_params_default}.
+A typical default might be:
 
-\item{catboost_params}{PARAM_DESCRIPTION, Default: catboost_params}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list(
+  learning_rate = 0.3, max_depth = 2, nrounds = 30, min_child_weight = 1,
+  subsample = 1, colsample_bytree = 0.6, reg_lambda = 1, reg_alpha = 0,
+  nthread = 1, objective = "multi:softprob", num_class = 4, balance_weights = TRUE
+)
+}\if{html}{\out{</div>}}}
 
-\item{randomforest_params}{PARAM_DESCRIPTION, Default: randomforest_params}
+\item{catboost_params}{List of parameters for CatBoost training. Default: \code{catboost_params_default}.}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{randomforest_params}{List of parameters for Random Forest training. Default: \code{randomforest_params_default}.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{do_smote}{Logical, whether to apply SMOTE for class balancing before training. Default: FALSE.}
+
+\item{smote_params}{List with SMOTE configuration. Default: \code{smote_params_default}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with:
+\itemize{
+\item \code{fullresults}: A named list of model objects for each (score, topn) combination.
+\item \code{allmodsum}: A summary data frame of model performances and used taxa.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function selects important taxa from PCA loadings and differential abundance results (e.g., DESeq2),
+and trains predictive models (XGBoost, CatBoost, Random Forest, optionally with SMOTE) using subsets
+of features. It supports general K-fold cross-validation.
+
+The input data must contain a column named \code{'sample'} to match sample-level metadata.
 }
 \details{
-DETAILS
+Taxa are ranked based on their contribution to PCA components and optionally the direction of the SVM decision boundary.
+Models are trained on top-N taxa using different scoring strategies.
 }
 \examples{
 \dontrun{

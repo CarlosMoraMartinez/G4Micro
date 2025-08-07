@@ -1,34 +1,86 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param datasc PARAM_DESCRIPTION
-#' @param levs PARAM_DESCRIPTION
-#' @param varnames PARAM_DESCRIPTION
-#' @param kernel PARAM_DESCRIPTION, Default: 'linear'
-#' @param SEED PARAM_DESCRIPTION, Default: 123
-#' @param folds PARAM_DESCRIPTION, Default: c()
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)
-#' @param balance_classes PARAM_DESCRIPTION, Default: TRUE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Train and Evaluate an SVM Classifier with Cross-Validation
+#' @description
+#' This function trains a Support Vector Machine (SVM) classifier using the `e1071` package and evaluates it using cross-validation.
+#' It supports both leave-one-out and custom-fold validation, optional SMOTE oversampling, and returns detailed performance metrics
+#' including confusion matrices and ROC AUC.
+#'
+#' @param datasc A data frame containing the input data. Must include a `class` column (as factor) and the specified feature columns.
+#' @param levs A character vector specifying the class levels (e.g., `c("control", "case")`).
+#' @param varnames A character vector with the names of the variables (features) to be used for training.
+#' @param kernel The kernel to be used by the SVM model. Default: `'linear'`.
+#' @param SEED An integer used to set the random seed for reproducibility. Default: `123`.
+#' @param folds A vector of indices indicating which samples to leave out in each iteration. If empty, leave-one-out is used. Default: `c()`.
+#' @param do_smote Logical, whether to apply SMOTE to balance the training data. Default: `FALSE`.
+#' @param smote_params A list of parameters passed to `SmoteClassif`, including `K` (number of neighbors) and `dup_size` (oversampling factor). Default: `list(K = 5, dup_size = 2)`.
+#' @param balance_classes Logical, whether to balance class weights in the SVM. Default: `TRUE`.
+#'
+#' @return A list with the following elements:
+#' \itemize{
+#'   \item `confmat`: Confusion matrix from cross-validation predictions.
+#'   \item `confmat_no_l1o`: Confusion matrix from model trained on all data.
+#'   \item `mod`: Final SVM model trained on all data.
+#'   \item `preds`: Predictions from cross-validation.
+#'   \item `pred_probs`: Probabilities from cross-validation predictions.
+#'   \item `pred_probs_obj`: Raw probability prediction objects from cross-validation.
+#'   \item `preds_no_l1o`: Predictions from model trained on all data.
+#'   \item `mod_noscale`: SVM model trained on first 2 features without scaling.
+#'   \item `preds_noscale`: Predictions from `mod_noscale`.
+#'   \item `confmat_noscale`: Confusion matrix for `preds_noscale`.
+#'   \item `roc_obj`: ROC object from cross-validation.
+#'   \item `roc_auc`: AUC value from `roc_obj`.
+#'   \item `roc_obj_no_l1o`: Placeholder, always NULL.
+#'   \item `roc_auc_no_l1o`: Placeholder, always NULL.
+#' }
+#'
+#' @details
+#' The function allows for either leave-one-out or custom-fold cross-validation using SVM classifiers.
+#'  It optionally applies SMOTE oversampling and computes ROC AUC using either binary or multiclass evaluation.
+#'  SVMs are trained using the `e1071` package with optional class weighting.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  result <- make_svm_l1o(datasc = my_data,
+#'                         levs = c("control", "case"),
+#'                         varnames = c("gene1", "gene2", "gene3"),
+#'                         kernel = "linear")
+#'  print(result$confmat)
+#'  plot(result$roc_obj)
 #'  }
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}
-#'  \code{\link[e1071]{svm}}
+#'
+#' @seealso
+#'  \code{\link[dplyr]{select}},
+#'  \code{\link[dplyr]{all_of}},
+#'  \code{\link[e1071]{svm}},
+#'  \code{\link[UBL]{SmoteClassif}},
+#'  \code{\link[pROC]{roc}},
+#'  \code{\link[pROC]{multiclass.roc}},
+#'  \code{\link[caret]{confusionMatrix}},
+#'  \code{\link[purrr]{map}},
+#'  \code{\link[dplyr]{bind_rows}},
+#'  \code{\link[rlang]{sym}},
+#'  \code{\link[stats]{as.formula}},
+#'  \code{\link[base]{set.seed}},
+#'  \code{\link[base]{factor}},
+#'  \code{\link[base]{rep}},
+#'  \code{\link[base]{paste}},
+#'  \code{\link[base]{paste0}}
+#'
 #' @rdname make_svm_l1o
-#' @export 
-#' @importFrom dplyr select
+#' @export
+#' @importFrom dplyr select all_of bind_rows
 #' @importFrom e1071 svm
+#' @importFrom UBL SmoteClassif
+#' @importFrom pROC roc multiclass.roc
+#' @importFrom caret confusionMatrix
+#' @importFrom purrr map
+#' @importFrom rlang sym
+#' @importFrom stats as.formula
 make_svm_l1o <- function(datasc, levs, varnames, kernel="linear", SEED=123, folds=c(),
                          do_smote=FALSE,
-                         smote_params=list(K=5, dup_size=2),
+                         smote_params=smote_params_default,
                          balance_classes=TRUE){
-  library(e1071)
   datasc$class <- factor(datasc$class)
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
   predict1 <- factor(levels=levs)

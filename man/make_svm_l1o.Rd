@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_svm_l1o.R
 \name{make_svm_l1o}
 \alias{make_svm_l1o}
-\title{FUNCTION_TITLE}
+\title{Train and Evaluate an SVM Classifier with Cross-Validation}
 \usage{
 make_svm_l1o(
   datasc,
@@ -12,46 +12,86 @@ make_svm_l1o(
   SEED = 123,
   folds = c(),
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = 2),
+  smote_params = smote_params_default,
   balance_classes = TRUE
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the input data. Must include a \code{class} column (as factor) and the specified feature columns.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector specifying the class levels (e.g., \code{c("control", "case")}).}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector with the names of the variables (features) to be used for training.}
 
-\item{kernel}{PARAM_DESCRIPTION, Default: 'linear'}
+\item{kernel}{The kernel to be used by the SVM model. Default: \code{'linear'}.}
 
-\item{SEED}{PARAM_DESCRIPTION, Default: 123}
+\item{SEED}{An integer used to set the random seed for reproducibility. Default: \code{123}.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{A vector of indices indicating which samples to leave out in each iteration. If empty, leave-one-out is used. Default: \code{c()}.}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical, whether to apply SMOTE to balance the training data. Default: \code{FALSE}.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)}
+\item{smote_params}{A list of parameters passed to \code{SmoteClassif}, including \code{K} (number of neighbors) and \code{dup_size} (oversampling factor). Default: \code{list(K = 5, dup_size = 2)}.}
 
-\item{balance_classes}{PARAM_DESCRIPTION, Default: TRUE}
+\item{balance_classes}{Logical, whether to balance class weights in the SVM. Default: \code{TRUE}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with the following elements:
+\itemize{
+\item \code{confmat}: Confusion matrix from cross-validation predictions.
+\item \code{confmat_no_l1o}: Confusion matrix from model trained on all data.
+\item \code{mod}: Final SVM model trained on all data.
+\item \code{preds}: Predictions from cross-validation.
+\item \code{pred_probs}: Probabilities from cross-validation predictions.
+\item \code{pred_probs_obj}: Raw probability prediction objects from cross-validation.
+\item \code{preds_no_l1o}: Predictions from model trained on all data.
+\item \code{mod_noscale}: SVM model trained on first 2 features without scaling.
+\item \code{preds_noscale}: Predictions from \code{mod_noscale}.
+\item \code{confmat_noscale}: Confusion matrix for \code{preds_noscale}.
+\item \code{roc_obj}: ROC object from cross-validation.
+\item \code{roc_auc}: AUC value from \code{roc_obj}.
+\item \code{roc_obj_no_l1o}: Placeholder, always NULL.
+\item \code{roc_auc_no_l1o}: Placeholder, always NULL.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function trains a Support Vector Machine (SVM) classifier using the \code{e1071} package and evaluates it using cross-validation.
+It supports both leave-one-out and custom-fold validation, optional SMOTE oversampling, and returns detailed performance metrics
+including confusion matrices and ROC AUC.
 }
 \details{
-DETAILS
+The function allows for either leave-one-out or custom-fold cross-validation using SVM classifiers.
+It optionally applies SMOTE oversampling and computes ROC AUC using either binary or multiclass evaluation.
+SVMs are trained using the \code{e1071} package with optional class weighting.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ result <- make_svm_l1o(datasc = my_data,
+                        levs = c("control", "case"),
+                        varnames = c("gene1", "gene2", "gene3"),
+                        kernel = "linear")
+ print(result$confmat)
+ plot(result$roc_obj)
  }
 }
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
-\code{\link[e1071]{svm}}
+\code{\link[dplyr]{select}},
+\code{\link[dplyr]{all_of}},
+\code{\link[e1071]{svm}},
+\code{\link[UBL]{SmoteClassif}},
+\code{\link[pROC]{roc}},
+\code{\link[pROC]{multiclass.roc}},
+\code{\link[caret]{confusionMatrix}},
+\code{\link[purrr]{map}},
+\code{\link[dplyr]{bind_rows}},
+\code{\link[rlang]{sym}},
+\code{\link[stats]{as.formula}},
+\code{\link[base]{set.seed}},
+\code{\link[base]{factor}},
+\code{\link[base]{rep}},
+\code{\link[base]{paste}},
+\code{\link[base]{paste0}}
 }

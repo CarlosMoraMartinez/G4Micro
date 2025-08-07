@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeHeatmapsFromMultipleDeseqResults.R
 \name{makeHeatmapsFromMultipleDeseqResults}
 \alias{makeHeatmapsFromMultipleDeseqResults}
-\title{FUNCTION_TITLE}
+\title{Generate Heatmaps from Multiple DESeq2 Results}
 \usage{
 makeHeatmapsFromMultipleDeseqResults(
   deseq_results_list,
@@ -19,42 +19,59 @@ makeHeatmapsFromMultipleDeseqResults(
 )
 }
 \arguments{
-\item{deseq_results_list}{PARAM_DESCRIPTION}
+\item{deseq_results_list}{A named list of data frames, each containing DESeq2 results for a different variable/contrast.}
 
-\item{daa_main}{PARAM_DESCRIPTION}
+\item{daa_main}{A data frame containing the main DESeq2 results to highlight.}
 
-\item{main_name}{PARAM_DESCRIPTION}
+\item{main_name}{Character. The name/key in the list to assign to the main DESeq2 results.}
 
-\item{vars2plot}{PARAM_DESCRIPTION}
+\item{vars2plot}{Character vector of variable names indicating which DESeq2 results in the list to include in the heatmaps.}
 
-\item{italics_rownames}{PARAM_DESCRIPTION, Default: T}
+\item{italics_rownames}{Logical, default TRUE. Whether to display row names (taxa) in italics on the heatmap.}
 
-\item{pfilt}{PARAM_DESCRIPTION, Default: 0.05}
+\item{pfilt}{Numeric, default 0.05. P-value cutoff for filtering taxa to display in the heatmaps.}
 
-\item{pplot}{PARAM_DESCRIPTION, Default: 0.05}
+\item{pplot}{Numeric, default 0.05. P-value cutoff threshold above which p-values are replaced with NA for visualization.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Character. Base name used for output files.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{Character. Output directory path where results and heatmaps will be saved.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 5}
+\item{w}{Numeric, default 5. Base width (in inches) of the output heatmap PDF.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 4}
+\item{h}{Numeric, default 4. Base height (in inches) of the output heatmap PDF.}
 }
 \value{
-OUTPUT_DESCRIPTION
+None. The function saves heatmaps as PDF files and writes a merged DAA results TSV file.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates heatmaps visualizing significance levels (-10*log10 p-values and adjusted p-values)
+across multiple differential abundance analysis (DAA) results, combining results from multiple contrasts.
+Saves merged DAA tables and heatmaps to specified output directory.
 }
 \details{
-DETAILS
+This function merges multiple DESeq2 results data frames by taxa, transforms p-values for visualization,
+filters taxa by significance, and generates heatmaps showing p-values and adjusted p-values across contrasts.
+Row names can be displayed in italics for better readability of taxon names.
+Heatmaps are saved as PDF files with dynamically adjusted dimensions based on matrix size.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assume deseq_list is a named list of DESeq2 results,
+  # daa_main is a main DESeq2 result data.frame,
+  # vars_to_plot is a vector of contrasts to include
+  makeHeatmapsFromMultipleDeseqResults(
+    deseq_results_list = deseq_list,
+    daa_main = daa_main,
+    main_name = "main_contrast",
+    vars2plot = vars_to_plot,
+    name = "output_heatmaps",
+    outdir = "results/",
+    pfilt = 0.05,
+    pplot = 0.01
+  )
+}
 }
 }
 \seealso{

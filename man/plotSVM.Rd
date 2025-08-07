@@ -2,37 +2,45 @@
 % Please edit documentation in R/plotSVM.R
 \name{plotSVM}
 \alias{plotSVM}
-\title{FUNCTION_TITLE}
+\title{Plot SVM Classification Boundaries}
 \usage{
 plotSVM(modelo_svm, datasc, varnames, opt, name)
 }
 \arguments{
-\item{modelo_svm}{PARAM_DESCRIPTION}
+\item{modelo_svm}{A fitted SVM model object (e.g., from \code{e1071::svm}) with at least two variables.}
 
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the PCA or input data used for classification.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector with the names of the variables to use in the plot (only the first two will be used).}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list-like object containing output options; must include \code{opt$out}, a directory where plots will be saved.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A character string to identify the output file name.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object representing the SVM classification plot. The plot is also saved to a PDF.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates a 2D visualization of a Support Vector Machine (SVM) classification model, including predicted regions, data points, and support vectors.
+If the model is linear with two classes, it also plots the decision boundary and margins.
 }
 \details{
-DETAILS
+This function was adapted from an example published at \url{https://rpubs.com/Joaquin_AR/267926}.
+It performs interpolation across the feature space, applies the SVM model to the grid, and plots the decision boundaries.
+If the kernel is linear and the problem is binary, the function also draws the decision hyperplane and margin lines.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  model <- e1071::svm(class ~ ., data = training_data, kernel = "linear")
+  plotSVM(model, training_data, c("PC1", "PC2"), opt = list(out = "./results/"), name = "example")
 }
+}
+
 }
 \seealso{
+\code{\link[e1071]{svm}},
+\code{\link[stats]{predict}}
+
 \code{\link[dplyr]{select}}
 }

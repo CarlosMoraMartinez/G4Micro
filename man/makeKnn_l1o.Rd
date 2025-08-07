@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeKnn_l1o.R
 \name{makeKnn_l1o}
 \alias{makeKnn_l1o}
-\title{FUNCTION_TITLE}
+\title{K-Nearest Neighbors Classification with Cross-Validation and Optional SMOTE}
 \usage{
 makeKnn_l1o(
   datasc,
@@ -15,36 +15,64 @@ makeKnn_l1o(
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the features, the class factor column named \code{class}, and a \code{sample} column.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector of factor levels for the classification target (\code{class}).}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{Character vector of variable names to be used as features.}
 
-\item{different_ks}{PARAM_DESCRIPTION, Default: c(1, 3, 5, 7, 9, 11, 13)}
+\item{different_ks}{Integer vector of k values to test for k-NN. Default: \code{c(1,3,5,7,9,11,13)}.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{Integer vector of row indices to use as test folds in cross-validation. Default: all rows (leave-one-out).}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical indicating whether to apply SMOTE oversampling on training data. Default: \code{FALSE}.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{smote_params}{List with SMOTE parameters: \code{K} (neighbors) and \code{dup_size} (duplication strategy). Default: \code{list(K=5, dup_size="balance")}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list of results for each tested k, each containing:
+\item{preds}{Predicted classes from cross-validation.}
+\item{confmat}{Confusion matrix of cross-validated predictions.}
+\item{pred_probs}{Predicted class probabilities.}
+\item{preds_no_l1o}{Predictions from training on full data (no cross-validation).}
+\item{confmat_no_l1o}{Confusion matrix of full-data predictions.}
+\item{roc_obj}{ROC curve object.}
+\item{roc_auc}{Area under the ROC curve.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs k-NN classification on a dataset with multiple values of k.
+Supports cross-validation with any folds and optional SMOTE oversampling.
+The input data must include a \code{sample} column.
 }
 \details{
-DETAILS
+Cross-validation is done over the specified \code{folds} indices, which can represent any partitioning scheme.
+SMOTE can be applied during training to handle class imbalance.
+The function requires the packages \code{class}, \code{caret}, \code{pROC}, and optionally \code{smotefamily}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(dplyr)
+
+  data(iris)
+  # Add a sample column
+  iris$sample <- 1:nrow(iris)
+  # Convert Species to factor with levels
+  iris$class <- factor(iris$Species)
+  levels_iris <- levels(iris$class)
+  # Use only first two classes for binary example:
+  iris_bin <- iris \%>\% filter(class != "virginica") \%>\% droplevels()
+  varnames_iris <- colnames(iris)[1:4]
+  folds_iris <- sample(1:nrow(iris_bin), size = nrow(iris_bin), replace = FALSE)
+
+  res <- makeKnn_l1o(iris_bin, levs=levels(iris_bin$class), varnames=varnames_iris,
+                     different_ks = c(3,5,7),
+                     folds = folds_iris,
+                     do_smote = FALSE)
+  print(res$`K=3`$confmat)
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[class]{knn}}, \code{\link[caret]{confusionMatrix}}, \code{\link[pROC]{roc}}
 }

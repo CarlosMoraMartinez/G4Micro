@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_glm_l1o_multiclass.R
 \name{make_glm_l1o_multiclass}
 \alias{make_glm_l1o_multiclass}
-\title{FUNCTION_TITLE}
+\title{Multinomial GLM with Custom Fold Cross-Validation and Optional SMOTE}
 \usage{
 make_glm_l1o_multiclass(
   datasc,
@@ -10,39 +10,65 @@ make_glm_l1o_multiclass(
   varnames,
   folds = c(),
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = 2)
+  smote_params = smote_params_default
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the classification variable \code{class}, a \code{sample} column, and predictor variables.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{Character vector with the class levels to use in the factor definition of the response variable.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{Character vector indicating the names of the predictor variables to include in the model.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{Integer vector of row indices defining the test folds. If empty (default), performs leave-one-out cross-validation.}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical indicating whether to apply SMOTE resampling to balance the training data, Default: FALSE}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = 2)}
+\item{smote_params}{A list with parameters for SMOTE: \code{K} (number of neighbors) and \code{dup_size} (duplication factor), Default: list(K = 5, dup_size = 2)}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\itemize{
+\item \code{confmat}: Confusion matrix from fold-based prediction.
+\item \code{confmat_no_l1o}: Confusion matrix from the full model.
+\item \code{mod}: Fitted model using all data.
+\item \code{preds}: Class predictions from cross-validation.
+\item \code{preds_no_l1o}: Class predictions from the full model.
+\item \code{roc_obj}: Multiclass ROC object from fold-based prediction.
+\item \code{roc_auc}: AUC from the cross-validation model.
+\item \code{roc_obj_no_l1o}: List of ROC objects per class from the full model.
+\item \code{roc_auc_no_l1o}: Mean AUC of ROC objects from the full model.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Trains a multinomial logistic regression model using user-defined folds (e.g., leave-one-out or k-fold) with optional SMOTE resampling to handle class imbalance.
 }
 \details{
-DETAILS
+This function supports multi-class classification using a multinomial generalized linear model (GLM).
+It allows the user to define custom folds for cross-validation (e.g., leave-one-out if \code{folds = 1:nrow(datasc)}).
+Optional SMOTE resampling can be applied to each training fold to correct for class imbalance.
+Performance is assessed via confusion matrices and multiclass ROC curves.
+
+Requires that \code{class} is a factor and that \code{datasc} contains a \code{sample} column (which is removed internally).
+
+The ROC objects returned are computed using \code{pROC::multiclass.roc}, which provides an aggregate AUC estimate for multi-class settings.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+ datasc <- my_data_frame
+ levels <- c("A", "B", "C")
+ vars <- c("gene1", "gene2", "gene3")
+ result <- make_glm_l1o_multiclass(datasc, levs = levels, varnames = vars)
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
-\code{\link[assertthat]{assert_that}}
+\code{\link[dplyr]{select}},
+\code{\link[dplyr]{mutate}},
+\code{\link[assertthat]{assert_that}},
+\code{\link[pROC]{multiclass.roc}},
+\code{\link[nnet]{multinom}},
+\code{\link[UBL]{SmoteClassif}},
+\code{\link[caret]{confusionMatrix}}
 }

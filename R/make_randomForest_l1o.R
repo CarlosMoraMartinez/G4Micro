@@ -1,30 +1,75 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param datasc PARAM_DESCRIPTION
-#' @param levs PARAM_DESCRIPTION
-#' @param varnames PARAM_DESCRIPTION
-#' @param folds PARAM_DESCRIPTION, Default: folds()
-#' @param randomforest_params PARAM_DESCRIPTION, Default: randomforest_params
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Train and Evaluate Random Forest with Leave-One-Out Cross-Validation
+#' @description
+#' This function trains a Random Forest classifier on the provided dataset using
+#' leave-one-out or k-fold cross-validation. It optionally applies SMOTE for class balancing
+#' during training folds. The function returns performance metrics including confusion matrices,
+#' ROC curves, and the trained model on the full dataset.
+#'
+#' @param datasc A data frame containing the dataset with features and a factor column named `class` indicating class labels, and a column named `sample`.
+#' @param levs A character vector of factor levels for the class variable. The second level is considered the "positive" class.
+#' @param varnames A character vector specifying which columns in `datasc` to use as predictor variables.
+#' @param folds A vector of indices indicating which samples to leave out in each iteration. If empty, leave-one-out is used. Default: `c()`.
+#' @param randomforest_params A list of parameters for the randomForest model, including `ntree`, `mtry`, `nodesize`, and `balance_weights` (logical).
+#'                            Default is `randomforest_params_default`.
+#' @param do_smote Logical, whether to apply SMOTE oversampling on the training folds to balance classes. Default is FALSE.
+#' @param smote_params A list of parameters for SMOTE, including `K` (number of neighbors) and `dup_size` (duplication size or "balance"). Default is `smote_params_default`.
+#'
+#' @return A list containing:
+#' \describe{
+#'   \item{confmat}{Confusion matrix for the cross-validation predictions.}
+#'   \item{confmat_no_l1o}{Confusion matrix for predictions from the model trained on the entire dataset.}
+#'   \item{mod}{Random Forest model trained on the entire dataset.}
+#'   \item{preds}{Vector of predicted classes from CV.}
+#'   \item{pred_probs}{Numeric vector or data frame of predicted probabilities from CV.}
+#'   \item{preds_no_l1o}{Predicted classes from the full model.}
+#'   \item{roc_obj}{ROC curve object from CV predictions.}
+#'   \item{roc_auc}{AUC value from CV predictions.}
+#'   \item{smoteData}{The last SMOTE-augmented training set generated during CV (if `do_smote = TRUE`).}
+#'   \item{params}{List of parameters used for the Random Forest model.}
+#' }
+#'
+#' @details
+#' The function supports binary and multiclass classification. If `balance_weights` is TRUE in `randomforest_params` and `do_smote` is FALSE,
+#' class weights are set inversely proportional to class frequencies.
+#' If `do_smote` is TRUE, SMOTE oversampling is applied on each training fold with parameters specified in `smote_params`.
+#' The function requires the `randomForest` package and optionally the `UBL` package for SMOTE.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Example usage:
+#'   data(iris)
+#'   iris <- iris %>%
+#'   mutate(class = factor(ifelse(Species == "setosa", "pos", "neg")), sample = 1:n())
+#'
+#'   rf_params <- list(ntree=500, mtry=3, nodesize=5, balance_weights=TRUE)
+#'   smote_params <- list(K=5, dup_size="balance")
+#'
+#'   result <- make_randomForest_l1o(datasc=iris, levs=c("neg", "pos"),
+#'                      varnames=colnames(iris)[1:4], folds=1:nrow(iris),
+#'                      randomforest_params=rf_params, do_smote=TRUE,
+#'                      smote_params=smote_params)
+#'   print(result$confmat)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}
+#' }
+#'
+#' @seealso
+#' \code{\link[dplyr]{select}},
+#' \code{\link[randomForest]{randomForest}},
+#' \code{\link[UBL]{SMOTE}}
+#'
 #' @rdname make_randomForest_l1o
-#' @export 
+#' @export
 #' @importFrom dplyr select
+#' @importFrom UBL SmoteClassif
+#' @importFrom randomForest randomForest
+#' @importFrom pROC roc multiclass.roc
+#' @importFrom caret confusionMatrix
 make_randomForest_l1o <- function(datasc, levs, varnames,
                                   folds=folds(),
-                                  randomforest_params = randomforest_params,
+                                  randomforest_params = randomforest_params_default,
                                   do_smote=FALSE,
-                                  smote_params=list(K=5, dup_size="balance")
+                                  smote_params=smote_params_default
 ){
   library(randomForest)
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotPrediction.R
 \name{plotPrediction}
 \alias{plotPrediction}
-\title{FUNCTION_TITLE}
+\title{Plot Model Predictions on PCA Components}
 \usage{
 plotPrediction(
   phname,
@@ -18,34 +18,44 @@ plotPrediction(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Character. Name of the phenotype or dataset subset to analyze.}
 
-\item{mod2plot}{PARAM_DESCRIPTION}
+\item{mod2plot}{Character. Name of the model to plot predictions for (e.g., "KNN-K=5").}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{List. Nested list containing PCA results, model predictions, and metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{List. Options list containing at least the output directory path as \code{opt$out}.}
 
-\item{get_pcnames_from}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{get_pcnames_from}{Character. Name of the sublist in \code{all_model_results} to get PCA variable names and models from. Default is "padj_taxa_res".}
 
-\item{pca_name}{PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'}
+\item{pca_name}{Character. Name of the PCA results list in \code{all_model_results}. Default is "padj_taxa_pcas".}
 
-\item{varname}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{varname}{Character. Name of the metadata variable to use for grouping/condition. Default is "Condition".}
 
-\item{pred_mode}{PARAM_DESCRIPTION, Default: 'l1o'}
+\item{pred_mode}{Character. Prediction mode to use: "l1o" (leave-one-out) or other mode (e.g., "no_l1o"). Default is "l1o".}
 
-\item{w}{PARAM_DESCRIPTION, Default: 6}
+\item{w}{Numeric. Width of the saved plot in inches. Default is 6.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 4}
+\item{h}{Numeric. Height of the saved plot in inches. Default is 4.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object showing predicted vs actual classes on the first two PCs.
+The plot is saved as a PDF file in the output directory.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates a scatter plot showing model predictions over the first two principal components (PCs).
+Points are colored by their true condition, with misclassified points highlighted.
+The plot includes the accuracy of the model in the title and is saved as a PDF.
 }
 \details{
-DETAILS
+This function:
+\itemize{
+\item Retrieves model predictions and matches them to sample IDs.
+\item Extracts the first two principal components for samples.
+\item Highlights correct vs. incorrect predictions by point size and layering.
+\item Calculates a confusion matrix and shows the overall accuracy in the plot title.
+\item Saves the plot to the specified output folder.
+}
 }
 \examples{
 \dontrun{

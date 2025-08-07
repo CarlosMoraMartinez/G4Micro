@@ -2,49 +2,83 @@
 % Please edit documentation in R/make_randomForest_l1o.R
 \name{make_randomForest_l1o}
 \alias{make_randomForest_l1o}
-\title{FUNCTION_TITLE}
+\title{Train and Evaluate Random Forest with Leave-One-Out Cross-Validation}
 \usage{
 make_randomForest_l1o(
   datasc,
   levs,
   varnames,
   folds = folds(),
-  randomforest_params = randomforest_params,
+  randomforest_params = randomforest_params_default,
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = "balance")
+  smote_params = smote_params_default
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the dataset with features and a factor column named \code{class} indicating class labels, and a column named \code{sample}.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector of factor levels for the class variable. The second level is considered the "positive" class.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector specifying which columns in \code{datasc} to use as predictor variables.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: folds()}
+\item{folds}{A vector of indices indicating which samples to leave out in each iteration. If empty, leave-one-out is used. Default: \code{c()}.}
 
-\item{randomforest_params}{PARAM_DESCRIPTION, Default: randomforest_params}
+\item{randomforest_params}{A list of parameters for the randomForest model, including \code{ntree}, \code{mtry}, \code{nodesize}, and \code{balance_weights} (logical).
+Default is \code{randomforest_params_default}.}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical, whether to apply SMOTE oversampling on the training folds to balance classes. Default is FALSE.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{smote_params}{A list of parameters for SMOTE, including \code{K} (number of neighbors) and \code{dup_size} (duplication size or "balance"). Default is \code{smote_params_default}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\describe{
+\item{confmat}{Confusion matrix for the cross-validation predictions.}
+\item{confmat_no_l1o}{Confusion matrix for predictions from the model trained on the entire dataset.}
+\item{mod}{Random Forest model trained on the entire dataset.}
+\item{preds}{Vector of predicted classes from CV.}
+\item{pred_probs}{Numeric vector or data frame of predicted probabilities from CV.}
+\item{preds_no_l1o}{Predicted classes from the full model.}
+\item{roc_obj}{ROC curve object from CV predictions.}
+\item{roc_auc}{AUC value from CV predictions.}
+\item{smoteData}{The last SMOTE-augmented training set generated during CV (if \code{do_smote = TRUE}).}
+\item{params}{List of parameters used for the Random Forest model.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function trains a Random Forest classifier on the provided dataset using
+leave-one-out or k-fold cross-validation. It optionally applies SMOTE for class balancing
+during training folds. The function returns performance metrics including confusion matrices,
+ROC curves, and the trained model on the full dataset.
 }
 \details{
-DETAILS
+The function supports binary and multiclass classification. If \code{balance_weights} is TRUE in \code{randomforest_params} and \code{do_smote} is FALSE,
+class weights are set inversely proportional to class frequencies.
+If \code{do_smote} is TRUE, SMOTE oversampling is applied on each training fold with parameters specified in \code{smote_params}.
+The function requires the \code{randomForest} package and optionally the \code{UBL} package for SMOTE.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Example usage:
+  data(iris)
+  iris <- iris \%>\%
+  mutate(class = factor(ifelse(Species == "setosa", "pos", "neg")), sample = 1:n())
+
+  rf_params <- list(ntree=500, mtry=3, nodesize=5, balance_weights=TRUE)
+  smote_params <- list(K=5, dup_size="balance")
+
+  result <- make_randomForest_l1o(datasc=iris, levs=c("neg", "pos"),
+                     varnames=colnames(iris)[1:4], folds=1:nrow(iris),
+                     randomforest_params=rf_params, do_smote=TRUE,
+                     smote_params=smote_params)
+  print(result$confmat)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
+\code{\link[dplyr]{select}},
+\code{\link[randomForest]{randomForest}},
+\code{\link[UBL]{SMOTE}}
 }

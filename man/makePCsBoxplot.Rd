@@ -2,7 +2,7 @@
 % Please edit documentation in R/makePCsBoxplot.R
 \name{makePCsBoxplot}
 \alias{makePCsBoxplot}
-\title{FUNCTION_TITLE}
+\title{Plot Boxplots of Principal Components by Condition with Significance Annotations}
 \usage{
 makePCsBoxplot(
   phname,
@@ -16,30 +16,43 @@ makePCsBoxplot(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Character. Name/key identifying the phyloseq object or dataset within \code{all_model_results}.}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{Nested list containing model summaries, PCA results, and metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{List or similar object with at least an \code{out} element specifying the output directory.}
 
-\item{get_pcnames_from}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{get_pcnames_from}{Character. Key within \code{all_model_results[[phname]]} from which to extract PC names. Default is \code{"padj_taxa_res"}.}
 
-\item{pca_name}{PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'}
+\item{pca_name}{Character. Key within \code{all_model_results[[phname]]} where PCA objects are stored. Default is \code{"padj_taxa_pcas"}.}
 
-\item{varname}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{varname}{Character. Name of the metadata variable used to group samples (e.g., experimental condition). Default is \code{"Condition"}.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 4}
+\item{w}{Numeric. Width of the saved plot in inches. Default is 4.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 6}
+\item{h}{Numeric. Height of the saved plot in inches. Default is 6.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with three elements:
+\describe{
+\item{plot}{A ggplot2 object showing PC score distributions by condition with significance annotations.}
+\item{tab}{A tidy data frame containing PC scores, sample IDs, and condition labels used for plotting.}
+\item{pcfactors}{A data frame with directional factors used to flip PC scores for visualization convenience.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates boxplots of principal component (PC) scores grouped by a categorical condition,
+adds significance annotations for pairwise comparisons, and saves the plot and data to files.
+
+This function adjusts PC score directions for easier visualization when comparing two groups (e.g., "Control" vs "Depression").
+It re-labels PCs with explained variance percentages and outputs both the plot and the underlying data.
 }
 \details{
-DETAILS
+The function orders PCs numerically, generates descriptive PC labels with variance explained (using \code{\link{getPCnamesFromAllresults}}),
+and adjusts PC score signs so that, if comparing "Control" vs "Depression", the scores for depression are aligned for easier interpretation.
+Pairwise t-tests between conditions are computed and annotated on the plot using \code{ggsignif::stat_signif}.
+
+Output files include a PDF plot, and TSV files with the plotted data and PC direction factors.
 }
 \examples{
 \dontrun{

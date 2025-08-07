@@ -1,24 +1,43 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param counts_df PARAM_DESCRIPTION
-#' @param genes PARAM_DESCRIPTION
-#' @param vars2pca PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: 'PCAs'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Generate and Save Multiple PCA Plots
+#' @description This function computes and saves PCA plots for a set of specified metadata variables, using count data and gene selection. It also exports PCA components and rotations.
+#' @param phobj A phyloseq object containing sample metadata and the OTU table.
+#' @param counts_df A data frame or matrix with normalized counts (e.g., variance-stabilized or log-transformed counts).
+#' @param genes A vector of gene/taxa names, corresponding to rownames of \code{counts_df} to include in the PCA.
+#' @param vars2pca A character vector with the names of metadata variables to use for PCA visualization (e.g., treatment groups, batches).
+#' @param opt A list containing an `out` element, which specifies the output directory path.
+#' @param name A character string to use as the output file name prefix, Default: 'PCAs'
+#' @return A named list of PCA plot objects (one per variable in `vars2pca`). Also writes `.RData`, `.tsv`, and `.pdf` files to disk.
+#' @details
+#' This function uses the sample metadata and the normalized count matrix to compute PCA and generate plots colored by metadata variables.
+#' It also appends a log10 transformed total read count (`reads_log10_current`) to the metadata and includes it in the PCA plot list, to visually check for depth biases.
+#'
+#' PCA computation and plotting are delegated to a helper function `plotPCA`, which must return a list with components `$pca` (containing the PCA object) and `$plots` (a ggplot2 object).
+#' If plotting fails for a specific variable, a fallback null plot is generated using `getNullPlot`.
+#'
+#' Outputs:
+#' - A PDF with all PCA plots.
+#' - A `.RData` file with all PCA objects.
+#' - TSV tables with PCA coordinates and rotations for the first variable.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   pcas <- makeAllPCAs(phobj, counts_df, genes, vars2pca = c("group", "sex"), opt = list(out = "results/"))
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}
+#' }
+#' @seealso
+#'  \code{\link[dplyr]{mutate}},
+#'  \code{\link[phyloseq]{sample_data}},
+#'  \code{\link[phyloseq]{otu_table}},
+#'  \code{\link[readr]{write_tsv}},
+#'  \code{\link[stats]{prcomp}},
+#'  \code{\link{plotPCA}},
+#'  \code{\link{getNullPlot}}
 #' @rdname makeAllPCAs
-#' @export 
+#' @export
 #' @importFrom dplyr mutate
+#' @importFrom phyloseq sample_data otu_table
+#' @importFrom readr write_tsv
 makeAllPCAs <- function(phobj, counts_df, genes, vars2pca, opt, name = "PCAs"){
   design <- sample_data(phobj)
   design<- data.frame(design)

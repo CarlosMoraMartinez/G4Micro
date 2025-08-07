@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_classifTree_l1o.R
 \name{make_classifTree_l1o}
 \alias{make_classifTree_l1o}
-\title{FUNCTION_TITLE}
+\title{Classification Tree with General Cross-Validation and Optional SMOTE Oversampling}
 \usage{
 make_classifTree_l1o(
   datasc,
@@ -15,36 +15,80 @@ make_classifTree_l1o(
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the dataset. Must include a factor column \code{class} with the target labels,
+and a \code{sample} column. Predictor variables are selected by \code{varnames}.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector specifying the factor levels of the \code{class} variable. The second element is used as the positive class.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector of predictor variable names to use in the model.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{Integer vector specifying indices of samples to be used as test sets in cross-validation. If empty, leave-one-out cross-validation is performed.}
 
-\item{balance_weights}{PARAM_DESCRIPTION, Default: TRUE}
+\item{balance_weights}{Logical indicating whether to apply class weights to balance classes. Default: \code{TRUE}.
+Note: currently not implemented for C5.0 (warning issued).}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical indicating whether to apply SMOTE oversampling on training folds. Default: \code{FALSE}.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{smote_params}{Named list with SMOTE parameters: \code{K} (nearest neighbors, default 5), \code{dup_size} (oversampling amount, default \code{"balance"}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list containing:
+\describe{
+\item{\code{confmat}}{Confusion matrix from cross-validated predictions.}
+\item{\code{mod}}{C5.0 classification tree model trained on the full dataset.}
+\item{\code{preds}}{Predicted classes from cross-validation.}
+\item{\code{pred_probs}}{Predicted probabilities for the positive class from cross-validation.}
+\item{\code{preds_no_l1o}}{Predicted classes from model trained on the full dataset.}
+\item{\code{confmat_no_l1o}}{Confusion matrix from the full dataset model predictions.}
+\item{\code{roc_obj_no_l1o}}{Currently \code{NULL}, placeholder for ROC object from the full dataset model.}
+\item{\code{roc_auc_no_l1o}}{Currently \code{NULL}, placeholder for ROC AUC value from the full dataset model.}
+\item{\code{roc_obj}}{ROC curve object from cross-validation predictions (binary or multiclass).}
+\item{\code{roc_auc}}{Numeric ROC AUC value from cross-validation predictions.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Trains and evaluates a classification tree using C5.0 with general cross-validation defined by \code{folds}.
+Optionally applies SMOTE oversampling to training data folds to handle class imbalance.
+Returns confusion matrices, predictions, predicted probabilities, and ROC AUC metrics.
 }
 \details{
-DETAILS
+This function performs classification using C5.0 trees with cross-validation defined by \code{folds}.
+If \code{folds} is empty, leave-one-out cross-validation is performed.
+When \code{do_smote} is \code{TRUE}, SMOTE oversampling is applied on each training fold using parameters defined in \code{smote_params}.
+Class weights balancing is currently not implemented due to C5.0 limitations.
+ROC/AUC is computed differently depending on whether the classification is binary or multiclass.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+
+  data(iris)
+  iris_sub <- iris \%>\% filter(Species != "setosa")
+  iris_sub$class <- factor(iris_sub$Species)
+  iris_sub$sample <- 1:nrow(iris_sub)
+  levs <- levels(iris_sub$class)
+  varnames <- colnames(iris_sub)[1:4]
+
+  res <- make_classifTree_l1o(
+    datasc = iris_sub,
+    levs = levs,
+    varnames = varnames,
+    folds = c(),           # leave-one-out CV
+    balance_weights = FALSE,
+    do_smote = FALSE
+  )
+  print(res$confmat)
+  print(res$roc_auc)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
+\code{\link[dplyr]{select}},
+\code{\link[C50]{C5.0}},
+\code{\link[caret]{confusionMatrix}},
+\code{\link[pROC]{roc}},
+\code{\link[UBL]{SmoteClassif}},
+\code{\link[purrr]{map}},
+\code{\link[rlang]{sym}}
 }

@@ -1,26 +1,47 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phname PARAM_DESCRIPTION
-#' @param all_model_results PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
-#' @param pca_name PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'
-#' @param varname PARAM_DESCRIPTION, Default: 'Condition'
-#' @param w PARAM_DESCRIPTION, Default: 16
-#' @param h PARAM_DESCRIPTION, Default: 16
-#' @param pred_mode PARAM_DESCRIPTION, Default: 'l1o'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Plot All Model Predictions on PCA Components for a Phenotype
+#' @description
+#' Generates and saves combined plots of predictions from multiple models
+#' for a given phenotype/dataset over PCA components.
+#' The models are ordered by accuracy and plotted using \code{plotPrediction}.
+#' The combined plot is saved as a PDF.
+#'
+#' @param phname Character. Name of the phenotype or dataset subset to analyze.
+#' @param all_model_results List. Nested list containing PCA results, model predictions, and metadata.
+#' @param opt List. Options list containing at least the output directory path as \code{opt$out}.
+#' @param get_pcnames_from Character. Name of the sublist in \code{all_model_results} to get PCA variable names and models from. Default is "padj_taxa_res".
+#' @param pca_name Character. Name of the PCA results list in \code{all_model_results}. Default is "padj_taxa_pcas".
+#' @param varname Character. Name of the metadata variable to use for grouping/condition. Default is "Condition".
+#' @param w Numeric. Width of the saved combined plot PDF in inches. Default is 16.
+#' @param h Numeric. Height of the saved combined plot PDF in inches. Default is 16.
+#' @param pred_mode Character. Prediction mode to use: "l1o" (leave-one-out) or other mode. Default is "l1o".
+#'
+#' @return A list with two elements:
+#' \item{cw}{A \code{ggplot} object representing the combined grid of all model prediction plots.}
+#' \item{plots}{A named list of individual \code{ggplot} objects or empty lists (if a plot failed).}
+#'
+#' @details
+#' The function:
+#' \itemize{
+#'   \item Creates an output directory if it does not exist.
+#'   \item Extracts all model names and orders them by their accuracy.
+#'   \item Calls \code{plotPrediction} for each model, safely capturing errors.
+#'   \item Combines successful plots into a grid using \code{cowplot::plot_grid}.
+#'   \item Saves the combined plot as a PDF file.
+#'   \item Returns the combined plot object and the list of individual plots.
+#' }
+#' If no plots are successfully generated, a message is printed instead.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[cowplot]{plot_grid}}
+#'  \code{\link{plotPrediction}}
 #' @rdname plotAllModelPredictions
-#' @export 
+#' @export
 #' @importFrom cowplot plot_grid
 plotAllModelPredictions <- function(phname, all_model_results, opt,
                                     get_pcnames_from="padj_taxa_res",

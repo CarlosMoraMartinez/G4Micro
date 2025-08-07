@@ -2,29 +2,49 @@
 % Please edit documentation in R/getSummaryTablesDeseq.R
 \name{getSummaryTablesDeseq}
 \alias{getSummaryTablesDeseq}
-\title{FUNCTION_TITLE}
+\title{Generate Summary Tables from DESeq2 Results}
 \usage{
 getSummaryTablesDeseq(res, opt)
 }
 \arguments{
-\item{res}{PARAM_DESCRIPTION}
+\item{res}{A \code{DESeq2} results object or data frame containing differential expression results,
+including columns \code{pvalue}, \code{padj}, and \code{log2FoldChange}.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list or object containing analysis options:
+\itemize{
+\item \code{pval}: numeric, p-value cutoff threshold.
+\item \code{fc}: numeric, fold-change cutoff (linear scale, e.g., 2 for 2-fold).
+\item \code{out}: character, output directory where summary tables will be saved.
+}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two contingency tables:
+\describe{
+\item{\code{restab}}{Table of counts by categories using raw p-values and fold changes.}
+\item{\code{restab_adj}}{Table of counts by categories using adjusted p-values and fold changes.}
+}
+Both tables show counts of taxa split by significance (p-value threshold) and direction/magnitude of fold change.
 }
 \description{
-FUNCTION_DESCRIPTION
+Summarizes differential expression results by categorizing taxa based on raw and adjusted p-values
+and log2 fold change thresholds, and outputs contingency tables showing counts in each category.
+The tables separate taxa into more frequent, less frequent, or equal abundance based on the
+specified fold-change cutoff, for both raw p-values and adjusted p-values.
 }
 \details{
-DETAILS
+This function processes DESeq2 differential abundance results to create summary tables
+that help interpret the number of taxa meeting significance and fold-change criteria.
+It writes the contingency tables as TSV files in the specified output directory.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming 'res' is a DESeq2 results object and 'opt' is a list of options:
+  opt <- list(pval = 0.05, fc = 2, out = "./results/")
+  summary_tables <- getSummaryTablesDeseq(res, opt)
+  print(summary_tables$restab)
+  print(summary_tables$restab_adj)
+}
 }
 }
 \seealso{

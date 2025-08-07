@@ -1,22 +1,42 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @param vars2deseq PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Full DESeq2 Differential Expression Analysis Pipeline
+#' @description
+#' Runs a comprehensive differential expression analysis pipeline on a phyloseq object,
+#' including filtering, DESeq2 result generation, annotation, visualization (MA plots, volcano plots, heatmaps),
+#' and saving of annotated results.
+#'
+#' @param phobj A phyloseq object containing count data and taxonomy information.
+#' @param name A character string used as a prefix for output directories and files.
+#' @param vars2deseq Character vector of variable names to use in the DESeq2 design formula.
+#' @param opt A list of options controlling output directories, filtering thresholds, p-value cutoffs, and other parameters.
+#'
+#' @return A list containing DESeq2 result data frames and associated objects produced by \code{getDeseqResults}.
+#'
+#' @details
+#' This function creates output directories if needed, computes the minimum number of samples with counts based on frequency thresholds,
+#' executes differential expression analysis through \code{getDeseqResults()}, annotates results with genus-level taxonomy,
+#' saves annotated tables as TSV files, and generates diagnostic and visualization plots such as MA plots, volcano plots, and heatmaps.
+#' It also performs intersection of taxa lists across contrasts when applicable.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   opt <- list(out = "results/", minfreq = 0.01, pval = 0.05)
+#'   vars <- c("Condition", "Batch")
+#'   res <- deseq_full_pipeline(physeq_object, "MyExperiment", vars, opt)
 #' }
-#' @seealso 
+#' }
+#' @seealso
+#'  \code{\link{getDeseqResults}}, \code{\link{make_maplot}}, \code{\link{make_volcano}},
+#'  \code{\link{makeHeatmap}}, \code{\link{getSummaryTablesDeseq}}
+#'  \code{\link[DESeq2]{DESeq}}, \code{\link[DESeq2]{results}}, \code{\link[DESeq2]{plotDispEsts}},
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{filter}}
 #' @rdname deseq_full_pipeline
-#' @export 
+#' @export
 #' @importFrom dplyr mutate select arrange filter
+#' @importFrom purrr map
+#' @importFrom readr write_tsv
+#' @importFrom phyloseq tax_table
+#' @importFrom DESeq2 plotDispEsts
 deseq_full_pipeline <- function(phobj, name, vars2deseq, opt){
   if(!dir.exists(paste0(opt$out, "DeSEQ2"))) dir.create(paste0(opt$out, "DeSEQ2"))
   outdir <- paste0(opt$out, "DeSEQ2/", name, "/")
@@ -42,7 +62,9 @@ deseq_full_pipeline <- function(phobj, name, vars2deseq, opt){
   tryCatch(make_maplot(resLFC, opt,  paste0(name, "_MAPlot-rawFC.pdf")),  error=\(x)cat("Error make_maplot"))
   tryCatch(make_maplot(resLFC_ape, opt,  paste0(name, "_MAPlot-rawFC-ape.pdf")),  error=\(x)cat("Error make_maplot"))
   tryCatch(make_maplot(resLFC_ashr, opt,  paste0(name, "_MAPlot-rawFC-ashr.pdf")),  error=\(x)cat("Error make_maplot"))
+  pdf(paste0(opt$out, name, "_DispEsts.pdf"))
   plotDispEsts(dds, CV=T , ylim = c(1e-6, 1e1))
+  dev.off()
   rtabs <- getSummaryTablesDeseq(res, opt)
   tryCatch(make_volcano(resLFC, opt, paste0(name, "volcano_rawfc_rawpval.pdf"), "pvalue"), error=\(x)cat("Error make_volcano"))
   tryCatch(make_volcano(res, opt, paste0(name, "volcano_rawfc_adjpval.pdf"), "padj"),  error=\(x)cat("Error make_volcano"))

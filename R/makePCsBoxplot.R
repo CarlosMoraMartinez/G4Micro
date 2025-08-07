@@ -1,27 +1,46 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phname PARAM_DESCRIPTION
-#' @param all_model_results PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
-#' @param pca_name PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'
-#' @param varname PARAM_DESCRIPTION, Default: 'Condition'
-#' @param w PARAM_DESCRIPTION, Default: 4
-#' @param h PARAM_DESCRIPTION, Default: 6
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Plot Boxplots of Principal Components by Condition with Significance Annotations
+#' @description
+#' Generates boxplots of principal component (PC) scores grouped by a categorical condition,
+#' adds significance annotations for pairwise comparisons, and saves the plot and data to files.
+#'
+#' This function adjusts PC score directions for easier visualization when comparing two groups (e.g., "Control" vs "Depression").
+#' It re-labels PCs with explained variance percentages and outputs both the plot and the underlying data.
+#'
+#' @param phname Character. Name/key identifying the phyloseq object or dataset within \code{all_model_results}.
+#' @param all_model_results Nested list containing model summaries, PCA results, and metadata.
+#' @param opt List or similar object with at least an \code{out} element specifying the output directory.
+#' @param get_pcnames_from Character. Key within \code{all_model_results[[phname]]} from which to extract PC names. Default is \code{"padj_taxa_res"}.
+#' @param pca_name Character. Key within \code{all_model_results[[phname]]} where PCA objects are stored. Default is \code{"padj_taxa_pcas"}.
+#' @param varname Character. Name of the metadata variable used to group samples (e.g., experimental condition). Default is \code{"Condition"}.
+#' @param w Numeric. Width of the saved plot in inches. Default is 4.
+#' @param h Numeric. Height of the saved plot in inches. Default is 6.
+#'
+#' @return A list with three elements:
+#' \describe{
+#'   \item{plot}{A ggplot2 object showing PC score distributions by condition with significance annotations.}
+#'   \item{tab}{A tidy data frame containing PC scores, sample IDs, and condition labels used for plotting.}
+#'   \item{pcfactors}{A data frame with directional factors used to flip PC scores for visualization convenience.}
+#' }
+#'
+#' @details
+#' The function orders PCs numerically, generates descriptive PC labels with variance explained (using \code{\link{getPCnamesFromAllresults}}),
+#' and adjusts PC score signs so that, if comparing "Control" vs "Depression", the scores for depression are aligned for easier interpretation.
+#' Pairwise t-tests between conditions are computed and annotated on the plot using \code{ggsignif::stat_signif}.
+#'
+#' Output files include a PDF plot, and TSV files with the plotted data and PC direction factors.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}
 #'  \code{\link[tidyr]{gather}}, \code{\link[tidyr]{spread}}
 #'  \code{\link[ggsignif]{stat_signif}}
 #' @rdname makePCsBoxplot
-#' @export 
+#' @export
 #' @importFrom dplyr select mutate summarise
 #' @importFrom tidyr gather spread
 #' @importFrom ggsignif stat_signif

@@ -1,28 +1,44 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phname PARAM_DESCRIPTION
-#' @param condnames PARAM_DESCRIPTION
-#' @param all_model_results PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param w PARAM_DESCRIPTION, Default: 8
-#' @param h PARAM_DESCRIPTION, Default: 12
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Compare Model Accuracies Across Multiple Conditions for a Single Phyloseq Object
+#' @description This function compares classification model accuracies across several conditions
+#' (e.g., groups of selected features or experimental groups) for a given phyloseq object.
+#' It aggregates model summaries from a list of results, formats them, and generates a line plot of accuracies.
+#' A TSV file with all model summaries is also saved.
+#'
+#' @param phname Name of the phyloseq object (used to subset \code{all_model_results}).
+#' @param condnames Character vector with the names of different feature selection conditions or experimental groups to compare.
+#' @param all_model_results A nested list of model results. The top-level list is indexed by phyloseq object names,
+#' and the second level is indexed by condition names (e.g., "padj_taxa_res", "raw_taxa_res"), each containing a \code{modummary} data frame.
+#' @param name Prefix used to name the output plot file.
+#' @param opt A list containing output options. Must include the \code{opt$out} directory path.
+#' @param w Width of the output PDF file in inches. Default is 8.
+#' @param h Height of the output PDF file in inches. Default is 12.
+#'
+#' @return A ggplot2 object representing the accuracy comparison plot. Additionally, a TSV file and a PDF plot are saved to disk.
+#'
+#' @details
+#' The function loops through the specified conditions, extracts the model accuracy summaries for each,
+#' appends metadata for plotting, merges all results into a single table, and generates a line plot
+#' showing accuracy (Accuracy_l1out) across different models and conditions.
+#'
+#' The y-axis shows accuracy, the x-axis shows model type, and lines/points are grouped by condition.
+#'
+#' Output files are saved in a subdirectory named after the \code{phname}, within the path specified by \code{opt$out}.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{summarise}}
 #'  \code{\link[ggpubr]{theme_pubr}}
 #' @rdname makeLinePlotComparingSamePhobjModels_Cov
-#' @export 
+#' @export
 #' @importFrom dplyr mutate arrange select summarise
 #' @importFrom ggpubr theme_pubr
+#' @importFrom ggsci scale_color_cosmic scale_fill_cosmic
 makeLinePlotComparingSamePhobjModels_Cov<- function(phname, condnames,
                                                     all_model_results,
                                                     name, opt, w=8, h=12){

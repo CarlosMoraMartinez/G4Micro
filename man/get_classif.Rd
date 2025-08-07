@@ -2,28 +2,46 @@
 % Please edit documentation in R/get_classif.R
 \name{get_classif}
 \alias{get_classif}
-\title{FUNCTION_TITLE}
+\title{Parse Taxonomic Classification String into a Data Frame}
 \usage{
 get_classif(classtring, classnames = NULL)
 }
 \arguments{
-\item{classtring}{PARAM_DESCRIPTION}
+\item{classtring}{Character. Taxonomic classification string, e.g. "d__Bacteria|p__Proteobacteria|c__Gammaproteobacteria".}
 
-\item{classnames}{PARAM_DESCRIPTION, Default: NULL}
+\item{classnames}{Named list or vector. Optional. Mapping of taxonomic rank prefixes to rank names.
+Default is a list with typical taxonomic levels:
+\itemize{
+\item d = "Kingdom"
+\item k = "Kingdom2"
+\item p = "Phylum"
+\item c = "Class"
+\item o = "Order"
+\item f = "Family"
+\item g = "Genus"
+\item s = "Species"
+\item xx = "Strain"
+}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A one-row \code{data.frame} with columns named after taxonomic ranks and values parsed from the input string.
+Missing ranks will be \code{NA}.
 }
 \description{
-FUNCTION_DESCRIPTION
+Parses a taxonomic classification string formatted with hierarchical ranks separated by
+pipe (\code{|}) and double underscore (\verb{__}), and returns a one-row data frame with named taxonomic ranks.
 }
 \details{
-DETAILS
+The function splits the input classification string by pipe and double underscore to extract rank prefixes and
+associated taxon names. It handles the special case where multiple "k" ranks appear by converting the first "k" to "d".
+The output data frame columns correspond to the provided or default rank names.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  clas <- "d__Bacteria|p__Proteobacteria|c__Gammaproteobacteria|o__Enterobacterales|f__Enterobacteriaceae|g__Escherichia|s__coli"
+  get_classif(clas)
 }
+}
+
 }

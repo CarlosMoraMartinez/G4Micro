@@ -2,31 +2,41 @@
 % Please edit documentation in R/make_maplot.R
 \name{make_maplot}
 \alias{make_maplot}
-\title{FUNCTION_TITLE}
+\title{Generate MA-Plot from DESeq2 Results and Save as PDF}
 \usage{
 make_maplot(res, opt, name = "maplot.pdf")
 }
 \arguments{
-\item{res}{PARAM_DESCRIPTION}
+\item{res}{A \code{DESeq2} results object containing differential expression statistics.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list or object with plotting options, including:
+\itemize{
+\item \code{pval}: numeric, significance threshold for adjusted p-value (alpha).
+\item \code{fc}: numeric, fold-change cutoff (linear scale, e.g., 2 for 2-fold).
+\item \code{out}: character, output directory path for saving the PDF plot.
+}}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'maplot.pdf'}
+\item{name}{Character string specifying the filename of the saved plot PDF. Default is \code{"maplot.pdf"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+None. The function invisibly returns \code{NULL} after saving the plot and displaying it.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates an MA-plot from DESeq2 differential expression results using specified
+p-value and fold-change cutoffs, saves the plot as a PDF file, and also displays it.
+Horizontal lines indicate the fold-change thresholds.
 }
 \details{
-DETAILS
+The MA-plot visualizes log2 fold changes versus mean normalized counts with
+points colored based on adjusted p-values. Fold-change thresholds are marked
+by horizontal dashed blue lines at \code{±log2(fc)}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  opt <- list(pval = 0.05, fc = 2, out = "results")
+  make_maplot(res, opt, name = "my_ma_plot.pdf")
+}
 }
 }
 \seealso{

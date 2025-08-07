@@ -1,32 +1,108 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param datasc PARAM_DESCRIPTION
-#' @param levs PARAM_DESCRIPTION
-#' @param varnames PARAM_DESCRIPTION
-#' @param folds PARAM_DESCRIPTION, Default: folds()
-#' @param catboost_params PARAM_DESCRIPTION, Default: catboost_params
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Train CatBoost model with cross-validation and optional SMOTE augmentation
+#' @description
+#' Performs cross-validation training of a CatBoost classifier with support for categorical imbalance handling,
+#' optional SMOTE oversampling on training folds, and returns predictions, probabilities, confusion matrices,
+#' and trained models. Supports binary and multiclass classification.
+#'
+#' @param datasc Data frame containing the dataset. Must include a factor column named `class` and a column `sample`.
+#' @param levs Character vector specifying the levels of the class factor, defining class order.
+#' @param varnames Character vector of variable names (features) to use as predictors.
+#' @param folds Integer vector specifying indices for cross-validation folds. Default is all rows (no CV).
+#' @param catboost_params A named list of CatBoost training parameters controlling model training behavior.
+#'   Defaults to:
+#'   \itemize{
+#'     \item \code{iterations} (int): Number of boosting iterations. Default: 100
+#'     \item \code{learning_rate} (numeric): Step size shrinkage used to prevent overfitting. Default: 0.05
+#'     \item \code{depth} (int): Depth of the tree. Default: 2
+#'     \item \code{loss_function} (string): Loss function to optimize. Default: "Logloss"
+#'     \item \code{eval_metric} (string): Metric for evaluation. Default: "AUC"
+#'     \item \code{random_seed} (int): Seed for reproducibility. Default: 123
+#'     \item \code{use_best_model} (bool): Use best model found during training. Default: TRUE
+#'     \item \code{od_type} (string): Overfitting detector type. Default: "Iter"
+#'     \item \code{od_wait} (int): Overfitting detector wait iterations. Default: 20
+#'     \item \code{verbose} (bool): Print training progress. Default: FALSE
+#'     \item \code{thread_count} (int): Number of threads to use. Default: 1
+#'     \item \code{balance_weights} (bool): Whether to balance class weights. Default: TRUE
+#'     \item \code{bootstrap_type} (string): Bootstrap sampling type ("Bayesian", "Bernoulli", etc.). Default: "Bayesian"
+#'     \item \code{l2_leaf_reg} (numeric): L2 regularization coefficient. Default: 3
+#'     \item \code{subsample} (numeric): Subsample ratio for Bernoulli bootstrap (not used if "Bayesian" is selected). Default: 0.6
+#'     \item \code{grow_policy} (string): Tree grow policy ("Depthwise" or others). Default: "Depthwise"
+#'     \item \code{auto_class_weights} (string or bool): Automatic class weights adjustment. Default: "Balanced"
+#'   }
+#' @param do_smote Logical indicating whether to apply SMOTE oversampling on training folds. Default is FALSE.
+#' @param smote_params List with parameters for SMOTE sampling, including `K` (nearest neighbors) and `dup_size` (duplication size or balance strategy). Default is list(K = 5, dup_size = "balance").
+#'
+#' @return A list containing:
+#' \item{confmat}{Confusion matrix of predictions from cross-validation folds.}
+#' \item{confmat_no_l1o}{Confusion matrix of predictions from model trained on full data (no CV).}
+#' \item{mod}{CatBoost model trained on the full dataset.}
+#' \item{preds}{Factor vector of predicted classes from cross-validation folds.}
+#' \item{pred_probs}{Numeric vector or matrix of predicted class probabilities from cross-validation folds.}
+#' \item{preds_no_l1o}{Factor vector of predicted classes from the full model.}
+#' \item{roc_obj_no_l1o}{Currently NULL; placeholder for ROC object from full model predictions.}
+#' \item{roc_auc_no_l1o}{Currently NULL; placeholder for AUC of full model predictions.}
+#' \item{roc_obj}{ROC object from cross-validation predictions (binary or multiclass).}
+#' \item{roc_auc}{Numeric AUC value from cross-validation predictions.}
+#' \item{xgboost_params}{Parameters used for CatBoost training.}
+#' \item{smoteData}{The last SMOTE-augmented training data frame (if `do_smote = TRUE`), otherwise NULL.}
+#'
+#' @details
+#' The function trains a CatBoost classification model using the specified cross-validation folds.
+#' It supports binary and multiclass classification by encoding labels appropriately.
+#' If `do_smote` is TRUE, SMOTE oversampling is applied to training folds to balance classes before model training.
+#' Class weights can be used if specified in `catboost_params` and SMOTE is not applied.
+#' After cross-validation, a final CatBoost model is trained on the entire dataset without folds.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   data(iris)
+#'   df <- %>% filter(Species != "setosa")
+#'   df$class <- df$Species
+#'   df$sample <- 1:nrow(df)
+#'   levs <- as.character(unique(df$class))
+#'   varnames <- colnames(df)[1:4]
+#'   folds <- caret::createFolds(df$class, k = 10, list = TRUE, returnTrain = FALSE) # 10-fold CV
+#'   params <- list(depth=6,
+#'                  learning_rate=0.05,
+#'                  iterations=100,
+#'                  loss_function="Logloss",
+#'                  eval_metric="AUC",
+#'                  bootstrap_type="Bernoulli",
+#'                  random_seed = 123,
+#'                  use_best_model = TRUE,
+#'                  od_type = "Iter",
+#'                  od_wait = 20,
+#'                  l2_leaf_reg=3,
+#'                  subsample=0.8,
+#'                  grow_policy="Depthwise",
+#'                  auto_class_weights="Balanced",
+#'                  verbose=FALSE,
+#'                  thread_count=4,
+#'                  balance_weights=TRUE)
+#'   results <- make_catboost_l1o(df, levs, varnames, folds=folds, catboost_params=params, do_smote=TRUE)
+#'   print(results$confmat)
 #' }
-#' @seealso 
+#' }
+#' @seealso
 #'  \code{\link[dplyr]{select}}
+#'  \code{\link[catboost]{catboost.train}}
+#'  \code{\link[pROC]{roc}},
+#'  \code{\link[caret]{confusionMatrix}},
+#'  \code{\link[UBL]{SmoteClassif}},
 #' @rdname make_catboost_l1o
-#' @export 
+#' @export
 #' @importFrom dplyr select
+#' @importFrom catboost catboost.load_pool catboost.train catboost.predict
+#' @importFrom caret confusionMatrix
+#' @importFrom pROC roc multiclass.roc
+#' @importFrom UBL SmoteClassif
 make_catboost_l1o <- function(datasc, levs, varnames,
                               folds=folds(),
                               catboost_params = catboost_params,
                               do_smote=FALSE,
                               smote_params=list(K=5, dup_size="balance")
 ){
-  library(catboost)
   datasc$class <- factor(datasc$class, levels=levs)
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
   if(length(folds)==0){
@@ -74,14 +150,14 @@ make_catboost_l1o <- function(datasc, levs, varnames,
       smoteData = NULL
     }
     if(length(levs) == 2){
-      train_pool <- catboost.load_pool(data = train_df, label = as.integer(train_labels == levs[2]))
+      train_pool <- catboost::catboost.load_pool(data = train_df, label = as.integer(train_labels == levs[2]))
     }else{
-      train_pool <- catboost.load_pool(data = train_df, label = as.integer(train_labels)-1)
+      train_pool <- catboost::catboost.load_pool(data = train_df, label = as.integer(train_labels)-1)
     }
-    test_pool <- catboost.load_pool(data = test_df)
+    test_pool <- catboost::catboost.load_pool(data = test_df)
 
     if(catboost_params$bootstrap_type == "Bernoulli"){
-      model <- catboost.train(learn_pool = train_pool, params = list(
+      model <- catboost::catboost.train(learn_pool = train_pool, params = list(
         depth = catboost_params$depth,
         learning_rate = catboost_params$learning_rate,
         iterations = catboost_params$iterations,
@@ -97,7 +173,7 @@ make_catboost_l1o <- function(datasc, levs, varnames,
         logging_level = "Silent"
       ))
     }else{
-      model <- catboost.train(learn_pool = train_pool, params = list(
+      model <- catboost::catboost.train(learn_pool = train_pool, params = list(
         depth = catboost_params$depth,
         learning_rate = catboost_params$learning_rate,
         iterations = catboost_params$iterations,
@@ -113,7 +189,7 @@ make_catboost_l1o <- function(datasc, levs, varnames,
         logging_level = "Silent"
       ))
     }
-    pred_prob <- catboost.predict(model, test_pool, prediction_type = "Probability")
+    pred_prob <- catboost::catboost.predict(model, test_pool, prediction_type = "Probability")
 
     if(length(levs) == 2){
       predict_probs <- c(predict_probs, pred_prob)
@@ -132,11 +208,11 @@ make_catboost_l1o <- function(datasc, levs, varnames,
   }
   confmat_tree1 <- confusionMatrix(predict_tree1, datasc$class, positive = levs[2])
 
-  train_pool <- catboost.load_pool(data = df, label = as.integer(datasc$class == levs[2]))
-  test_pool <- catboost.load_pool(data = df)
+  train_pool <- catboost::catboost.load_pool(data = df, label = as.integer(datasc$class == levs[2]))
+  test_pool <- catboost::catboost.load_pool(data = df)
 
   if(catboost_params$bootstrap_type == "Bernoulli"){
-    model2 <- catboost.train(learn_pool = train_pool, params = list(
+    model2 <- catboost::catboost.train(learn_pool = train_pool, params = list(
       depth = catboost_params$depth,
       learning_rate = catboost_params$learning_rate,
       iterations = catboost_params$iterations,
@@ -152,7 +228,7 @@ make_catboost_l1o <- function(datasc, levs, varnames,
       logging_level = "Silent"
     ))
   }else{
-    model2 <- catboost.train(learn_pool = train_pool, params = list(
+    model2 <- catboost::catboost.train(learn_pool = train_pool, params = list(
       depth = catboost_params$depth,
       learning_rate = catboost_params$learning_rate,
       iterations = catboost_params$iterations,
@@ -168,7 +244,7 @@ make_catboost_l1o <- function(datasc, levs, varnames,
       logging_level = "Silent"
     ))
   }
-  predict_tree2 <- catboost.predict(model2, test_pool, prediction_type = "Probability")
+  predict_tree2 <- catboost::catboost.predict(model2, test_pool, prediction_type = "Probability")
   if(length(levs) == 2){
     predict_tree2 <- factor(levs[as.integer(round(predict_tree2))+1], levels=levs)
   }else{

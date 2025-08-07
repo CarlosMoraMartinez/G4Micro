@@ -1,36 +1,56 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phname PARAM_DESCRIPTION
-#' @param all_model_results PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param w PARAM_DESCRIPTION, Default: 8
-#' @param h PARAM_DESCRIPTION, Default: 12
-#' @param get_pcnames_from PARAM_DESCRIPTION, Default: 'padj_taxa_res'
-#' @param plot_extra PARAM_DESCRIPTION, Default: FALSE
-#' @param plot_indiv PARAM_DESCRIPTION, Default: TRUE
-#' @param plot_normal_with_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param filter_out PARAM_DESCRIPTION, Default: c("Ensemble2")
-#' @param order_by_measure PARAM_DESCRIPTION, Default: 'Accuracy_l1out'
-#' @param from_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param name PARAM_DESCRIPTION, Default: ''
-#' @param sel_method_name PARAM_DESCRIPTION, Default: 'PCA DESeq'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Compare Model Accuracies from Several Feature Selection Strategies
+#' @description This function compares model performance across two feature selection strategies, each performed on features selected from different phyloseq objects.
+#' (e.g., padj-selected and raw p-value-selected taxa). It extracts accuracy results from model summaries,
+#' merges them, and generates a faceted line plot comparing model performances for each group.
+#' The resulting data and figure are saved to disk.
+#' @param phname Name of the phyloseq object (used to subset the \code{all_model_results} list)
+#' @param all_model_results A named list of model results, containing sublists for different feature selection strategies
+#' (e.g., 'padj_taxa_res' and 'praw_taxa_res'), each with a `modummary` data frame.
+#' @param opt A list containing output options, specifically `opt$out` for the output directory path.
+#' @param w Width of output PDF file, in inches. Default: 8
+#' @param h Height of output PDF file, in inches. Default: 12
+#' @param get_pcnames_from Name of the feature selection strategy to extract variable names and model summary from. Default is \code{"padj_taxa_res"}.
+#' @param plot_extra Whether to include additional models (e.g., LinDA) in the comparison plots. Default is \code{FALSE}.
+#' @param plot_indiv Whether to include individual species models in the comparison. Default is \code{TRUE}.
+#' @param plot_normal_with_smote Whether to also plot SMOTE-enhanced models for comparison. Default is \code{FALSE}.
+#' @param filter_out Vector of model names to exclude from plots (e.g., "Ensemble2"). Default is \code{c("Ensemble2")}.
+#' @param order_by_measure The metric used to order models and selection strategies (e.g., \code{"Accuracy_l1out"}). Default is \code{"Accuracy_l1out"}.
+#' @param from_smote Whether the models being processed are already from SMOTE-based selection. Adjusts which object names are used. Default is \code{FALSE}.
+#' @param name String prefix used for naming the output folder and files. Default is empty string \code{""}.
+#' @param sel_method_name Label to assign to the main selection strategy (used in plots). Default is \code{"PCA DESeq"}.
+#'
+#' @return This function saves multiple PDF files with comparison plots of model metrics, as well as a TSV file
+#' summarizing the combined model results. It returns no R object.
+#'
+#' @details
+#' This function is useful when comparing different sets of selected features on the same dataset,
+#' especially when assessing feature selection strategies such as raw vs. adjusted p-value filters.
+#' It supports optional inclusion of LinDA-based selections and SMOTE-augmented models.
+#'
+#' The following plots are generated and saved:
+#' \itemize{
+#'   \item Bar plots of Accuracy across models.
+#'   \item Line plots for Accuracy, Sensitivity, Specificity, Kappa, Balanced Accuracy, and AUC.
+#'   \item Several combined panels in different layout configurations (e.g., 2- or 4-panel plots).
+#' }
+#' All files are written to a subfolder named based on \code{phname} and \code{name} in the output directory.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{arrange}}
 #'  \code{\link[ggpubr]{theme_pubr}}
 #'  \code{\link[cowplot]{plot_grid}}
 #' @rdname makeLinePlotComparingSamePhobjModels
-#' @export 
+#' @export
 #' @importFrom dplyr mutate filter summarise arrange
 #' @importFrom ggpubr theme_pubr
 #' @importFrom cowplot plot_grid
+#' @importFrom ggsci scale_color_cosmic scale_fill_cosmic
 makeLinePlotComparingSamePhobjModels<- function(phname, all_model_results, opt,
                                                 w=8, h=12, get_pcnames_from="padj_taxa_res", plot_extra=FALSE,
                                                 plot_indiv = TRUE, plot_normal_with_smote=FALSE,

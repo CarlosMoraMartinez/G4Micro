@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeAllModels.R
 \name{makeAllModels}
 \alias{makeAllModels}
-\title{FUNCTION_TITLE}
+\title{Build and Evaluate Multiple Machine Learning Models with K-Fold Cross-Validation or Leave-One-Out Strategy}
 \usage{
 makeAllModels(
   datasc,
@@ -10,11 +10,11 @@ makeAllModels(
   opt,
   name = "Condition",
   nfolds = 0,
-  xgboost_params = xgboost_params,
-  catboost_params = catboost_params,
-  randomforest_params = randomforest_params,
+  xgboost_params = xgboost_params_default,
+  catboost_params = catboost_params_default,
+  randomforest_params = randomforest_params_default,
   do_smote = FALSE,
-  smote_params = smote_params,
+  smote_params = smote_params_default,
   ensemble_param = "BalancedAccuracy_l1out",
   ensemble_minval = 0,
   ensemble_1knn = FALSE,
@@ -22,50 +22,69 @@ makeAllModels(
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame with a column named \code{class} containing the labels.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.01}
+\item{plim}{p-value threshold to select significant variables. Default: 0.01}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options, must contain an output path in \code{opt$out}.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{name}{Name for the output files and modeling group. Default: 'Condition'}
 
-\item{nfolds}{PARAM_DESCRIPTION, Default: 0}
+\item{nfolds}{Number of folds for cross-validation. If 0, leave-one-out is used. Default: 0}
 
-\item{xgboost_params}{PARAM_DESCRIPTION, Default: xgboost_params}
+\item{xgboost_params}{Parameters for the xgboost model. Default: xgboost_params_default}
 
-\item{catboost_params}{PARAM_DESCRIPTION, Default: catboost_params}
+\item{catboost_params}{Parameters for the catboost model. Default: catboost_params_default}
 
-\item{randomforest_params}{PARAM_DESCRIPTION, Default: randomforest_params}
+\item{randomforest_params}{Parameters for the random forest model. Default: randomforest_params_default}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Whether to apply SMOTE to balance classes. Default: FALSE}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: smote_params}
+\item{smote_params}{Parameters for SMOTE. Default: smote_params_default}
 
-\item{ensemble_param}{PARAM_DESCRIPTION, Default: 'BalancedAccuracy_l1out'}
+\item{ensemble_param}{Performance metric used for selecting models in the ensemble. Default: 'BalancedAccuracy_l1out'}
 
-\item{ensemble_minval}{PARAM_DESCRIPTION, Default: 0}
+\item{ensemble_minval}{Minimum performance required for inclusion in ensemble. Default: 0}
 
-\item{ensemble_1knn}{PARAM_DESCRIPTION, Default: FALSE}
+\item{ensemble_1knn}{Whether to include only 1-NN in the ensemble. Default: FALSE}
 
-\item{do_ensemble_probs}{PARAM_DESCRIPTION, Default: TRUE}
+\item{do_ensemble_probs}{Whether to build a second ensemble using probability-based voting. Default: TRUE}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing: \code{models}, \code{modummary} (performance summary), \code{component_pvals} (significant PCA components), and \code{varnames} (selected variable names).
 }
 \description{
-FUNCTION_DESCRIPTION
+This function builds a set of machine learning models using leave-one-out or k-fold cross-validation.
+It selects significant PCA components, applies various classifiers, and optionally ensembles them.
 }
 \details{
-DETAILS
+This function automates model training and evaluation using various classifiers (GLM, SVM, Random Forest, etc.) and ensembling.
+It is designed for multi-class or binary classification.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  result <- makeAllModels(datasc, opt = list(out = "output_dir/"))
+}
 }
 }
 \seealso{
-\code{\link[readr]{write_delim}}
+\code{\link[readr]{write_tsv}},
+\code{\link{get_signif_components}},
+\code{\link{get_signif_components_multiclass}},
+\code{\link{createFolds}},
+\code{\link{make_glm_l1o}},
+\code{\link{make_glm_l1o_multiclass}},
+\code{\link{make_svm_l1o}},
+\code{\link{make_randomForest_l1o}},
+\code{\link{make_classifTree_l1o}},
+\code{\link{makeNaiveBayes_l1o}},
+\code{\link{makeKnn_l1o}},
+\code{\link{makeKmeans_l1o}},
+\code{\link{make_xgboost_l1o}},
+\code{\link{make_catboost_l1o}},
+\code{\link{getTableFromConfmatrices}},
+\code{\link{getTableFromConfmatrices_multiclass}},
+\code{\link{make_ensemble_votes}},
+\code{\link{make_ensemble_probs}}
 }

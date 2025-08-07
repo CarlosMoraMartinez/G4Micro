@@ -2,7 +2,7 @@
 % Please edit documentation in R/makePCBarplot.R
 \name{makePCBarplot}
 \alias{makePCBarplot}
-\title{FUNCTION_TITLE}
+\title{Generate Barplots of Principal Components and Log Fold Change}
 \usage{
 makePCBarplot(
   phname,
@@ -18,34 +18,45 @@ makePCBarplot(
 )
 }
 \arguments{
-\item{phname}{PARAM_DESCRIPTION}
+\item{phname}{Character. Name of the phenotype or dataset subset to analyze.}
 
-\item{all_model_results}{PARAM_DESCRIPTION}
+\item{all_model_results}{List. Nested list containing PCA results, model predictions, and metadata.}
 
-\item{pcBoxplots}{PARAM_DESCRIPTION}
+\item{pcBoxplots}{List. List of outputs from \code{\link{makePCsBoxplot}} containing PCA factors for sign adjustment.}
 
-\item{daa_all}{PARAM_DESCRIPTION}
+\item{daa_all}{List. List containing differential abundance analysis results with log2 fold change and p-values.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{List. Options list containing at least the output directory path as \code{opt$out}.}
 
-\item{get_pcnames_from}{PARAM_DESCRIPTION, Default: 'padj_taxa_res'}
+\item{get_pcnames_from}{Character. Name of the sublist in \code{all_model_results} to get PCA variable names and models from. Default is "padj_taxa_res".}
 
-\item{pca_name}{PARAM_DESCRIPTION, Default: 'padj_taxa_pcas'}
+\item{pca_name}{Character. Name of the PCA results list in \code{all_model_results}. Default is "padj_taxa_pcas".}
 
-\item{varname}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{varname}{Character. Name of the metadata variable to use for grouping/condition. Default is "Condition".}
 
-\item{w}{PARAM_DESCRIPTION, Default: 8}
+\item{w}{Numeric. Width of the saved plot in inches. Default is 8.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 14}
+\item{h}{Numeric. Height of the saved plot in inches. Default is 14.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object with barplots of PCs, log2 fold changes, and adjusted p-values for taxa.
+The plot is saved as a PDF and the data used to create the plot is saved as a TSV file in the output directory.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates barplots comparing PCA rotation values of taxa with their corresponding log2 fold change and adjusted p-values.
+The function adjusts PCA rotation scores by factors derived from boxplot results to align with log fold change directions,
+merges these with differential abundance analysis (DAA) results, and plots them faceted by variable.
+It saves the plots and processed data to disk.
 }
 \details{
-DETAILS
+This function:
+\itemize{
+\item Retrieves PCA rotation scores and adjusts their sign based on factors from \code{pcBoxplots} to align with log fold change direction.
+\item Merges adjusted PCA rotations with differential abundance statistics from \code{daa_all}.
+\item Creates a long-format dataframe combining PCA components, log2 fold changes, and adjusted p-values (transformed as -10*log10(padj)).
+\item Plots faceted barplots with taxa on the y-axis and variable values on the x-axis, colored by significance or condition.
+\item Saves the plot and data tables in the specified output folder.
+}
 }
 \examples{
 \dontrun{

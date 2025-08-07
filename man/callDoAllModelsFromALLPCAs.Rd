@@ -2,7 +2,7 @@
 % Please edit documentation in R/callDoAllModelsFromALLPCAs.R
 \name{callDoAllModelsFromALLPCAs}
 \alias{callDoAllModelsFromALLPCAs}
-\title{FUNCTION_TITLE}
+\title{Train and Evaluate Models from PCA Results}
 \usage{
 callDoAllModelsFromALLPCAs(
   all_pcas,
@@ -12,54 +12,62 @@ callDoAllModelsFromALLPCAs(
   variable_plim = 0.01,
   meta_vars = c(),
   nfolds = 0,
-  xgboost_params = xgboost_params,
-  catboost_params = catboost_params,
-  randomforest_params = randomforest_params,
+  xgboost_params = xgboost_params_default,
+  catboost_params = catboost_params_default,
+  randomforest_params = randomforest_params_default,
   do_smote = FALSE,
-  smote_params = list(K = 5, dup_size = "balance")
+  smote_params = smote_params_default
 )
 }
 \arguments{
-\item{all_pcas}{PARAM_DESCRIPTION}
+\item{all_pcas}{List of PCA objects as output from prcomp or similar, where the first element must contain \verb{$pca$x}.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Character string, prefix for naming the output files.}
 
-\item{metadata}{PARAM_DESCRIPTION}
+\item{metadata}{Data frame with sample metadata. Must contain column \code{sampleID} and variables to join and model.}
 
-\item{vars2pca}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{vars2pca}{Character vector of metadata variable names to use as class labels for modeling, Default: c("Condition").}
 
-\item{variable_plim}{PARAM_DESCRIPTION, Default: 0.01}
+\item{variable_plim}{P-value threshold for variable preselection, based on logistic regressions, Default: 0.01.}
 
-\item{meta_vars}{PARAM_DESCRIPTION, Default: c()}
+\item{meta_vars}{Character vector of additional metadata variables to merge into the modeling dataset, Default: c().}
 
-\item{nfolds}{PARAM_DESCRIPTION, Default: 0}
+\item{nfolds}{Integer, number of folds for cross-validation (0 means leave-one-out), Default: 0.}
 
-\item{xgboost_params}{PARAM_DESCRIPTION, Default: xgboost_params}
+\item{xgboost_params}{List of parameters for the XGBoost model, Default: xgboost_params_default.}
 
-\item{catboost_params}{PARAM_DESCRIPTION, Default: catboost_params}
+\item{catboost_params}{List of parameters for the CatBoost model, Default: catboost_params_default.}
 
-\item{randomforest_params}{PARAM_DESCRIPTION, Default: randomforest_params}
+\item{randomforest_params}{List of parameters for the Random Forest model, Default: randomforest_params_default.}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical, whether to apply SMOTE oversampling, Default: FALSE.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{smote_params}{List of parameters for SMOTE oversampling, Default: list(K = 5, dup_size = "balance").}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing model summaries and generated plots, including trained models and SVM visualizations.
 }
 \description{
-FUNCTION_DESCRIPTION
+Trains multiple machine learning models using PCA-reduced data and evaluates their performance. Also generates SVM plots for linear and radial kernels.
 }
 \details{
-DETAILS
+This function prepares a dataset from PCA results and associated metadata, selects variables based on logistic regression (for binomial data), trains various machine learning models (SVM, XGBoost, CatBoost, Random Forest, KNN, K-Means, C5.0 Tree, NaiveBayes, GLM), and optionally applies SMOTE. It returns a summary and generates plots for linear and radial SVMs.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ results <- callDoAllModelsFromALLPCAs(all_pcas, name = "example", metadata = meta_df)
  }
 }
 }
 \seealso{
-\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}
+\code{\link[dplyr]{mutate}},
+\code{\link[dplyr]{filter}},
+\code{\link[dplyr]{select}},
+\code{\link[dplyr]{inner_join}},
+\code{\link[tibble]{rownames_to_column}},
+\code{\link[dplyr]{all_of}},
+\code{\link[dplyr]{join_by}},
+\code{\link{makeAllModels}},
+\code{\link{plotSVM}}
 }

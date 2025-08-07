@@ -1,33 +1,68 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param datasc PARAM_DESCRIPTION
-#' @param levs PARAM_DESCRIPTION
-#' @param varnames PARAM_DESCRIPTION
-#' @param different_ks PARAM_DESCRIPTION, Default: c(1, 3, 5, 7, 9, 11, 13)
-#' @param folds PARAM_DESCRIPTION, Default: c()
-#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
-#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title K-Nearest Neighbors Classification with Cross-Validation and Optional SMOTE
+#' @description
+#' Performs k-NN classification on a dataset with multiple values of k.
+#' Supports cross-validation with any folds and optional SMOTE oversampling.
+#' The input data must include a `sample` column.
+#'
+#' @param datasc A data frame containing the features, the class factor column named `class`, and a `sample` column.
+#' @param levs A character vector of factor levels for the classification target (`class`).
+#' @param varnames Character vector of variable names to be used as features.
+#' @param different_ks Integer vector of k values to test for k-NN. Default: `c(1,3,5,7,9,11,13)`.
+#' @param folds Integer vector of row indices to use as test folds in cross-validation. Default: all rows (leave-one-out).
+#' @param do_smote Logical indicating whether to apply SMOTE oversampling on training data. Default: `FALSE`.
+#' @param smote_params List with SMOTE parameters: `K` (neighbors) and `dup_size` (duplication strategy). Default: `list(K=5, dup_size="balance")`.
+#'
+#' @return A named list of results for each tested k, each containing:
+#' \item{preds}{Predicted classes from cross-validation.}
+#' \item{confmat}{Confusion matrix of cross-validated predictions.}
+#' \item{pred_probs}{Predicted class probabilities.}
+#' \item{preds_no_l1o}{Predictions from training on full data (no cross-validation).}
+#' \item{confmat_no_l1o}{Confusion matrix of full-data predictions.}
+#' \item{roc_obj}{ROC curve object.}
+#' \item{roc_auc}{Area under the ROC curve.}
+#'
+#' @details
+#' Cross-validation is done over the specified `folds` indices, which can represent any partitioning scheme.
+#' SMOTE can be applied during training to handle class imbalance.
+#' The function requires the packages `class`, `caret`, `pROC`, and optionally `smotefamily`.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   library(dplyr)
+#'
+#'   data(iris)
+#'   # Add a sample column
+#'   iris$sample <- 1:nrow(iris)
+#'   # Convert Species to factor with levels
+#'   iris$class <- factor(iris$Species)
+#'   levels_iris <- levels(iris$class)
+#'   # Use only first two classes for binary example:
+#'   iris_bin <- iris %>% filter(class != "virginica") %>% droplevels()
+#'   varnames_iris <- colnames(iris)[1:4]
+#'   folds_iris <- sample(1:nrow(iris_bin), size = nrow(iris_bin), replace = FALSE)
+#'
+#'   res <- makeKnn_l1o(iris_bin, levs=levels(iris_bin$class), varnames=varnames_iris,
+#'                      different_ks = c(3,5,7),
+#'                      folds = folds_iris,
+#'                      do_smote = FALSE)
+#'   print(res$`K=3`$confmat)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#' }
+#' @seealso
+#' \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[class]{knn}}, \code{\link[caret]{confusionMatrix}}, \code{\link[pROC]{roc}}
 #' @rdname makeKnn_l1o
-#' @export 
-#' @importFrom dplyr mutate select
+#' @export
+#' @importFrom dplyr mutate select all_of
+#' @importFrom caret confusionMatrix
+#' @importFrom UBL SmoteClassif
+#' @importFrom pROC roc multiclass.roc
+#' @importFrom class knn
 makeKnn_l1o <- function(datasc, levs, varnames,
                         different_ks=c(1, 3, 5, 7, 9, 11, 13),
                         folds=c(),
                         do_smote=FALSE,
                         smote_params=list(K=5, dup_size="balance")){
-  library(class)
-  #library(gmodels)
-
   results <- list()
   datasc <- datasc %>% dplyr::mutate(class=factor(class))
   train_df_all <- datasc %>%
@@ -62,7 +97,7 @@ makeKnn_l1o <- function(datasc, levs, varnames,
       }else{
         smoteData = NULL
       }
-      kires <- knn(train_df, test_df, train_labels, k = k, prob = T)
+      kires <- class::knn(train_df, test_df, train_labels, k = k, prob = T)
       preds  <- c(preds, kires)
       pred_probs[[i]] <- kires
 
@@ -87,7 +122,7 @@ makeKnn_l1o <- function(datasc, levs, varnames,
 
 
 
-    preds2 <- knn(train_df_all, train_df_all, datasc$class, k = k, prob = T)
+    preds2 <- class::knn(train_df_all, train_df_all, datasc$class, k = k, prob = T)
     results[[kname]][["preds_no_l1o"]] <- levs[preds2] %>% factor(levels=levs)
     results[[kname]][["confmat_no_l1o"]] <- confusionMatrix(results[[kname]][["preds_no_l1o"]],
                                                             factor(datasc$class),

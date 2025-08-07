@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeHeatmap.R
 \name{makeHeatmap}
 \alias{makeHeatmap}
-\title{FUNCTION_TITLE}
+\title{Generate Heatmap of Selected Taxa or Genes from Differential Expression Results}
 \usage{
 makeHeatmap(
   resdf,
@@ -21,48 +21,68 @@ makeHeatmap(
 )
 }
 \arguments{
-\item{resdf}{PARAM_DESCRIPTION}
+\item{resdf}{A data frame containing differential expression results, including
+p-values, adjusted p-values, log2 fold changes, and taxa or gene identifiers.}
 
-\item{dds}{PARAM_DESCRIPTION}
+\item{dds}{A \code{DESeqDataSet} object containing expression data and sample metadata.}
 
-\item{df2plot}{PARAM_DESCRIPTION}
+\item{df2plot}{A data frame or matrix of expression values with genes/taxa as rows
+and samples as columns. Must include a column named "gene" for filtering.}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'condition'}
+\item{variable}{Character. The name of the sample metadata column to use for annotation
+(default is \code{"condition"}).}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list or object containing analysis options, including:
+\itemize{
+\item \code{pval}: numeric, significance threshold for p-value or adjusted p-value.
+\item \code{fc}: numeric, fold-change cutoff.
+\item \code{out}: character, output directory to save the heatmap PDF.
+}}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'heatmap.pdf'}
+\item{name}{Character. Filename for the output PDF heatmap (default \code{"heatmap.pdf"}).}
 
-\item{logscale}{PARAM_DESCRIPTION, Default: FALSE}
+\item{logscale}{Logical. Whether to log-transform the expression values before plotting (default \code{FALSE}).}
 
-\item{ptype}{PARAM_DESCRIPTION, Default: 'padj'}
+\item{ptype}{Character. Type of p-value to filter by: \code{"padj"} for adjusted p-values or \code{"pvalue"} (default \code{"padj"}).}
 
-\item{w}{PARAM_DESCRIPTION, Default: 5}
+\item{w}{Numeric. Width of the output PDF in inches (default 5).}
 
-\item{h}{PARAM_DESCRIPTION, Default: 4}
+\item{h}{Numeric. Height of the output PDF in inches (default 4).}
 
-\item{trim_values}{PARAM_DESCRIPTION, Default: FALSE}
+\item{trim_values}{Logical. Whether to trim expression values at the 1st and 99th percentiles to reduce outliers (default \code{FALSE}).}
 
-\item{italics_rownames}{PARAM_DESCRIPTION, Default: TRUE}
+\item{italics_rownames}{Logical. Whether to italicize the row labels (default \code{TRUE}).}
 
-\item{taxalist}{PARAM_DESCRIPTION, Default: c()}
+\item{taxalist}{Character vector. A custom list of taxa or genes to include; if empty, selection is based on significance criteria (default empty vector).}
 }
 \value{
-OUTPUT_DESCRIPTION
+None. The function saves a PDF heatmap file to the specified output directory.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates and saves a heatmap of expression values for selected taxa or genes based on
+significance criteria from differential expression analysis results. The heatmap
+includes sample annotations and offers options for log-scaling, trimming extreme values,
+and italicizing row names.
 }
 \details{
-DETAILS
+The function filters taxa/genes based on p-value or adjusted p-value thresholds and
+fold-change cutoffs. If the number of selected taxa is fewer than a default number
+(from \code{opt$num_genes_default}), it selects the top taxa by p-value.
+Expression values are optionally log-transformed and scaled per gene before plotting.
+The heatmap is generated with sample annotations for the specified metadata variable.
+Row labels can be italicized for better visualization of taxon names.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  opt <- list(pval = 0.05, fc = 2, out = "results", num_genes_default = 50)
+  makeHeatmap(resdf, dds, expression_df,
+              variable = "condition", opt = opt,
+              name = "diff_heatmap.pdf", logscale = TRUE)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{filter}}
+\code{\link[dplyr]{filter}}, \code{\link[pheatmap]{pheatmap}}
 }

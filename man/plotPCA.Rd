@@ -2,36 +2,51 @@
 % Please edit documentation in R/plotPCA.R
 \name{plotPCA}
 \alias{plotPCA}
-\title{FUNCTION_TITLE}
+\title{PCA Plot Generator from Normalized Counts}
 \usage{
 plotPCA(counts, design, genes, plotvar = "Condition")
 }
 \arguments{
-\item{counts}{PARAM_DESCRIPTION}
+\item{counts}{A data frame with normalized counts where rows are taxa/genes and columns are samples. It must include a "gene" column.}
 
-\item{design}{PARAM_DESCRIPTION}
+\item{design}{A data frame containing sample metadata. Must include a "sampleID" column and the column named in \code{plotvar}.}
 
-\item{genes}{PARAM_DESCRIPTION}
+\item{genes}{A character vector of gene/taxa names to retain for PCA.}
 
-\item{plotvar}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{plotvar}{The metadata variable used to color the PCA plots, Default: 'Condition'}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\itemize{
+\item \code{pca}: the result of \code{\link[stats]{prcomp}}.
+\item \code{plots}: a combined \code{\link[ggplot2]{ggplot}} object (via \code{\link[cowplot]{plot_grid}}) with four PCA plots (PC1 vs PC2, PC3, PC4, and PC5).
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs PCA on a selected subset of genes and generates four scatter plots showing PC1 vs PC2–PC5, colored by a specified metadata variable.
 }
 \details{
-DETAILS
+The function filters the normalized count matrix to include only the provided genes, scales and transposes the matrix for PCA, and joins metadata for plotting.
+If the resulting matrix has fewer than 3 rows (samples), a placeholder plot is returned via \code{\link{getNullPlot}}.
+It uses \code{ggplot2} for plotting, \code{ggrepel} for labeling, and a custom theme (\code{mystyle}) for aesthetics.
+The proportion of variance explained by each principal component is shown in axis labels (via \code{\link{getPropVar}}).
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  result <- plotPCA(counts, design, genes = c("geneA", "geneB", "geneC"), plotvar = "group")
+  result$plots
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}
-\code{\link[cowplot]{plot_grid}}
+\code{\link[dplyr]{filter}},
+\code{\link[dplyr]{select}},
+\code{\link[tibble]{column_to_rownames}},
+\code{\link[stats]{prcomp}},
+\code{\link[ggplot2]{ggplot}},
+\code{\link[ggrepel]{geom_text_repel}},
+\code{\link[cowplot]{plot_grid}},
+\code{\link{getPropVar}},
+\code{\link{getNullPlot}}
 }

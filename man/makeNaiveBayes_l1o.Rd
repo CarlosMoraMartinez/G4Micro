@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeNaiveBayes_l1o.R
 \name{makeNaiveBayes_l1o}
 \alias{makeNaiveBayes_l1o}
-\title{FUNCTION_TITLE}
+\title{Naive Bayes Classifier with General Cross-Validation and Optional SMOTE Oversampling}
 \usage{
 makeNaiveBayes_l1o(
   datasc,
@@ -15,36 +15,88 @@ makeNaiveBayes_l1o(
 )
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame containing the dataset, including a factor column named \code{class} for the target variable,
+and a \code{sample} column. Predictor variables are selected by \code{varnames}.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{A character vector specifying the factor levels of the target variable \code{class}. The second element is used as the positive class.}
 
-\item{varnames}{PARAM_DESCRIPTION}
+\item{varnames}{A character vector of predictor variable names to use in the model.}
 
-\item{SEED}{PARAM_DESCRIPTION, Default: 123}
+\item{SEED}{Integer seed for random number generation to ensure reproducibility. Default is 123.}
 
-\item{folds}{PARAM_DESCRIPTION, Default: c()}
+\item{folds}{Integer vector or list specifying the indices of samples used as test sets in cross-validation.
+If empty, performs leave-one-out cross-validation (each sample left out once).}
 
-\item{do_smote}{PARAM_DESCRIPTION, Default: FALSE}
+\item{do_smote}{Logical indicating whether to apply SMOTE oversampling on training data. Default is \code{FALSE}.}
 
-\item{smote_params}{PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")}
+\item{smote_params}{Named list with SMOTE parameters:
+\itemize{
+\item \code{K}: Number of nearest neighbors (default 5).
+\item \code{dup_size}: Oversampling amount, can be \code{"balance"} or numeric (default \code{"balance"}).
+}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list with the following components:
+\describe{
+\item{\code{confmat}}{Confusion matrix from cross-validated predictions.}
+\item{\code{confmat_no_l1o}}{Confusion matrix from the model trained on the entire dataset without cross-validation.}
+\item{\code{preds}}{Vector of predicted classes from cross-validation.}
+\item{\code{pred_probs}}{Predicted probabilities for the positive class from cross-validation.}
+\item{\code{preds_no_l1o}}{Predicted classes from the model trained on the entire dataset.}
+\item{\code{mod}}{Naive Bayes model trained on the entire dataset.}
+\item{\code{roc_obj_no_l1o}}{Currently \code{NULL}, placeholder for ROC object from non-cross-validated model.}
+\item{\code{roc_auc_no_l1o}}{Currently \code{NULL}, placeholder for ROC AUC value from non-cross-validated model.}
+\item{\code{roc_obj}}{ROC object from cross-validation predictions (binary or multiclass).}
+\item{\code{roc_auc}}{Numeric ROC AUC value from cross-validation.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Trains and evaluates a Naive Bayes classifier using general cross-validation specified by \code{folds}.
+Optionally applies SMOTE oversampling to training folds to address class imbalance.
+Returns confusion matrices, predictions, predicted probabilities, and ROC AUC metrics.
 }
 \details{
-DETAILS
+This function performs general cross-validation for a Naive Bayes classifier using the \code{e1071} package.
+If \code{folds} is empty, it defaults to leave-one-out cross-validation.
+When \code{do_smote} is \code{TRUE}, SMOTE oversampling is applied on the training fold to improve class balance, using \code{SmoteClassif}.
+ROC and AUC metrics are computed differently for binary and multiclass classification.
+The function also fits a Naive Bayes model on the entire dataset for comparison.
+
+The user must ensure that the \code{datasc} data frame contains the required columns and that \code{levs} corresponds to levels in \code{datasc$class}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+
+  # Example: use iris dataset (binary subset)
+  data(iris)
+  iris_sub <- iris \%>\% filter(Species != "setosa")
+  iris_sub$class <- factor(iris_sub$Species)
+  iris_sub$sample <- 1:nrow(iris_sub)
+  levs <- levels(iris_sub$class)
+  varnames <- colnames(iris_sub)[1:4]
+
+  results <- makeNaiveBayes_l1o(
+    datasc = iris_sub,
+    levs = levs,
+    varnames = varnames,
+    SEED = 42,
+    folds = c(),         # leave-one-out
+    do_smote = FALSE
+  )
+
+  print(results$confmat)
+  print(results$roc_auc)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
+\code{\link[dplyr]{select}},
+\code{\link[e1071]{naiveBayes}},
+\code{\link[caret]{confusionMatrix}},
+\code{\link[pROC]{roc}},
+\code{\link[UBL]{SmoteClassif}},
+\code{\link[purrr]{map}},
+\code{\link[rlang]{sym}}
 }

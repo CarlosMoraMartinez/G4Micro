@@ -2,21 +2,32 @@
 % Please edit documentation in R/getTableFromConfmatrices_multiclass.R
 \name{getTableFromConfmatrices_multiclass}
 \alias{getTableFromConfmatrices_multiclass}
-\title{FUNCTION_TITLE}
+\title{Summarize Performance Metrics from Multiclass Classification Models}
 \usage{
 getTableFromConfmatrices_multiclass(modlist)
 }
 \arguments{
-\item{modlist}{PARAM_DESCRIPTION}
+\item{modlist}{A named list of trained model objects. Each element should contain confusion matrices
+(for cross-validated and full model) and optionally a \code{roc_auc} value. Expected fields are:
+\itemize{
+\item \code{confmat}: Confusion matrix object (e.g., from caret::confusionMatrix) for cross-validation folds
+\item \code{confmat_no_l1o}: Confusion matrix for the full training predictions (non-cross-validated)
+\item \code{roc_auc}: Optional AUC score for the cross-validation evaluation
+}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame summarizing the mean values of multiple classification performance metrics
+including Accuracy, Kappa, Sensitivity, Specificity, PPV, NPV, Precision, Recall, Balanced Accuracy, and AUC.
+Metrics are provided separately for cross-validation (\code{*_l1out}) and for full data (\code{*}).
 }
 \description{
-FUNCTION_DESCRIPTION
+akes a list of trained classification models and extracts key evaluation metrics
+(e.g., Accuracy, Kappa, AUC, Precision, Recall, etc.) from their confusion matrices and ROC AUC results.
+It summarizes them in a tidy data frame for easy comparison.
 }
 \details{
-DETAILS
+This function is designed for evaluating multiclass classifiers trained using general cross-validation.
+It averages the per-class metrics (e.g., Sensitivity, Specificity) across all classes in a consistent way.
 }
 \examples{
 \dontrun{

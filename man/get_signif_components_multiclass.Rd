@@ -2,34 +2,48 @@
 % Please edit documentation in R/get_signif_components_multiclass.R
 \name{get_signif_components_multiclass}
 \alias{get_signif_components_multiclass}
-\title{FUNCTION_TITLE}
+\title{@title Identify Significant Variables Across Multiple Classes}
 \usage{
 get_signif_components_multiclass(datasc, levs, plim = 0.05)
 }
 \arguments{
-\item{datasc}{PARAM_DESCRIPTION}
+\item{datasc}{A data frame with a column \code{class} (factor with 2 or more levels) and other numeric predictor variables. Must include a \code{sample} column which will be excluded.}
 
-\item{levs}{PARAM_DESCRIPTION}
+\item{levs}{Character vector indicating the levels of the \code{class} factor, in the desired order.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim}{P-value threshold for determining statistical significance. Default: 0.05}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with one row per variable including model p-value (\code{pval}), whether any class comparisons were significant (\code{any_sig}), and which coefficients were significant (\code{which_sig}), along with summary statistics from \code{broom::glance()}.
 }
 \description{
-FUNCTION_DESCRIPTION
+Evaluates each numeric variable for significant differences across multiple classes using linear models.
+Returns model statistics and significance flags.
 }
 \details{
-DETAILS
+For each variable, a linear model is fitted with the formula \code{value ~ class}. If any class coefficient (vs baseline) is below the \code{plim} threshold, it is flagged as significant. The result includes model-level statistics (R-squared, F-statistic, etc.) and names of significant contrasts.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  data <- data.frame(
+    sample = paste0("S", 1:100),
+    var1 = rnorm(100),
+    var2 = rnorm(100),
+    class = factor(sample(c("A", "B", "C"), 100, replace = TRUE))
+  )
+  get_signif_components_multiclass(data, levs = c("A", "B", "C"))
+}
 }
 }
 \seealso{
+\code{\link[dplyr]{select}},
+\code{\link[dplyr]{filter}},
+\code{\link[dplyr]{rename}},
+\code{\link[dplyr]{arrange}},
+\code{\link[stats]{lm}},
+\code{\link[broom]{glance}}
+
 \code{\link[dplyr]{select}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{rename}}, \code{\link[dplyr]{arrange}}
 \code{\link[broom]{reexports}}
 }
