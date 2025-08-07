@@ -40,6 +40,20 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Install non-CRAN dependencies
+        run: |
+          install.packages("devtools")
+          install.packages("remotes")
+          # UBL from GitHub
+          remotes::install_github("paobranco/UBL")
+          # catboost from CRAN-like repo (if available) or GitHub
+          remotes::install_github("catboost/catboost", subdir = "catboost/R-package")
+          # scImpute from GitHub
+          remotes::install_github("Vivianstats/scImpute")
+          # omixerRpm from GitHub
+          remotes::install_github("MRCIEU/omixerRpm")
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
