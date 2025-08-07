@@ -118,7 +118,7 @@ makeNaiveBayes_l1o <- function(datasc, levs, varnames,
     }else{
       smoteData = NULL
     }
-    mod_bayes2 <- naiveBayes(train_df, train_labels, laplace = 0)
+    mod_bayes2 <- e1071::naiveBayes(train_df, train_labels, laplace = 0)
     predict_bayes1 <- c(predict_bayes1, predict(mod_bayes2, test_df))
     predict_bayes1_probs[[i]] <- predict(mod_bayes2, test_df, type="raw")
 
