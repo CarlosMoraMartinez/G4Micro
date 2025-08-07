@@ -12,7 +12,6 @@ Remotes:
     github::ggloor/CoDaSeq/CoDaSeq,
     github::zhouhj1994/LinDA,
     github::gmteunisse/fantaxtic,
-    github::omixer/omixer-rpmR,
     bioc::DESeq2,
 Depends:
     dplyr,
@@ -72,7 +71,6 @@ Imports:
     lubridate,
     magrittr,
     nnet,
-    omixerRpm,
     openxlsx,
     outliers,
     parallel,

@@ -56,8 +56,6 @@ jobs:
           remotes::install_github("catboost/catboost", subdir = "catboost/R-package")
           # scImpute from GitHub
           remotes::install_github("Vivianstats/scImpute")
-          # omixerRpm from GitHub
-          remotes::install_github("omixer/omixerRpm")
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
