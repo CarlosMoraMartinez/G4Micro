@@ -2,27 +2,33 @@
 % Please edit documentation in R/makeMediationSimple_mergedX.R
 \name{makeMediationSimple_mergedX}
 \alias{makeMediationSimple_mergedX}
-\title{FUNCTION_TITLE}
+\title{Perform Mediation Analysis with Multiple Predictors Merged into a Single Model}
 \usage{
 makeMediationSimple_mergedX(df, xnames, yname, medname)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame containing the variables involved in the mediation model.}
 
-\item{xnames}{PARAM_DESCRIPTION}
+\item{xnames}{A character vector with the names of the independent variables.}
 
-\item{yname}{PARAM_DESCRIPTION}
+\item{yname}{A character string indicating the name of the dependent (outcome) variable.}
 
-\item{medname}{PARAM_DESCRIPTION}
+\item{medname}{A character string indicating the name of the mediator variable.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with mediation effect estimates, standard errors, z-scores, p-values, and matched x variable labels for each path.
 }
 \description{
-FUNCTION_DESCRIPTION
+Runs a simple mediation model where multiple independent variables (\code{xnames})
+affect a single mediator (\code{medname}), which in turn affects the dependent variable (\code{yname}).
+The function constructs the equations dynamically and calculates direct, indirect, and total effects using the Sobel test.
 }
 \details{
-DETAILS
+This function supports multiple independent variables by dynamically constructing the mediation equations. It uses the \code{bmem.sobel} function from the \code{bmem} package to estimate mediation effects and returns both the indirect and total effects per variable. Useful for simple mediation power calculations or exploratory analyses.
+
+The function adds a \code{x_labels} column to indicate which independent variable each effect corresponds to.
+
+Note: This function is designed for continuous or dichotomous outcomes and assumes linear relationships.
 }
 \examples{
 \dontrun{

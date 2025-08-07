@@ -2,27 +2,35 @@
 % Please edit documentation in R/makeMediationSimple.R
 \name{makeMediationSimple}
 \alias{makeMediationSimple}
-\title{FUNCTION_TITLE}
+\title{Run a Mediation Analysis}
 \usage{
 makeMediationSimple(df, xname, yname, medname)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{Data frame. The dataset containing the variables for mediation analysis.}
 
-\item{xname}{PARAM_DESCRIPTION}
+\item{xname}{Character. Name of the independent (predictor) variable in \code{df}.}
 
-\item{yname}{PARAM_DESCRIPTION}
+\item{yname}{Character. Name of the dependent (outcome) variable in \code{df}.}
 
-\item{medname}{PARAM_DESCRIPTION}
+\item{medname}{Character. Name of the mediator variable in \code{df}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+An object of class \code{bmem}, containing the results of the mediation analysis,
+including estimated paths, indirect and total effects, and significance.
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs a basic mediation analysis using the \code{bmem} and \code{sem} packages. The function estimates
+the direct, indirect, and total effects of an independent variable on a dependent variable through a mediator.
 }
 \details{
-DETAILS
+The function fits a two-equation mediation model:
+\itemize{
+\item \code{medname = a * xname} (effect of the independent variable on the mediator)
+\item \code{yname = b * medname + cp * xname} (effect of the mediator and the direct effect of the independent variable on the outcome)
+}
+It then uses the Sobel test to estimate the indirect effect (a\emph{b) and total effect (cp + a}b).
+The model is specified using \code{specifyEquations} from the \code{sem} package and estimated with \code{bmem.sobel} from the \code{bmem} package.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeMediationSimplePowerCurve.R
 \name{makeMediationSimplePowerCurve}
 \alias{makeMediationSimplePowerCurve}
-\title{FUNCTION_TITLE}
+\title{Power Analysis for Mediation Models Using bmemLavaan}
 \usage{
 makeMediationSimplePowerCurve(
   df,
@@ -20,47 +20,51 @@ makeMediationSimplePowerCurve(
 )
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame containing the variables used in the mediation analysis.}
 
-\item{xname}{PARAM_DESCRIPTION}
+\item{xname}{Character. Name of the independent variable (X).}
 
-\item{yname}{PARAM_DESCRIPTION}
+\item{yname}{Character. Name of the dependent variable (Y).}
 
-\item{medname}{PARAM_DESCRIPTION}
+\item{medname}{Character. Name of the mediator variable (M).}
 
-\item{param_estimates}{PARAM_DESCRIPTION, Default: c(a = 0.1, b = 0.1, cp = 0.1)}
+\item{param_estimates}{Named numeric vector with starting values for parameters a, b, and cp. Default: \code{c(a = 0.1, b = 0.1, cp = 0.1)}.}
 
-\item{nboot}{PARAM_DESCRIPTION, Default: 1000}
+\item{nboot}{Integer. Number of bootstrap samples for initial power estimation. Default: 1000.}
 
-\item{nrep}{PARAM_DESCRIPTION, Default: 1000}
+\item{nrep}{Integer. Number of repetitions for initial power estimation. Default: 1000.}
 
-\item{nboot_curve}{PARAM_DESCRIPTION, Default: 100}
+\item{nboot_curve}{Integer. Number of bootstrap samples for power curve estimation. Default: 100.}
 
-\item{nrep_curve}{PARAM_DESCRIPTION, Default: 100}
+\item{nrep_curve}{Integer. Number of repetitions for power curve estimation. Default: 100.}
 
-\item{min_n}{PARAM_DESCRIPTION, Default: 100}
+\item{min_n}{Integer. Minimum sample size to consider in power curve. Default: 100.}
 
-\item{max_n}{PARAM_DESCRIPTION, Default: 500}
+\item{max_n}{Integer. Maximum sample size to consider in power curve. Default: 500.}
 
-\item{inc_n}{PARAM_DESCRIPTION, Default: 20}
+\item{inc_n}{Integer. Step size between sample sizes in power curve. Default: 20.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\item{pwres}{Raw result from \code{power.bmem}.}
+\item{pwsum}{Summary of power results.}
+\item{pwcurve}{A data frame with power estimates for each parameter across sample sizes.}
+\item{estimates}{Input parameter estimates used in the simulation.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs power analysis for mediation models over a range of sample sizes, returning a power curve and summary statistics.
 }
 \details{
-DETAILS
+This function uses the \code{bmemLavaan} package to estimate statistical power for the indirect effect (\code{a*b}) and other parameters in a simple mediation model. It returns both summary statistics and a full power curve over a specified range of sample sizes.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  makeMediationSimplePowerCurve(mydata, xname = "X", yname = "Y", medname = "M")
+}
 }
 }
 \seealso{
-\code{\link[bmemLavaan]{power.bmem}}
+\code{\link[bmemLavaan]{power.bmem}},
 \code{\link[dplyr]{mutate}}
 }

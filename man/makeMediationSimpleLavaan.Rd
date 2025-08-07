@@ -2,32 +2,54 @@
 % Please edit documentation in R/makeMediationSimpleLavaan.R
 \name{makeMediationSimpleLavaan}
 \alias{makeMediationSimpleLavaan}
-\title{FUNCTION_TITLE}
+\title{Run a Mediation Analysis with lavaan}
 \usage{
 makeMediationSimpleLavaan(df, xname, yname, medname)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{Data frame. The dataset containing the variables used in the mediation model.}
 
-\item{xname}{PARAM_DESCRIPTION}
+\item{xname}{Character. Name of the independent (predictor) variable.}
 
-\item{yname}{PARAM_DESCRIPTION}
+\item{yname}{Character. Name of the dependent (outcome) variable.}
 
-\item{medname}{PARAM_DESCRIPTION}
+\item{medname}{Character. Name of the mediator variable.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\describe{
+\item{\code{sem}}{A fitted \code{lavaan} SEM object.}
+\item{\code{estimates}}{A data frame with the estimated path coefficients, standard errors, z-scores, and p-values
+for the direct effect (cp), indirect effect (a\emph{b), and total effect (cp + a}b).}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs a simple mediation analysis using the \code{lavaan} package. Estimates the direct, indirect, and total effects
+of a predictor variable on an outcome variable via a mediator, using structural equation modeling (SEM).
 }
 \details{
-DETAILS
+The mediation model estimated is defined as:
+\itemize{
+\item \code{medname ~ a * xname} (effect of independent variable on mediator)
+\item \code{yname ~ b * medname + cp * xname} (effect of mediator and independent variable on outcome)
+\item Indirect effect: \code{a*b}
+\item Total effect: \code{cp + a*b}
+}
+If the dependent variable (\code{yname}) has only one unique value in the data, the function returns a zero-filled
+result with \code{p.value} set slightly above 0.05 to indicate non-significance.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+  library(dplyr)
+  df <- tibble(
+    x = rnorm(100),
+    m = 0.5 * x + rnorm(100),
+    y = 0.6 * m + 0.3 * x + rnorm(100)
+  )
+  result <- makeMediationSimpleLavaan(df, "x", "y", "m")
+  print(result$estimates)
+  summary(result$sem)
  }
 }
 }

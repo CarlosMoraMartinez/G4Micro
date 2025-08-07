@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeMediationSimplePowerCurveLavaan.R
 \name{makeMediationSimplePowerCurveLavaan}
 \alias{makeMediationSimplePowerCurveLavaan}
-\title{FUNCTION_TITLE}
+\title{Estimate Mediation Model Power Curve Using Lavaan}
 \usage{
 makeMediationSimplePowerCurveLavaan(
   df,
@@ -19,36 +19,36 @@ makeMediationSimplePowerCurveLavaan(
 )
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{Data frame with original observed data to extract distributions.}
 
-\item{xname}{PARAM_DESCRIPTION}
+\item{xname}{Name (string) of the independent variable (X).}
 
-\item{yname}{PARAM_DESCRIPTION}
+\item{yname}{Name (string) of the dependent variable (Y), must be binary.}
 
-\item{medname}{PARAM_DESCRIPTION}
+\item{medname}{Name (string) of the mediator variable (M).}
 
-\item{med_res}{PARAM_DESCRIPTION}
+\item{med_res}{A data frame with estimated mediation coefficients from \code{makeMediationSimpleLavaan()}.}
 
-\item{nrep}{PARAM_DESCRIPTION, Default: 1000}
+\item{nrep}{Number of simulations to perform per sample size. Default is 1000.}
 
-\item{min_n}{PARAM_DESCRIPTION, Default: 100}
+\item{min_n}{Minimum sample size for power simulation. Default is 100.}
 
-\item{max_n}{PARAM_DESCRIPTION, Default: 500}
+\item{max_n}{Maximum sample size for power simulation. Default is 500.}
 
-\item{inc_n}{PARAM_DESCRIPTION, Default: 20}
+\item{inc_n}{Increment step of sample sizes from min_n to max_n. Default is 20.}
 
-\item{error}{PARAM_DESCRIPTION, Default: 0.1}
+\item{error}{Noise level used in mediator simulation. (Not currently used.) Default is 0.1.}
 
-\item{ncores}{PARAM_DESCRIPTION, Default: 12}
+\item{ncores}{Number of cores to use for parallel computing. Default is 12.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame summarizing the mean estimates, standard errors, z-scores, and power for each parameter at each sample size.
 }
 \description{
-FUNCTION_DESCRIPTION
+Simulates data and evaluates the statistical power of a mediation model using increasing sample sizes and the \code{lavaan} package.
 }
 \details{
-DETAILS
+This function simulates new datasets by sampling the independent variable and generating mediator and binary outcome values based on a logistic model using coefficients from a previously fitted mediation model. For each simulated dataset, a mediation analysis is repeated and the proportion of significant results (p < 0.05) is used to estimate statistical power across a range of sample sizes.
 }
 \examples{
 \dontrun{

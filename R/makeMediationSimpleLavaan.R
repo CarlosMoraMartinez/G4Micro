@@ -1,22 +1,50 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @param xname PARAM_DESCRIPTION
-#' @param yname PARAM_DESCRIPTION
-#' @param medname PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Run a Mediation Analysis with lavaan
+#' @description
+#' Performs a simple mediation analysis using the `lavaan` package. Estimates the direct, indirect, and total effects
+#' of a predictor variable on an outcome variable via a mediator, using structural equation modeling (SEM).
+#'
+#' @param df Data frame. The dataset containing the variables used in the mediation model.
+#' @param xname Character. Name of the independent (predictor) variable.
+#' @param yname Character. Name of the dependent (outcome) variable.
+#' @param medname Character. Name of the mediator variable.
+#'
+#' @return A list with two elements:
+#' \describe{
+#'   \item{\code{sem}}{A fitted \code{lavaan} SEM object.}
+#'   \item{\code{estimates}}{A data frame with the estimated path coefficients, standard errors, z-scores, and p-values
+#'         for the direct effect (cp), indirect effect (a*b), and total effect (cp + a*b).}
+#' }
+#'
+#' @details
+#' The mediation model estimated is defined as:
+#' \itemize{
+#'   \item \code{medname ~ a * xname} (effect of independent variable on mediator)
+#'   \item \code{yname ~ b * medname + cp * xname} (effect of mediator and independent variable on outcome)
+#'   \item Indirect effect: \code{a*b}
+#'   \item Total effect: \code{cp + a*b}
+#' }
+#' If the dependent variable (\code{yname}) has only one unique value in the data, the function returns a zero-filled
+#' result with \code{p.value} set slightly above 0.05 to indicate non-significance.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'   library(dplyr)
+#'   df <- tibble(
+#'     x = rnorm(100),
+#'     m = 0.5 * x + rnorm(100),
+#'     y = 0.6 * m + 0.3 * x + rnorm(100)
+#'   )
+#'   result <- makeMediationSimpleLavaan(df, "x", "y", "m")
+#'   print(result$estimates)
+#'   summary(result$sem)
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{filter}}
 #'  \code{\link[lavaan]{sem}}
 #' @rdname makeMediationSimpleLavaan
-#' @export 
+#' @export
 #' @importFrom dplyr mutate select filter
 #' @importFrom lavaan sem
 makeMediationSimpleLavaan <- function(df, xname, yname, medname){
