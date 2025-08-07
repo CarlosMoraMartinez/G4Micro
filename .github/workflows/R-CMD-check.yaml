@@ -57,7 +57,7 @@ jobs:
           # scImpute from GitHub
           remotes::install_github("Vivianstats/scImpute")
           # omixerRpm from GitHub
-          remotes::install_github("MRCIEU/omixerRpm")
+          remotes::install_github("omixer/omixerRpm")
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
