@@ -2,30 +2,41 @@
 % Please edit documentation in R/getGTTableFromRes.R
 \name{getGTTableFromRes}
 \alias{getGTTableFromRes}
-\title{FUNCTION_TITLE}
+\title{Generate a Formatted GT Table from Differential Expression Results}
 \usage{
 getGTTableFromRes(res, genes, name)
 }
 \arguments{
-\item{res}{PARAM_DESCRIPTION}
+\item{res}{A data.frame or tibble containing differential expression results. Must include row names representing taxa or genes and columns \code{pvalue}, \code{padj}, and \code{log2FoldChange}.}
 
-\item{genes}{PARAM_DESCRIPTION}
+\item{genes}{A character vector of gene or taxa names to filter the results and include in the table.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A character string to be used as the table caption.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{gt} table object with formatted colors and styling applied.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates a styled gt table from a results data frame filtered by specified genes.
+Applies color gradients to p-value, adjusted p-value, and log2 fold change columns for easy visualization.
 }
 \details{
-DETAILS
+The function filters the results to only include rows corresponding to the specified genes,
+then creates a gt table with conditional coloring:
+\itemize{
+\item pvalue and padj are colored from red ("firebrick3") for high values to blue ("dodgerblue2") for low values.
+\item log2FoldChange is colored from blue for negative values to red for positive values.
+The table options adjust font sizes, background colors, padding, and width for clarity.
+}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(DESeq2)
+  res <- results(dds)  # DESeq2 result object
+  genes_of_interest <- c("GeneA", "GeneB", "GeneC")
+  gt_table <- getGTTableFromRes(res, genes_of_interest, "Differential Expression Table")
+  print(gt_table)
+}
 }
 }

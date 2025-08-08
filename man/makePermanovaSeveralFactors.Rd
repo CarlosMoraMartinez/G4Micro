@@ -2,7 +2,7 @@
 % Please edit documentation in R/makePermanovaSeveralFactors.R
 \name{makePermanovaSeveralFactors}
 \alias{makePermanovaSeveralFactors}
-\title{FUNCTION_TITLE}
+\title{Perform PERMANOVA Tests for Multiple Factor Models on Phyloseq Data}
 \usage{
 makePermanovaSeveralFactors(
   phobj,
@@ -13,32 +13,48 @@ makePermanovaSeveralFactors(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbiome data and sample metadata.}
 
-\item{dist_method}{PARAM_DESCRIPTION, Default: 'bray'}
+\item{dist_method}{Character string specifying the distance metric for beta diversity calculation. Default is "bray".}
 
-\item{seed}{PARAM_DESCRIPTION, Default: 123}
+\item{seed}{Integer random seed for reproducibility. Default is 123.}
 
-\item{modlist}{PARAM_DESCRIPTION, Default: c()}
+\item{modlist}{A list of character vectors, each vector specifying the metadata variables to include in a PERMANOVA model. Example: list(c("Condition"), c("Condition", "Batch")).}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'permanovas_mult.RData'}
+\item{outname}{File path to save the resulting tibble with PERMANOVA results as an \code{RData} file. Default is "permanovas_mult.RData".}
 }
 \value{
-OUTPUT_DESCRIPTION
+A tibble containing the formulas tested, the fitted PERMANOVA models (\code{adonis2} output as a list column), and the proportion of variance explained by the model (1 - residual R2).
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes PERMANOVA (adonis2) tests using the specified distance metric for multiple models defined by combinations of metadata variables on a phyloseq object.
 }
 \details{
-DETAILS
+For each set of variables in \code{modlist}, a PERMANOVA model is fit with the
+formula \code{distance ~ variables} using \code{vegan::adonis2}.
+The function saves the results in an \code{RData} file and returns the tibble for immediate use.
+
+Based on: \url{From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(phyloseq)
+  data(GlobalPatterns)
+  sample_data(GlobalPatterns)$Condition <- sample(c("A", "B"), nsamples(GlobalPatterns), replace = TRUE)
+  sample_data(GlobalPatterns)$Batch <- sample(c("X", "Y"), nsamples(GlobalPatterns), replace = TRUE)
+
+  results <- makePermanovaSeveralFactors(
+    phobj = GlobalPatterns,
+    dist_method = "bray",
+    modlist = list(c("Condition"), c("Condition", "Batch")),
+    outname = "permanova_results.RData"
+  )
+  print(results)
 }
+}
+
 }
 \seealso{
-\code{\link[phyloseq]{distance}}
+\code{\link[phyloseq]{distance}}, \code{\link[vegan]{adonis2}}
 }

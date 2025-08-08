@@ -2,29 +2,32 @@
 % Please edit documentation in R/getZCompositionImputedData.R
 \name{getZCompositionImputedData}
 \alias{getZCompositionImputedData}
-\title{FUNCTION_TITLE}
+\title{Zero Imputation of Compositional Data Using zCompositions}
 \usage{
 getZCompositionImputedData(phobj, prevalence_lim = 0.05)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing the OTU table.}
 
-\item{prevalence_lim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{prevalence_lim}{Numeric threshold for prevalence filtering.
+Taxa with prevalence (proportion of samples with count > 0)
+below this value are removed. Default is 0.05.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A numeric matrix with zeros imputed using multiplicative replacement, with taxa in rows and samples in columns.
 }
 \description{
-FUNCTION_DESCRIPTION
+Filters taxa based on prevalence and imputes zeros using the multiplicative replacement method from the \pkg{zCompositions} package.
 }
 \details{
-DETAILS
+This function filters taxa based on prevalence, then imputes zeros using \code{cmultRepl} from \pkg{zCompositions}.
+Note that \code{cmultRepl} expects samples as rows and taxa as columns, so the OTU table is transposed accordingly before and after imputation.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  imputed_matrix <- getZCompositionImputedData(phobj, prevalence_lim = 0.1)
+}
 }
 }
 \seealso{

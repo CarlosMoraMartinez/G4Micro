@@ -2,26 +2,37 @@
 % Please edit documentation in R/calc_scImpute.R
 \name{calc_scImpute}
 \alias{calc_scImpute}
-\title{FUNCTION_TITLE}
+\title{Run scImpute on OTU Table}
 \usage{
 calc_scImpute(otutab)
 }
 \arguments{
-\item{otutab}{PARAM_DESCRIPTION}
+\item{otutab}{A count matrix or data frame of raw counts (e.g., OTU table) with samples as columns and features as rows.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\describe{
+\item{outliers}{Output from the scImpute function, typically sample or cell outlier information.}
+\item{imputed_counts}{A data frame of counts after imputation by scImpute.}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs dropout imputation on count data using the scImpute package.
+
+The function writes the OTU count table to a CSV file, runs scImpute with specified parameters,
+and reads back the imputed count matrix. It returns the outlier samples identified and the imputed counts.
 }
 \details{
-DETAILS
+The function writes the input counts to a temporary CSV file \code{"test_input.csv"}, runs scImpute with default parameters
+(including dropout threshold 0.5, Kcluster=2, and 4 cores), and reads the imputed counts from \code{"scimpute_count.csv"}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming 'counts' is your OTU count matrix:
+  result <- calc_scImpute(counts)
+  head(result$imputed_counts)
 }
+}
+
 }

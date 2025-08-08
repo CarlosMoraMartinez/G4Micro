@@ -2,7 +2,7 @@
 % Please edit documentation in R/getSignASVBoxplot_paired.R
 \name{getSignASVBoxplot_paired}
 \alias{getSignASVBoxplot_paired}
-\title{FUNCTION_TITLE}
+\title{Generate Paired Boxplots for Significant ASVs}
 \usage{
 getSignASVBoxplot_paired(
   resdf_annot,
@@ -14,32 +14,33 @@ getSignASVBoxplot_paired(
 )
 }
 \arguments{
-\item{resdf_annot}{PARAM_DESCRIPTION}
+\item{resdf_annot}{Data frame containing ASV differential abundance results with taxonomic annotation and p-values.}
 
-\item{raw_counts}{PARAM_DESCRIPTION}
+\item{raw_counts}{Numeric matrix or data frame of raw counts for ASVs (rows = ASVs, columns = samples).}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: './'}
+\item{outdir}{Output directory path where the plot PDF will be saved. Default is current directory ("./").}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'sign_asvs_boxplot.pdf'}
+\item{name}{Output filename for the saved plot PDF. Default is "sign_asvs_boxplot.pdf".}
 
-\item{mode}{PARAM_DESCRIPTION, Default: 'PROP'}
+\item{mode}{Character specifying data transformation mode: "PROP" to convert counts to proportions by sample, otherwise raw counts used. Default is "PROP".}
 
-\item{max_n}{PARAM_DESCRIPTION, Default: 10}
+\item{max_n}{Maximum number of significant ASVs (p-value < 0.05) to plot. Defaults to 10.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 object representing the generated plot.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates violin and boxplots for ASVs significantly associated with conditions in paired samples.
 }
 \details{
-DETAILS
+The function filters ASVs by p-value significance, optionally converts counts to proportions, reshapes the data, and plots paired violin and boxplots for each ASV faceted by taxon. The paired nature is shown by lines connecting samples from the same patient across conditions.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  plot <- getSignASVBoxplot_paired(resdf_annot, raw_counts, outdir = "./plots", name = "asvs_plot.pdf")
+  print(plot)
+}
 }
 }
 \seealso{

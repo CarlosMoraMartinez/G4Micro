@@ -1,24 +1,73 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param variables PARAM_DESCRIPTION, Default: c("Condition")
-#' @param individual PARAM_DESCRIPTION, Default: 'pacienteID'
-#' @param outdir PARAM_DESCRIPTION, Default: ''
-#' @param name PARAM_DESCRIPTION, Default: 'dream'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Differential expression analysis with variancePartition's dream and limma-voom
+#' @description
+#' Runs a repeated-measures differential expression analysis on count data
+#' (e.g., microbiome or RNA-seq) using the `dream` method from the
+#' \pkg{variancePartition} package, which extends `limma-voom` to handle
+#' random effects such as subject IDs.
+#'
+#' @param phobj A \pkg{phyloseq} object containing an OTU/ASV count table
+#' and associated sample metadata.
+#' @param opt A list of options, must contain:
+#'   \itemize{
+#'     \item \code{mincount}: minimum count per feature to be kept.
+#'     \item \code{minsampleswithcount}: minimum number of samples with counts above \code{mincount} to retain a feature.
+#'   }
+#' @param variables Character vector specifying the fixed-effect variables
+#' to include in the model. Default: \code{c("Condition")}.
+#' @param individual Name of the metadata column identifying individuals
+#' for the random effect term. Default: \code{"pacienteID"}.
+#' @param outdir Output directory for saving results. Default: \code{""}.
+#' @param name Base name for output files. Default: \code{"dream"}.
+#'
+#' @return A list with:
+#'   \itemize{
+#'     \item \code{result}: topTable output from \code{dream}.
+#'     \item \code{vobj_tmp}: voom-transformed object with precision weights.
+#'     \item \code{fitmm}: fitted model object from \code{dream}.
+#'     \item \code{L}: contrast matrix used in the analysis.
+#'   }
+#'
+#' @details
+#' The workflow follows these steps:
+#' \enumerate{
+#'   \item Extract counts from the \pkg{phyloseq} object and filter low-abundance features.
+#'   \item Create an \pkg{edgeR} \code{DGEList} and normalize library sizes with \code{calcNormFactors}.
+#'   \item Apply \code{voomWithDreamWeights} to transform counts to logCPM and estimate observation-level weights.
+#'   \item Specify contrasts with \code{getContrast} and fit the model with \code{dream}, including random effects.
+#'   \item Extract top results with \code{topTable} and save outputs as TSV and RData.
+#' }
+#' The \code{dream} method allows modeling of repeated measures (e.g., multiple samples from the same subject) by
+#' adding a random effect term \code{(1|individual)} in the model formula.
+#'
+#' For details on the methodology, see:
+#' \url{https://bioconductor.org/packages/release/bioc/vignettes/variancePartition/inst/doc/variancePartition.html}
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   library(phyloseq)
+#'   library(variancePartition)
+#'   ps <- phyloseq(otu_table(matrix(rpois(200, lambda=5), ncol=10), taxa_are_rows=TRUE),
+#'                  sample_data(data.frame(Condition=rep(c("A","B"), each=5),
+#'                                         pacienteID=rep(1:5, each=2))))
+#'   opt <- list(mincount=5, minsampleswithcount=2)
+#'   results <- dreamLimma(ps, opt, variables="Condition", individual="pacienteID",
+#'                         outdir="results", name="dream_test")
 #' }
-#' @seealso 
-#'  \code{\link[variancePartition]{topTable}}
+#' }
+#'
+#' @seealso
+#'  \code{\link[variancePartition]{dream}},
+#'  \code{\link[variancePartition]{topTable}},
+#'  \code{\link[variancePartition]{voomWithDreamWeights}},
+#'  \code{\link[limma]{voom}},
+#'  \code{\link[edgeR]{calcNormFactors}}
 #' @rdname dreamLimma
-#' @export 
-#' @importFrom variancePartition topTable
+#' @export
+#' @importFrom phyloseq otu_table
+#' @importFrom magrittr %>%
+#' @importFrom edgeR DGEList calcNormFactors
+#' @importFrom variancePartition voomWithDreamWeights getContrast dream topTable
 dreamLimma <- function(phobj, opt, variables =  c("Condition"), individual="pacienteID", outdir = "", name = "dream"){
   formula <- paste0("~ 0 +", paste(variables, sep=" + ", collapse=" + ")) %>%
     as.formula

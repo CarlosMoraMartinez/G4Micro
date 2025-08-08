@@ -36,7 +36,8 @@
 #' @import DESeq2
 #' @importFrom dplyr mutate filter
 #' @importFrom tidyr gather
-#' @importFrom ggplot2 ggplot aes geom_point geom_text_repel geom_density scale_x_continuous guides theme_bw ggtitle
+#' @importFrom ggplot2 ggplot aes geom_point geom_density scale_x_continuous guides theme_bw ggtitle
+#' @importFrom ggrepel geom_text_repel
 #' @importFrom gridExtra grid.arrange
 plotCountsDeseq <- function(dds, raw_counts, norm_counts){
   d <- plotCounts(dds, gene=which.min(res$padj), intgroup="Condition", normalized = T,

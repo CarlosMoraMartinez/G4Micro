@@ -43,6 +43,7 @@ Imports:
     doParallel,
     dplyr,
     e1071,
+    edgeR,
     EnhancedVolcano,
     fantaxtic,
     forcats,

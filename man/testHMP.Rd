@@ -2,29 +2,42 @@
 % Please edit documentation in R/testHMP.R
 \name{testHMP}
 \alias{testHMP}
-\title{FUNCTION_TITLE}
+\title{Test for Differences in Microbiome Composition Using HMP Xdc.sevsample at the Phylum level}
 \usage{
 testHMP(phobj, seed = 123)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{phyloseq} object containing microbiome count data with sample metadata including a "Condition" variable that has at least "Control" and "Depression" groups.}
 
-\item{seed}{PARAM_DESCRIPTION, Default: 123}
+\item{seed}{Integer seed for reproducibility of the permutation test. Default: 123}
 }
 \value{
-OUTPUT_DESCRIPTION
+The test statistic and p-value from the \code{HMP::Xdc.sevsample} function assessing differences between groups.
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs a multi-sample permutation test from the HMP package to assess differences in microbiome composition between two groups at the Phylum level.
 }
 \details{
-DETAILS
+The function first agglomerates the phyloseq object at the Phylum level,
+then subsets samples into two groups based on the "Condition" variable.
+It extracts the OTU tables for each group and applies the \code{Xdc.sevsample} test
+from the HMP package, which tests for equality of community composition distributions.
+
+The input assumes the \code{Condition} variable has values "Control" and "Depression".
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(phyloseq)
+  library(HMP)
+  data(GlobalPatterns) # Example dataset, replace with your own phyloseq object
+
+  # Add a dummy Condition variable for demonstration
+  sample_data(GlobalPatterns)$Condition <- rep(c("Control", "Depression"), length.out = nsamples(GlobalPatterns))
+
+  test_result <- testHMP(GlobalPatterns, seed = 123)
+  print(test_result)
+}
 }
 }
 \seealso{

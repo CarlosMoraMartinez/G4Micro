@@ -2,28 +2,30 @@
 % Please edit documentation in R/getPropVar.R
 \name{getPropVar}
 \alias{getPropVar}
-\title{FUNCTION_TITLE}
+\title{getPropVar}
 \usage{
 getPropVar(pca, PC)
 }
 \arguments{
-\item{pca}{PARAM_DESCRIPTION}
+\item{pca}{PCA object (result of prcomp or similar) from which the proportion of explained variance is extracted.}
 
-\item{PC}{PARAM_DESCRIPTION}
+\item{PC}{Numeric vector indicating the principal component(s) to query (e.g., 1 for PC1, 2 for PC2).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character vector with labels for each specified principal component in the format "PCn (xx.xx\%)".
 }
 \description{
-FUNCTION_DESCRIPTION
+Returns a label with the percentage of variance explained by one or more principal components from a PCA object.
 }
 \details{
-DETAILS
+The function extracts the proportion of variance explained from the importance matrix in the summary of the PCA object, rounds it to two decimals, and constructs a readable label for plotting or reporting.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  pca <- prcomp(USArrests, scale. = TRUE)
+  getPropVar(pca, 1)        # "1 (62.00\%)"
+  getPropVar(pca, c(1,2))   # "1 (62.00\%)" "2 (24.74\%)"
+}
 }
 }

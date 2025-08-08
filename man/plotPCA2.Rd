@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotPCA2.R
 \name{plotPCA2}
 \alias{plotPCA2}
-\title{FUNCTION_TITLE}
+\title{PCA Plotting Function with Multiple PCs and Grouping Variables}
 \usage{
 plotPCA2(
   dfraw,
@@ -18,40 +18,48 @@ plotPCA2(
 )
 }
 \arguments{
-\item{dfraw}{PARAM_DESCRIPTION}
+\item{dfraw}{A data.frame containing the raw data with samples as rows and variables as columns.}
 
-\item{vars2pc}{PARAM_DESCRIPTION}
+\item{vars2pc}{Character vector of column names in \code{dfraw} to use for PCA.}
 
-\item{labvar}{PARAM_DESCRIPTION, Default: 'PACIENTE'}
+\item{labvar}{Name of the column in \code{dfraw} that contains sample labels (default: "PACIENTE").}
 
-\item{plotvars}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{plotvars}{Character vector of column names in \code{dfraw} used to color the PCA plots (default: "Condition").}
 
-\item{transform}{PARAM_DESCRIPTION, Default: 'scale'}
+\item{transform}{Character specifying how to transform the data before PCA. Options: "scale" (standardize variables), "log" (log-transform +1), "sqrt" (square root), or other (no transformation). Default is "scale".}
 
-\item{dims}{PARAM_DESCRIPTION, Default: 2:5}
+\item{dims}{Integer vector specifying which principal components (PCs) to plot against PC1 (default: 2:5).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'PCAs.pdf'}
+\item{name}{Filename for the output PDF containing the plots (default: "PCAs.pdf").}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Directory where the PDF will be saved (default: current directory).}
 
-\item{w}{PARAM_DESCRIPTION, Default: 12}
+\item{w}{Width of the saved plot in inches (default: 12).}
 
-\item{h}{PARAM_DESCRIPTION, Default: 8}
+\item{h}{Height of the saved plot in inches (default: 8).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\itemize{
+\item \code{pca} - the result of the \code{prcomp} PCA object,
+\item \code{plots} - a named list of combined ggplot objects for each grouping variable.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs PCA on selected variables of a data frame with optional transformations, then creates scatterplots of PC1 vs multiple other PCs colored by grouping variables. Saves plots to PDF.
 }
 \details{
-DETAILS
+The function first subsets the data to the specified variables, applies the chosen transformation, and performs PCA with \code{prcomp}.
+It then merges the PCA rotation results with metadata for plotting.
+For each grouping variable, it creates a combined plot of PC1 against the PCs in \code{dims}.
+The plots are saved into a multi-page PDF using a helper function \code{WriteManyPlots}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  df <- data.frame(PACIENTE=letters[1:10], Var1=rnorm(10), Var2=rnorm(10), Condition=rep(c("A","B"),5))
+  plotPCA2(df, vars2pc=c("Var1", "Var2"), labvar="PACIENTE", plotvars="Condition", transform="scale")
+}
 }
 }
 \seealso{

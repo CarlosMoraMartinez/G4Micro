@@ -2,30 +2,31 @@
 % Please edit documentation in R/getNullPlot.R
 \name{getNullPlot}
 \alias{getNullPlot}
-\title{FUNCTION_TITLE}
+\title{Generate a Placeholder Plot with an Error Message}
 \usage{
 getNullPlot(opt, name = "var", error = FALSE)
 }
 \arguments{
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{Parameter reserved for future use or to match generic function signature (currently unused).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'var'}
+\item{name}{Character string specifying the context or name related to the plot. Default is "var".}
 
-\item{error}{PARAM_DESCRIPTION, Default: FALSE}
+\item{error}{Logical flag indicating the type of error message to display. If FALSE, the message includes the \code{name}; if TRUE, a generic error message is shown. Default is FALSE.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 plot object showing an error message as text.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates an empty ggplot object displaying an error message as text, useful when a plot cannot be generated.
 }
 \details{
-DETAILS
+This function helps to return a consistent placeholder plot when an error occurs during plotting, so that downstream code that expects a plot can still run without crashing.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Generate a placeholder plot for a failed plot named "variance"
+  print(getNullPlot(NULL, name = "variance"))
+}
 }
 }

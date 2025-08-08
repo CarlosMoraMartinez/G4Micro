@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotRegressionsASV_vs_vars2.R
 \name{plotRegressionsASV_vs_vars2}
 \alias{plotRegressionsASV_vs_vars2}
-\title{FUNCTION_TITLE}
+\title{Plot Regressions of ASV Abundances vs Variables}
 \usage{
 plotRegressionsASV_vs_vars2(
   df3,
@@ -21,49 +21,55 @@ plotRegressionsASV_vs_vars2(
 )
 }
 \arguments{
-\item{df3}{PARAM_DESCRIPTION}
+\item{df3}{A data.frame containing the ASV abundance data and metadata variables.}
 
-\item{corrdf_annot}{PARAM_DESCRIPTION}
+\item{corrdf_annot}{A data.frame with correlation annotations including columns \code{Genus}, \code{var1}, \code{var2}, and group-specific Spearman correlations (\code{PSO_spearman_cor}, \code{CTRL_spearman_cor}).}
 
-\item{vars2cor}{PARAM_DESCRIPTION}
+\item{vars2cor}{Character vector of variable names to correlate against ASVs.}
 
-\item{groupvar}{PARAM_DESCRIPTION, Default: 'Psoriasis'}
+\item{groupvar}{Character string naming the grouping variable in \code{df3}. Default is \code{"Psoriasis"}.}
 
-\item{group_levels}{PARAM_DESCRIPTION, Default: c("no", "yes")}
+\item{group_levels}{Character vector defining the factor levels of \code{groupvar}. Default is \code{c("no", "yes")}.}
 
-\item{top_n}{PARAM_DESCRIPTION, Default: 10}
+\item{top_n}{Integer specifying the number of top correlated ASVs to plot per variable. Default is \code{10}.}
 
-\item{groupnames}{PARAM_DESCRIPTION, Default: c("Control", "Psoriasis")}
+\item{groupnames}{Character vector of length two for naming the groups in plots. Default is \code{c("Control", "Psoriasis")}.}
 
-\item{ylabel}{PARAM_DESCRIPTION, Default: 'log(pg/mL)'}
+\item{ylabel}{Character string for the y-axis label in plots. Default is \code{"log(pg/mL)"}.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Directory path where to save the output plots. Default is current directory \code{""}.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'regr.pdf'}
+\item{name}{File name for the combined plot output. Default is \code{"regr.pdf"}.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 7}
+\item{w}{Numeric width of the output plot in inches. Default is \code{7}.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 14}
+\item{h}{Numeric height of the output plot in inches. Default is \code{14}.}
 
-\item{opt}{PARAM_DESCRIPTION, Default: list()}
+\item{opt}{List of additional options passed to the plot saving function. Default is empty list \code{list()}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list of ggplot objects, one per variable in \code{vars2cor}.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates regression plots between CLR-transformed ASV abundances and selected variables, stratified by groups.
+
+For each variable in \code{vars2cor}, the function selects the top \code{top_n} ASVs based on combined Spearman correlations
+from \code{corrdf_annot}. It then plots regression lines and statistics separately for each group defined in \code{groupvar}.
 }
 \details{
-DETAILS
+The function transforms the data to long format for plotting, matches ASVs to genus-level annotations,
+selects top correlated ASVs per variable, and generates separate regression plots per group with
+linear model fits and polynomial equation statistics.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming df3, corrdf_annot, and vars2cor are pre-loaded:
+  plots <- plotRegressionsASV_vs_vars2(df3, corrdf_annot, vars2cor = c("IL6", "TNFa"))
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{desc}}
-\code{\link[cowplot]{plot_grid}}
+\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{desc}}, \code{\link[cowplot]{plot_grid}}
 }

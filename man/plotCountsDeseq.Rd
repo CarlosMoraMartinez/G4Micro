@@ -2,33 +2,50 @@
 % Please edit documentation in R/plotCountsDeseq.R
 \name{plotCountsDeseq}
 \alias{plotCountsDeseq}
-\title{FUNCTION_TITLE}
+\title{Plot Raw and Normalized Counts from DESeq2 Data}
 \usage{
 plotCountsDeseq(dds, raw_counts, norm_counts)
 }
 \arguments{
-\item{dds}{PARAM_DESCRIPTION}
+\item{dds}{A DESeqDataSet object containing the DESeq2 experiment data, including sample metadata.}
 
-\item{raw_counts}{PARAM_DESCRIPTION}
+\item{raw_counts}{A matrix or data frame of raw counts with genes as rows and samples as columns.}
 
-\item{norm_counts}{PARAM_DESCRIPTION}
+\item{norm_counts}{A matrix or data frame of normalized counts matching \code{raw_counts} dimensions.}
 }
 \value{
-OUTPUT_DESCRIPTION
+NULL (plots are drawn to the current graphics device).
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates plots summarizing raw and normalized counts for DESeq2
+experiment samples, including total counts per condition and the distribution
+of normalized counts across samples.
 }
 \details{
-DETAILS
+This function creates three plots arranged in a single row:
+\itemize{
+\item Total raw counts per sample by condition with sample labels.
+\item Total normalized counts per sample by condition with sample labels.
+\item Density distribution of normalized counts per sample on a log2 scale,
+truncated at the 95th percentile for visualization clarity.
+}
+The function uses the \code{Condition} column from \code{colData(dds)} to group samples.
+It requires \code{ggplot2}, \code{ggrepel}, \code{dplyr}, and \code{gridExtra} packages.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  dds <- DESeq2::makeExampleDESeqDataSet()
+  raw_counts <- counts(dds)
+  norm_counts <- DESeq2::counts(dds, normalized=TRUE)
+  plotCountsDeseq(dds, raw_counts, norm_counts)
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{mutate}}
+\code{\link[DESeq2]{plotCounts}},
+\code{\link[ggplot2]{ggplot}},
+\code{\link[dplyr]{mutate}},
+\code{\link[ggrepel]{geom_text_repel}},
+\code{\link[gridExtra]{grid.arrange}}
 }

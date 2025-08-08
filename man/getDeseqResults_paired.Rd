@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDeseqResults_paired.R
 \name{getDeseqResults_paired}
 \alias{getDeseqResults_paired}
-\title{FUNCTION_TITLE}
+\title{Differential Expression Analysis for Paired Samples with DESeq2}
 \usage{
 getDeseqResults_paired(
   phobj,
@@ -13,29 +13,74 @@ getDeseqResults_paired(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing OTU counts and sample metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options including filtering thresholds and output paths.
+Expected elements include:
+\itemize{
+\item \code{mincount}: minimum count threshold for filtering features.
+\item \code{minsampleswithcount}: minimum number of samples required to meet the count threshold.
+\item \code{minfreq}: minimum frequency threshold (not directly used here).
+\item \code{fc}: fold-change threshold used for log fold change shrinkage.
+\item \code{out}: output directory path for saving results.
+}}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{Character string suffix to append to output file names. Default is an empty string.}
 
-\item{variables}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{variables}{Character vector of variable names to include as fixed effects in the model. Default is \code{c("Condition")}.}
 
-\item{individual}{PARAM_DESCRIPTION, Default: 'pacienteID'}
+\item{individual}{Character string naming the individual identifier variable used for pairing. Default is \code{"pacienteID"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list containing:
+\itemize{
+\item \code{dds}: DESeqDataSet object from the full model.
+\item \code{dds_null}: DESeqDataSet object from the reduced model.
+\item \code{raw_counts}: matrix of raw counts.
+\item \code{res}: DESeq2 results from the likelihood ratio test.
+\item \code{res_null}: results from the null model.
+\item \code{resLFC}: log fold change shrinkage results (normal).
+\item \code{resLFC_ape}: LFC shrinkage with "apeglm" method.
+\item \code{resLFC_ashr}: LFC shrinkage with "ashr" method.
+\item \code{resdf}, \code{resdf_ape}, \code{resdf_shr}: data frames written by \code{defWriteDEAResults}.
+\item \code{raw_df}: data frame of raw counts written by \code{defWriteMatAsDF}.
+\item \code{norm_counts}: matrix of normalized counts.
+\item \code{norm_counts_df}: data frame of normalized counts.
+\item \code{vstds}: variance stabilized transformed counts matrix (or NULL if error).
+\item \code{vst_counts_df}: data frame of VST counts.
+\item \code{options}: list of options including filtering parameters and whether pseudocounts were added.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs differential expression analysis on paired samples using DESeq2,
+applying a likelihood ratio test (LRT) to test the effect of specified
+variables while controlling for individual effects. The function handles filtering,
+pseudocount addition, multiple shrinkage methods for log fold changes,
+and returns various DESeq2 results and normalized counts.
 }
 \details{
-DETAILS
+This function fits a paired design model for differential expression using DESeq2,
+controlling for individual effects. It filters low-count features based on
+specified thresholds, applies pseudocounts if necessary, and performs likelihood
+ratio tests between full and reduced models. Multiple methods for log fold
+change shrinkage are applied and results are saved to files.
+
+The function requires \code{defWriteDEAResults} and \code{defWriteMatAsDF} helper functions
+for writing results to disk.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming 'ps' is a phyloseq object and 'options' is a list with required parameters:
+  results <- getDeseqResults_paired(
+    phobj = ps,
+    opt = list(mincount=10, minsampleswithcount=3, fc=1.5, out="./results/"),
+    name = "experiment1",
+    variables = c("Treatment"),
+    individual = "PatientID"
+  )
+  print(results$resdf)
 }
+}
+
 }

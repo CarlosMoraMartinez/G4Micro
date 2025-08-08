@@ -2,28 +2,47 @@
 % Please edit documentation in R/getCorrelations.R
 \name{getCorrelations}
 \alias{getCorrelations}
-\title{FUNCTION_TITLE}
+\title{Compute Pairwise Correlations Between Two Matrices}
 \usage{
 getCorrelations(mat1, mat2)
 }
 \arguments{
-\item{mat1}{PARAM_DESCRIPTION}
+\item{mat1}{A numeric matrix or data.frame. Each column is a variable.}
 
-\item{mat2}{PARAM_DESCRIPTION}
+\item{mat2}{A numeric matrix or data.frame. Each column is a variable.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\item{res}{Data frame with correlation statistics for each variable pair.}
+\item{spcors}{Spearman correlation matrix (columns of mat1 vs columns of mat2).}
+\item{pcors}{Pearson correlation matrix (columns of mat1 vs columns of mat2).}
+\item{sp_pvals}{Matrix of Spearman correlation p-values.}
+\item{pr_pmat}{Matrix of Pearson correlation p-values.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Calculates Pearson and Spearman correlations, corresponding p-values,
+normality test p-values (Shapiro-Wilk), and linear model statistics
+for all pairs of columns between two matrices.
+Returns a detailed results data.frame and correlation matrices.
 }
 \details{
-DETAILS
+For each pair of variables (columns from mat1 and mat2), the function:
+\itemize{
+\item Computes Pearson and Spearman correlations and their p-values.
+\item Tests normality of each variable with Shapiro-Wilk test.
+\item Fits a linear model and extracts R-squared and slope p-value.
+\item Adjusts p-values across all tests for multiple testing using Benjamini-Hochberg.
+}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  mat1 <- matrix(rnorm(100*3), ncol=3)
+  colnames(mat1) <- c("VarA1", "VarA2", "VarA3")
+  mat2 <- matrix(rnorm(100*2), ncol=2)
+  colnames(mat2) <- c("VarB1", "VarB2")
+  cor_results <- getCorrelations(mat1, mat2)
+  print(cor_results$res)
+}
 }
 }

@@ -2,32 +2,45 @@
 % Please edit documentation in R/getDeseqResults_fromFormula.R
 \name{getDeseqResults_fromFormula}
 \alias{getDeseqResults_fromFormula}
-\title{FUNCTION_TITLE}
+\title{Differential Expression Analysis from Phyloseq Object Using Formula}
 \usage{
 getDeseqResults_fromFormula(phobj, opt, name = "", formula = "~ Condition")
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing count data and sample metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options controlling filtering and output parameters. Expected fields include \code{mincount}, \code{minsampleswithcount}, \code{minfreq}, and \code{out} (output directory).}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{A string appended to output filenames (default is empty).}
 
-\item{formula}{PARAM_DESCRIPTION, Default: '~ Condition'}
+\item{formula}{A design formula for DESeq2 (default is \code{"~ Condition"}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing DESeq2 results, raw and normalized counts, contrasts, and additional diagnostic data.
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs DESeq2 differential expression analysis on a phyloseq object using a specified design formula.
+Filters features based on minimum counts and samples, supports multiple contrasts, and returns results including normalized and transformed counts.
 }
 \details{
-DETAILS
+The function:
+\itemize{
+\item Extracts variables from the design formula,
+\item Filters OTUs based on count thresholds,
+\item Runs DESeq2 with or without a pseudocount depending on data,
+\item Performs contrasts for all pairwise comparisons of categorical variables or numerical covariates,
+\item Saves intermediate results as TSV files and an RData file.
+}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming 'ps' is a phyloseq object and opt is a list with options
+  opt <- list(mincount=10, minsampleswithcount=3, minfreq=0.01, out="./results/")
+  results <- getDeseqResults_fromFormula(ps, opt, name="MyAnalysis", formula="~ Condition + Age")
 }
+}
+}
+\seealso{
+\code{\link[phyloseq]{phyloseq_to_deseq2}}, \code{\link[DESeq2]{DESeq}}, \code{\link[DESeq2]{results}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}
 }

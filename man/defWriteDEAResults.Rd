@@ -2,35 +2,47 @@
 % Please edit documentation in R/defWriteDEAResults.R
 \name{defWriteDEAResults}
 \alias{defWriteDEAResults}
-\title{FUNCTION_TITLE}
+\title{Write DESeq2 Differential Expression Results to File}
 \usage{
 defWriteDEAResults(res, resLFC, opt, name)
 }
 \arguments{
-\item{res}{PARAM_DESCRIPTION}
+\item{res}{A DESeq2 results object (typically from \code{DESeq2::results}).}
 
-\item{resLFC}{PARAM_DESCRIPTION}
+\item{resLFC}{A DESeq2 log fold change shrinkage results object (e.g., from \code{lfcShrink}).}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options, must include \code{out} specifying the output directory.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{A string used as the filename (without extension) for saving the results.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame containing the original DESeq2 results along with added columns for
+log2 fold change shrinkage, standard error of shrinkage, and s-values. The same data frame
+is also written to a tab-separated file at the specified output path.
 }
 \description{
-FUNCTION_DESCRIPTION
+Converts DESeq2 results and log fold change shrinkage results into a data frame,
+adds shrinkage statistics, writes the table to a tab-separated file, and returns the data frame.
 }
 \details{
-DETAILS
+The function converts the DESeq2 results object to a data frame, adds shrinkage
+estimates from \code{resLFC}, then writes the combined table to a file named
+\code{<opt$out>/<name>} (no file extension added). The returned data frame includes
+columns: \code{taxon}, original DESeq2 statistics, \code{log2FoldChangeShrink},
+\code{lfcSE_Shrink}, and \code{svalue}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  res <- DESeq2::results(dds)
+  resLFC <- DESeq2::lfcShrink(dds, coef=2, type="apeglm")
+  opt <- list(out="results")
+  defWriteDEAResults(res, resLFC, opt, "comparison1.tsv")
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{mutate}},
+\code{\link[DESeq2]{results}},
+\code{\link[DESeq2]{lfcShrink}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotRegressionsASV_vs_vars.R
 \name{plotRegressionsASV_vs_vars}
 \alias{plotRegressionsASV_vs_vars}
-\title{FUNCTION_TITLE}
+\title{Plot Linear Regressions of ASVs vs Variables by Group}
 \usage{
 plotRegressionsASV_vs_vars(
   df3,
@@ -20,46 +20,50 @@ plotRegressionsASV_vs_vars(
 )
 }
 \arguments{
-\item{df3}{PARAM_DESCRIPTION}
+\item{df3}{Data frame containing ASVs and variables.}
 
-\item{asvs}{PARAM_DESCRIPTION}
+\item{asvs}{Character vector of ASV column names to plot as response variables.}
 
-\item{vars2cor}{PARAM_DESCRIPTION}
+\item{vars2cor}{Character vector of variable column names to use as predictors.}
 
-\item{groupvar}{PARAM_DESCRIPTION, Default: 'Psoriasis'}
+\item{groupvar}{Name of the grouping variable in \code{df3}, default is "Psoriasis".}
 
-\item{group_levels}{PARAM_DESCRIPTION, Default: c("no", "yes")}
+\item{group_levels}{Levels of the grouping variable, default is c("no", "yes").}
 
-\item{groupnames}{PARAM_DESCRIPTION, Default: c("Control", "Psoriasis")}
+\item{groupnames}{Names to use in plot titles for each group, default is c("Control", "Psoriasis").}
 
-\item{xlabel}{PARAM_DESCRIPTION, Default: 'log(pg/mL)'}
+\item{xlabel}{Label for the x-axis, default is "log(pg/mL)".}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Output directory to save plots, default is "" (current directory).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'regr.pdf'}
+\item{name}{Filename for the saved plot PDF, default is "regr.pdf".}
 
-\item{w}{PARAM_DESCRIPTION, Default: 7}
+\item{w}{Width of the output plot(s) in inches, default is 7.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 14}
+\item{h}{Height of the output plot(s) in inches, default is 14.}
 
-\item{opt}{PARAM_DESCRIPTION, Default: list()}
+\item{opt}{List of additional options to pass to the plotting/saving function.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list of ggplot objects, one for each ASV.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates scatterplots with linear regression fits of ASVs against variables of interest,
+faceted by variable, and separated by group.
 }
 \details{
-DETAILS
+The function creates separate regression plots for each ASV against all variables in \code{vars2cor},
+faceted by variable, and plots them separately for the two groups defined in \code{groupvar}.
+The regression line includes equation, R², p-value, and sample size using \pkg{ggpmisc}.
+Plots for each group are combined side-by-side using \pkg{cowplot}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  plotlist <- plotRegressionsASV_vs_vars(df, asvs = c("ASV1", "ASV2"), vars2cor = c("Var1", "Var2"))
+}
 }
 }
 \seealso{
-\code{\link[cowplot]{plot_grid}}
+\code{\link[cowplot]{plot_grid}}, \code{\link[ggpmisc]{stat_poly_eq}}
 }

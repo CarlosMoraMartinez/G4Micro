@@ -2,26 +2,28 @@
 % Please edit documentation in R/getPropVar_princomp.R
 \name{getPropVar_princomp}
 \alias{getPropVar_princomp}
-\title{FUNCTION_TITLE}
+\title{Generate Labels of Variance Explained from a princomp Object}
 \usage{
 getPropVar_princomp(pca)
 }
 \arguments{
-\item{pca}{PARAM_DESCRIPTION}
+\item{pca}{A \code{princomp} class object resulting from PCA analysis.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named character vector with labels like "PC1 (xx.xx\%)" representing variance explained by each component.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates character labels for each principal component indicating the percentage of variance explained, based on a \code{princomp} PCA object.
 }
 \details{
-DETAILS
+The function calculates the proportion of variance explained by each principal component, rounds it to two decimals, and formats the result into readable labels for visualization or reporting.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  data(USArrests)
+  pca <- princomp(USArrests, cor=TRUE)
+  getPropVar_princomp(pca)
+}
 }
 }
