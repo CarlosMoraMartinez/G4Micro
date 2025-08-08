@@ -24,12 +24,21 @@
 #' @rdname getGTTableFromRes
 #' @export
 #' @import gt
-getGTTableFromRes <- function(res, genes, name){
+getGTTableFromRes <- function(res, genes = c(), name = "DAA result"){
+
   gttable <- res %>% as.data.frame() %>%
-    rownames_to_column("Taxa") %>%
-    dplyr::filter(Taxa %in% genes) %>%
+    rownames_to_column("Taxa")
+  if(length(genes) > 0){
+    gttable <- gttable %>%
+      dplyr::filter(Taxa %in% genes)
+  }
+
+  gttable <- gttable %>%
+    dplyr::mutate(Taxa = gsub("_", " ", Taxa)) %>%
+    dplyr::mutate(Taxa = paste0("*", Taxa, "*")) %>%
     gt() %>%
     tab_caption(name) %>%
+    fmt_markdown(columns = "Taxa") %>%
     data_color(
       method = "numeric",
       palette = c("firebrick3", "dodgerblue2"),

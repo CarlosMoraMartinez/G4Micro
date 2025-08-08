@@ -10,7 +10,7 @@ getDeseqResults(
   name = "",
   variables = c("Condition"),
   formula = NULL,
-  doposcounts = FALSE
+  doPoscounts = FALSE
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ filtering thresholds (\code{mincount}, \code{minsampleswithcount}, and optionall
 
 \item{formula}{A custom formula to override automatic construction from \code{variables}. Default: NULL.}
 
-\item{doposcounts}{Logical; whether to force the use of the \code{poscounts} normalization method. Default: FALSE.}
+\item{doPoscounts}{Logical; whether to force the use of the \code{poscounts} normalization method. Default: FALSE.}
 }
 \value{
 A named list with components:

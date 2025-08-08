@@ -7,6 +7,7 @@
 #' @param dist_method Dissimilarity method to use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to \code{\link[phyloseq]{distance}}. Default: "bray".
 #' @param seed Random seed for reproducibility of adonis2. Default: 123.
 #' @param outname File name to save the summary table as a TSV file. Default: "permanovas_mult.tsv".
+#' @param adonisby String passed to \code{\link[vegan]{adonis2}} in the \code{by} argument. Default: "terms"
 #'
 #' @return A list with two elements:
 #' \itemize{
@@ -44,7 +45,7 @@
 #' @importFrom stringi stri_trans_general
 #' @importFrom vegan adonis2
 makePermanovaFormulas <- function(phobj, formulas, dist_method = "bray", seed = 123,
-                                  outname = "permanovas_mult.tsv"){
+                                  outname = "permanovas_mult.tsv", adonisby="terms"){
   ## From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
 
   meta <- sample_data(phobj)
@@ -57,11 +58,17 @@ makePermanovaFormulas <- function(phobj, formulas, dist_method = "bray", seed = 
   res <- data.frame()
   for(form in formulas){
     set.seed(seed)
-    mod1 <- adonis2(as.formula(form), data = sampledf, na.action=na.exclude)
-    res <-rbind(res, adonis2table(mod1))
+    mod1 <- adonis2(as.formula(form),
+                    data = sampledf,
+                    na.action=na.exclude,
+                    by = adonisby)
+    newtab <- adonis2table(mod1, adonisby = adonisby) %>%
+      dplyr::mutate(model = form,
+                    padj_bymodel = p.adjust(P, method = "BH"))
+    res <-rbind(res, newtab)
     modelos[[form]] <- mod1
   }
-  res <- res %>% dplyr::arrange(P)
+  res <- res %>% dplyr::select(model, everything())
   res$padj <- p.adjust(res$P, method="BH")
   write_tsv(res, file=outname)
   return(list(res=res, modelos=modelos))

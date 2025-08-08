@@ -26,8 +26,12 @@
 #' @param trim_values Logical. Whether to trim expression values at the 1st and 99th percentiles to reduce outliers (default \code{FALSE}).
 #' @param italics_rownames Logical. Whether to italicize the row labels (default \code{TRUE}).
 #' @param taxalist Character vector. A custom list of taxa or genes to include; if empty, selection is based on significance criteria (default empty vector).
-#'
-#' @return None. The function saves a PDF heatmap file to the specified output directory.
+#' @param check_taxa Check whether all taxa in \code{taxalist} exist or not.
+#' @param max_hm_h Heatmap height. If 0, will be automatically determined depending on number of rows.
+#' @param max_hm_w Max heatmap width. If 0, will be automatically determined depending on number of cols
+#' @param annotcols_num Max heatmap height
+#' @param annotpal_cat Name of Wes Anderson palette to annotate categorical variables. Default = \code{c("blue", "white", "red")}
+#' @return None. The function saves a PDF heatmap file to the specified output directory. Default = "Darjeeling1"
 #'
 #' @details
 #' The function filters taxa/genes based on p-value or adjusted p-value thresholds and
@@ -54,6 +58,8 @@
 #' @export
 #' @importFrom pheatmap pheatmap
 #' @importFrom dplyr filter
+#' @importFrom wesanderson wes_palette
+#' @importFrom SummarizedExperiment colData
 makeHeatmap <- function(resdf, dds, df2plot,
                         variable = "condition",
                         opt,
@@ -61,7 +67,12 @@ makeHeatmap <- function(resdf, dds, df2plot,
                         logscale=FALSE,
                         ptype = "padj", w=5, h=4,
                         trim_values=FALSE,
-                        italics_rownames=TRUE, taxalist=c()){
+                        italics_rownames=TRUE, taxalist=c(),
+                        check_taxa = TRUE,
+                        max_hm_h=16,
+                        max_hm_w=7,
+                        annotcols_num = c("blue", "white", "red"),
+                        annotpal_cat = "Darjeeling1"){
   outname <- paste(opt$out, name, sep="/", collapse="/")
   annot <- as.data.frame(colData(dds)[variable])
   names(annot) <- c(variable)
@@ -85,7 +96,11 @@ makeHeatmap <- function(resdf, dds, df2plot,
         pull(taxon)
     }
   }else{
-    taxa <- resdf$taxon[resdf$taxon %in% taxalist]
+    if(check_taxa){
+      taxa <- resdf$taxon[resdf$taxon %in% taxalist]
+    }else{
+      taxa <- taxalist
+    }
   }
 
   mat <- df2plot %>%
@@ -97,7 +112,9 @@ makeHeatmap <- function(resdf, dds, df2plot,
     mat <- log(mat + 1)
   }
 
-  fontsize_row = 10 - nrow(mat) / 15
+  #fontsize_row = 10 - nrow(mat) / 15
+  fontsize_row = 10 - nrow(mat) / 13
+  fontsize_col = 10 - ncol(mat) / 13
 
   mat_trim <- mat
   if(trim_values){
@@ -111,17 +128,64 @@ makeHeatmap <- function(resdf, dds, df2plot,
       bquote(italic(.(x)))
     }) %>% as.expression()
   }
-  hm <- pheatmap(mat_trim, cluster_rows=T,
-                 show_rownames=nrow(mat) < 120,
-                 annotation_col = annot,
-                 fontsize_row = fontsize_row,
-                 border_color = NA,
-                 labels_row = labels_row,
-                 cluster_cols=T,
-                 annotcluster_rowsation_col=annot
-  )
-  w <- w+0.05*ncol(mat)
-  h <- h+0.05*nrow(mat)
+
+  numcols <- max(sapply(annot %>% select_if(\(x) !is.numeric(x)), \(x)length(unique(x))))
+  cat("NUM COLS: ", numcols, "\n")
+  #cc <- ggsci::pal_npg()(numcols) #palette = "category10"
+  cc <- grDevices::colorRampPalette( wesanderson::wes_palette(annotpal_cat))(numcols)
+
+  user.colfn=colorRampPalette(cc)
+  newcc <- user.colfn(numcols) # in case there are too many colors
+
+  color_list_cols <- lapply(annot %>% select_if(\(x) !is.numeric(x)),
+                            \(x) {y <-newcc[1:length(unique(x))]; names(y)<- unique(x); y})
+
+  # Color list for continuous vars
+  cont_colors <- lapply(annot %>% select_if(\(x)is.numeric(x)), function(x) {
+    colorRampPalette(annotcols_num)(100)
+  })
+  names(cont_colors) <- names(annot %>% select_if(\(x) is.numeric(x)))
+  color_list_cols <- append(color_list_cols, cont_colors)
+  if(! all(rownames(mat_trim) %in% colnames(mat_trim))){
+    hm <- pheatmap(mat_trim,
+                   show_rownames=nrow(mat) < 120,
+                   annotation_col = annot,
+                   annotation_colors = color_list_cols,
+                   fontsize_col = fontsize_col,
+                   fontsize_row = fontsize_row,
+                   #annotcluster_rowsation_col=annot,
+                   border_color = NA,
+                   labels_row = labels_row,
+                   cluster_cols=T,
+                   cluster_rows=T
+    )
+  }else{
+    # Correlation heatmap
+    hm <- pheatmap(mat_trim,
+                   show_rownames=nrow(mat) < 120,
+                   annotation_col = annot,
+                   annotation_row = annot,
+                   fontsize_row = fontsize_row,
+                   fontsize_col = fontsize_row,
+                   border_color = NA,
+                   labels_row = labels_row,
+                   cluster_cols=T,
+                   cluster_rows=T
+    )
+  }
+  #w <- w+0.05*ncol(mat)
+  #h <- h+0.05*nrow(mat)
+
+  if(max_hm_h == 0){
+    h <- if(nrow(mat)>10) h+0.05*nrow(mat) else 7
+  }else{
+    h <- max_hm_h
+  }
+  if(max_hm_w == 0){
+    w <- if(ncol(mat)>10) w+0.05*ncol(mat) else 7
+  }else{
+    w <- max_hm_w
+  }
   pdf(outname, width = w, height = h)
   print(hm)
   tmp <- dev.off()

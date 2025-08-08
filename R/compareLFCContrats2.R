@@ -34,7 +34,7 @@
 compareLFCContrats2 <- function(contrastlist, firstContrast,
                                 contrastNamesOrdered, mainContrastName,
                                 plim_select= 0.000001, plim_plot=0.05,
-                                name2remove = "",
+                                name2remove = "xxx",
                                 resdfname="resdf", outdir = "./", name="LFC_compare", w=12, h=8,
                                 scale_mode="fixed"){
   alldeatables <- map(names(contrastlist),

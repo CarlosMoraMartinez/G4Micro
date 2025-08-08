@@ -5,6 +5,7 @@
 #' @param resLFC A DESeq2 log fold change shrinkage results object (e.g., from \code{lfcShrink}).
 #' @param opt A list of options, must include \code{out} specifying the output directory.
 #' @param name A string used as the filename (without extension) for saving the results.
+#' @param nested_dir Subdirectory within \code{opt$out} to write output.
 #' @return A data frame containing the original DESeq2 results along with added columns for
 #' log2 fold change shrinkage, standard error of shrinkage, and s-values. The same data frame
 #' is also written to a tab-separated file at the specified output path.
@@ -29,8 +30,11 @@
 #' @rdname defWriteDEAResults
 #' @export
 #' @importFrom dplyr mutate
-defWriteDEAResults <- function(res, resLFC, opt, name){
-  fname <-paste(opt$out, name, sep="/", collapse="/")
+defWriteDEAResults <- function(res, resLFC, opt, name, nested_dir = ""){
+  if(nested_dir != ""){
+    if(! dir.exists(paste0(opt$out, nested_dir))) dir.create(paste0(opt$out, nested_dir))
+  }
+  fname <-paste(opt$out, nested_dir, name, sep="/", collapse="/")
   resdf <- res %>% as.data.frame(row.names = rownames(.)) %>%
     rownames_to_column("taxon") %>%
     dplyr::mutate(log2FoldChangeShrink = resLFC$log2FoldChange,

@@ -25,12 +25,15 @@ getDeseqContrastFromCategorical <- function(dds, lev_combin, opt, name){
   contrastvec <- c(lev_combin[1], lev_combin[3], lev_combin[2])
   contrast_name <- paste0(lev_combin[1],'_', lev_combin[3], '_vs_', lev_combin[2]) %>% gsub(" ", ".", .)
   res <- results(dds, contrast = contrastvec)
+
+  nested_dir <- paste0(name, "_", contrast_name, "/")
+
   resLFC <- tryCatch(lfcShrink(dds, contrast = contrastvec, type="normal", lfcThreshold = log2(opt$fc)),error=\(x)data.frame() ) #apeglm gives weird results
   resLFC_ape <- tryCatch(lfcShrink(dds, coef = contrast_name, type="apeglm", lfcThreshold = log2(opt$fc)),error=\(x)data.frame() ) #apeglm gives weird results
   resLFC_ashr <- lfcShrink(dds, contrast = contrastvec, type="ashr", lfcThreshold = log2(opt$fc)) #apeglm gives weird results
-  resdf <- defWriteDEAResults(res, resLFC, opt, paste0(name, "_",contrast_name, "_DAAshrinkNormal.tsv"))
-  resdf_ape <- defWriteDEAResults(res, resLFC_ape, opt, paste0(name, "_", contrast_name, "_DAAshrinkApe.tsv"))
-  resdf_ashr <- defWriteDEAResults(res, resLFC_ashr, opt, paste0(name, "_", contrast_name, "_DAAshrinkAshr.tsv"))
+  resdf <- defWriteDEAResults(res, resLFC, opt, paste0(name, "_",contrast_name, "_DAAshrinkNormal.tsv"), nested_dir=nested_dir)
+  resdf_ape <- defWriteDEAResults(res, resLFC_ape, opt, paste0(name, "_", contrast_name, "_DAAshrinkApe.tsv"), nested_dir=nested_dir)
+  resdf_ashr <- defWriteDEAResults(res, resLFC_ashr, opt, paste0(name, "_", contrast_name, "_DAAshrinkAshr.tsv"), nested_dir=nested_dir)
 
   return(list("res"=res,
               "resLFC"=resLFC,
@@ -39,6 +42,9 @@ getDeseqContrastFromCategorical <- function(dds, lev_combin, opt, name){
               "resdf"=resdf,
               "resdf_ape"=resdf_ape,
               "resdf_shr"=resdf_ashr,
+              is_numeric = FALSE,
+              name = name,
               contrast_vec = contrastvec,
-              contrast_name = contrast_name))
+              contrast_name = contrast_name,
+              nested_dir = nested_dir))
 }

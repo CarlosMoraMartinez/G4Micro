@@ -12,6 +12,7 @@ Remotes:
     github::ggloor/CoDaSeq/CoDaSeq,
     github::zhouhj1994/LinDA,
     github::gmteunisse/fantaxtic,
+    github::paobranco/UBL,
     bioc::DESeq2,
 Depends:
     dplyr,
@@ -97,6 +98,7 @@ Imports:
     stats,
     stringi,
     stringr,
+    SummarizedExperiment,
     sva,
     tibble,
     tidyr,

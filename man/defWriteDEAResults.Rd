@@ -4,7 +4,7 @@
 \alias{defWriteDEAResults}
 \title{Write DESeq2 Differential Expression Results to File}
 \usage{
-defWriteDEAResults(res, resLFC, opt, name)
+defWriteDEAResults(res, resLFC, opt, name, nested_dir = "")
 }
 \arguments{
 \item{res}{A DESeq2 results object (typically from \code{DESeq2::results}).}
@@ -14,6 +14,8 @@ defWriteDEAResults(res, resLFC, opt, name)
 \item{opt}{A list of options, must include \code{out} specifying the output directory.}
 
 \item{name}{A string used as the filename (without extension) for saving the results.}
+
+\item{nested_dir}{Subdirectory within \code{opt$out} to write output.}
 }
 \value{
 A data frame containing the original DESeq2 results along with added columns for

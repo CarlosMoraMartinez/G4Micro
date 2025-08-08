@@ -7,7 +7,7 @@
 #' @param name Optional string used as a prefix for output files. Default: ''.
 #' @param variables A character vector with variables to use in the design formula (e.g., conditions to compare). Default: c("Condition").
 #' @param formula A custom formula to override automatic construction from `variables`. Default: NULL.
-#' @param doposcounts Logical; whether to force the use of the `poscounts` normalization method. Default: FALSE.
+#' @param doPoscounts Logical; whether to force the use of the `poscounts` normalization method. Default: FALSE.
 #' @return A named list with components:
 #' \itemize{
 #'   \item \code{dds}: The DESeq2 dataset object after filtering and running DESeq.
@@ -54,7 +54,7 @@
 #' @export
 #' @importFrom phyloseq phyloseq_to_deseq2
 #' @importFrom DESeq2 DESeq counts results resultsNames varianceStabilizingTransformation
-getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), formula=NULL, doposcounts=FALSE){
+getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), formula=NULL, doPoscounts=FALSE){
 
   if(is.null(formula)){
     formula <- paste0("~ ", paste(variables, sep=" + ", collapse=" + ")) %>%
@@ -77,7 +77,7 @@ getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), for
 
   ##Add pseudocount if necessary
   anyNonZero <- raw_counts %>% apply(MAR=1, all) %>% any
-  if(!anyNonZero | doposcounts){
+  if(!anyNonZero | doPoscounts){
     do_poscounts = TRUE
     dds <- DESeq(dds, betaPrior = F, sfType = "poscounts")
   }else{
@@ -109,7 +109,16 @@ getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), for
   all_combos_done <- TRUE
   # Write raw counts
   rawc_df <- defWriteMatAsDF(raw_counts, opt, paste0(name, "_", "raw_counts.tsv") )
-  #filtx_df <- defWriteMatAsDF(filt_counts, opt, "raw_counts_filtered.tsv")
+
+  tax2annot <- tax_table(phobj)
+  all_contrasts <- map(all_contrasts, \(this_contrast){
+    this_contrast$resdf_annot <- this_contrast$resdf %>%
+      dplyr::mutate(Genus = data.frame(tax2annot[taxon, "Genus"])$Genus) %>%
+      dplyr::select(Genus, everything()) %>%
+      dplyr::arrange(pvalue)
+    write_tsv(this_contrast$resdf_annot, file=paste0(opt$out, this_contrast$nested_dir, "/DEA_annot.tsv"))
+    return(this_contrast)
+  })
 
   # Normalized counts
   norm_counts <- counts(dds, normalized = T)
@@ -132,6 +141,7 @@ getDeseqResults <- function(phobj, opt, name="", variables = c("Condition"), for
     "resLFC_ape"=all_contrasts[[1]]$resLFC_ape,
     "resLFC_ashr"=all_contrasts[[1]]$resLFC_ashr,
     "resdf"=all_contrasts[[1]]$resdf,
+    "resdf_annot"=all_contrasts[[1]]$resdf_annot,
     "resdf_ape"=all_contrasts[[1]]$resdf_ape,
     "resdf_shr"=all_contrasts[[1]]$resdf_ashr,
     "raw_df" = rawc_df,

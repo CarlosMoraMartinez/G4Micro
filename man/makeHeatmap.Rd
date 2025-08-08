@@ -17,7 +17,12 @@ makeHeatmap(
   h = 4,
   trim_values = FALSE,
   italics_rownames = TRUE,
-  taxalist = c()
+  taxalist = c(),
+  check_taxa = TRUE,
+  max_hm_h = 16,
+  max_hm_w = 7,
+  annotcols_num = c("blue", "white", "red"),
+  annotpal_cat = "Darjeeling1"
 )
 }
 \arguments{
@@ -54,9 +59,19 @@ and samples as columns. Must include a column named "gene" for filtering.}
 \item{italics_rownames}{Logical. Whether to italicize the row labels (default \code{TRUE}).}
 
 \item{taxalist}{Character vector. A custom list of taxa or genes to include; if empty, selection is based on significance criteria (default empty vector).}
+
+\item{check_taxa}{Check whether all taxa in \code{taxalist} exist or not.}
+
+\item{max_hm_h}{Heatmap height. If 0, will be automatically determined depending on number of rows.}
+
+\item{max_hm_w}{Max heatmap width. If 0, will be automatically determined depending on number of cols}
+
+\item{annotcols_num}{Max heatmap height}
+
+\item{annotpal_cat}{Name of Wes Anderson palette to annotate categorical variables. Default = \code{c("blue", "white", "red")}}
 }
 \value{
-None. The function saves a PDF heatmap file to the specified output directory.
+None. The function saves a PDF heatmap file to the specified output directory. Default = "Darjeeling1"
 }
 \description{
 Creates and saves a heatmap of expression values for selected taxa or genes based on

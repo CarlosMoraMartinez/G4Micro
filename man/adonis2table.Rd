@@ -4,7 +4,7 @@
 \alias{adonis2table}
 \title{Format PERMANOVA and Dispersion Results into a Summary Table}
 \usage{
-adonis2table(mod1, perm_disp = NULL, ancap = NULL, var = "")
+adonis2table(mod1, perm_disp = NULL, ancap = NULL, var = "", adonisby = NULL)
 }
 \arguments{
 \item{mod1}{A result object from \code{\link[vegan]{adonis2}}.}
@@ -14,6 +14,8 @@ adonis2table(mod1, perm_disp = NULL, ancap = NULL, var = "")
 \item{ancap}{(Optional) A result object from \code{\link[vegan]{anova.cca}} applied to a \code{\link[vegan]{capscale}} model. Default: \code{NULL}}
 
 \item{var}{A string representing the name of the variable tested. Default: \code{""}}
+
+\item{adonisby}{String passed to \code{\link[vegan]{adonis2}} in the \code{by} argument. Default: "terms"}
 }
 \value{
 A \code{data.frame} with the following columns:

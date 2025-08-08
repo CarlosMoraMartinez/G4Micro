@@ -11,6 +11,7 @@
 #' @param perm_disp (Optional) A result object from \code{\link[vegan]{permutest}} applied to a \code{\link[vegan]{betadisper}} model. Default: \code{NULL}
 #' @param ancap (Optional) A result object from \code{\link[vegan]{anova.cca}} applied to a \code{\link[vegan]{capscale}} model. Default: \code{NULL}
 #' @param var A string representing the name of the variable tested. Default: \code{""}
+#' @param adonisby String passed to \code{\link[vegan]{adonis2}} in the \code{by} argument. Default: "terms"
 #'
 #' @return A \code{data.frame} with the following columns:
 #' \itemize{
@@ -40,21 +41,39 @@
 #' }
 #' @rdname adonis2table
 #' @export
-adonis2table <- function(mod1, perm_disp=NULL, ancap=NULL, var=""){
-  aux <- data.frame(
-    variable = ifelse(var == "", rownames(mod1)[1], var),
-    DF_var=mod1$Df[1],
-    DF_Residual = mod1$Df[2],
-    DF_Total = mod1$Df[3],
-    SumOfSQs_var = mod1$SumOfSqs[1],
-    SumOfSQs_Residual =mod1$SumOfSqs[2],
-    SumOfSQs_Total = mod1$SumOfSqs[3],
-    R2_var = mod1$R2[1],
-    R2_Residual = mod1$R2[2],
-    R2_Total = mod1$R2[3],
-    F_statistic = mod1$F[1],
-    P = mod1$`Pr(>F)`[1]
-  )
+adonis2table <- function(mod1, perm_disp=NULL, ancap=NULL, var="", adonisby=NULL){
+
+  if(is.null(adonisby)){
+    aux <- data.frame(
+      variable = ifelse(var == "", rownames(mod1)[1], var),
+      DF_var=mod1$Df[1],
+      DF_Residual = mod1$Df[2],
+      DF_Total = mod1$Df[3],
+      SumOfSQs_var = mod1$SumOfSqs[1],
+      SumOfSQs_Residual =mod1$SumOfSqs[2],
+      SumOfSQs_Total = mod1$SumOfSqs[3],
+      R2_var = mod1$R2[1],
+      R2_Residual = mod1$R2[2],
+      R2_Total = mod1$R2[3],
+      F_statistic = mod1$F[1],
+      P = mod1$`Pr(>F)`[1]
+    )
+  }else{
+    aux <- data.frame(
+      variable = rownames(mod1),
+      DF_var=mod1$Df,
+      DF_Residual = mod1$Df,
+      DF_Total = mod1$Df,
+      SumOfSQs_var = mod1$SumOfSqs,
+      SumOfSQs_Residual =mod1$SumOfSqs,
+      SumOfSQs_Total = mod1$SumOfSqs,
+      R2_var = mod1$R2,
+      R2_Residual = mod1$R2,
+      R2_Total = mod1$R2,
+      F_statistic = mod1$F,
+      P = mod1$`Pr(>F)`
+    )
+  }
   if(!is.null(perm_disp)){
     aux$perm_disp_P = perm_disp$tab[1, "Pr(>F)"]
     aux$perm_disp_F = perm_disp$tab[1, "F"]

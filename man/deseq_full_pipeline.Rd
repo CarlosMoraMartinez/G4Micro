@@ -4,7 +4,18 @@
 \alias{deseq_full_pipeline}
 \title{Full DESeq2 Differential Expression Analysis Pipeline}
 \usage{
-deseq_full_pipeline(phobj, name, vars2deseq, opt)
+deseq_full_pipeline(
+  phobj,
+  name,
+  vars2deseq,
+  opt,
+  plot_all = TRUE,
+  doPoscounts = FALSE,
+  deseqname = "DeSEQ2/",
+  vars2heatmap = c("Condition"),
+  max_hm_h = 16,
+  max_hm_w = 7
+)
 }
 \arguments{
 \item{phobj}{A phyloseq object containing count data and taxonomy information.}
@@ -14,6 +25,21 @@ deseq_full_pipeline(phobj, name, vars2deseq, opt)
 \item{vars2deseq}{Character vector of variable names to use in the DESeq2 design formula.}
 
 \item{opt}{A list of options controlling output directories, filtering thresholds, p-value cutoffs, and other parameters.}
+
+\item{plot_all}{Whether to make plots for all contrasts or not. Default, TRUE.}
+
+\item{doPoscounts}{Logical; whether to force the use of the \code{poscounts} normalization method. Default: FALSE.}
+
+\item{deseqname}{A character string specifying the subdirectory name for storing DESeq2 results.
+Default: \code{"DeSEQ2/"}.}
+
+\item{vars2heatmap}{Character vector of variable names (from sample metadata) to annotate
+in generated heatmaps. Default: \code{c("Condition")}.}
+
+\item{max_hm_h}{Numeric; maximum height of the heatmaps (in inches) when saving PDF output.
+Passed to \code{makeHeatmap}. Default: \code{16}.}
+
+\item{max_hm_w}{Max heatmap width. If 0, will be automatically determined depending on number of cols. Default: `7}
 }
 \value{
 A list containing DESeq2 result data frames and associated objects produced by \code{getDeseqResults}.

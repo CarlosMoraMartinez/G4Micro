@@ -4,7 +4,7 @@
 \alias{getGTTableFromRes}
 \title{Generate a Formatted GT Table from Differential Expression Results}
 \usage{
-getGTTableFromRes(res, genes, name)
+getGTTableFromRes(res, genes = c(), name = "DAA result")
 }
 \arguments{
 \item{res}{A data.frame or tibble containing differential expression results. Must include row names representing taxa or genes and columns \code{pvalue}, \code{padj}, and \code{log2FoldChange}.}

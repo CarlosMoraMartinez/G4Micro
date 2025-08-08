@@ -1,11 +1,13 @@
-
+#' @export
 NFOLDS_DEFAULT = 0
 
+#' @export
 randomforest_params_default = list(ntree = 500,
                            mtry = 1,
                            nodesize = 1,
                            balance_weights = TRUE)
 
+#' @export
 xgboost_params_default =  list(learning_rate=0.3,
                        max_depth=2,
                        nrounds =50,
@@ -20,6 +22,7 @@ xgboost_params_default =  list(learning_rate=0.3,
                        balance_weights = TRUE
 )
 
+#' @export
 catboost_params_default <- list(
   iterations = 100,
   learning_rate = 0.05,
@@ -40,13 +43,16 @@ catboost_params_default <- list(
   auto_class_weights = "Balanced"
 )
 
+#' @export
 smote_params_default = list(K=5, dup_size="balance")
 
+#' @export
 randomforest_params_mult_default = list(ntree = 500,
                                 mtry = 4,
                                 nodesize = 5,
                                 balance_weights = TRUE)
 
+#' @export
 xgboost_params_mult_default =  list(learning_rate=0.3,
                             max_depth=2,
                             nrounds =30,
@@ -61,6 +67,8 @@ xgboost_params_mult_default =  list(learning_rate=0.3,
                             num_class = 4,
                             balance_weights = TRUE
 )
+
+#' @export
 catboost_params_mult_default <- list(
   iterations = 100,
   learning_rate = 0.05,

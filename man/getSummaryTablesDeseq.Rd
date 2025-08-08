@@ -4,7 +4,7 @@
 \alias{getSummaryTablesDeseq}
 \title{Generate Summary Tables from DESeq2 Results}
 \usage{
-getSummaryTablesDeseq(res, opt)
+getSummaryTablesDeseq(res, opt, nested_dir = "")
 }
 \arguments{
 \item{res}{A \code{DESeq2} results object or data frame containing differential expression results,
@@ -16,6 +16,8 @@ including columns \code{pvalue}, \code{padj}, and \code{log2FoldChange}.}
 \item \code{fc}: numeric, fold-change cutoff (linear scale, e.g., 2 for 2-fold).
 \item \code{out}: character, output directory where summary tables will be saved.
 }}
+
+\item{nested_dir}{Subdirectory within \code{opt$out} to write output.}
 }
 \value{
 A list with two contingency tables:

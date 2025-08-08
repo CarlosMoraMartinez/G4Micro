@@ -11,7 +11,7 @@ compareLFCContrats2(
   mainContrastName,
   plim_select = 1e-06,
   plim_plot = 0.05,
-  name2remove = "",
+  name2remove = "xxx",
   resdfname = "resdf",
   outdir = "./",
   name = "LFC_compare",

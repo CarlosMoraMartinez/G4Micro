@@ -9,7 +9,8 @@ makePermanovaFormulas(
   formulas,
   dist_method = "bray",
   seed = 123,
-  outname = "permanovas_mult.tsv"
+  outname = "permanovas_mult.tsv",
+  adonisby = "terms"
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ makePermanovaFormulas(
 \item{seed}{Random seed for reproducibility of adonis2. Default: 123.}
 
 \item{outname}{File name to save the summary table as a TSV file. Default: "permanovas_mult.tsv".}
+
+\item{adonisby}{String passed to \code{\link[vegan]{adonis2}} in the \code{by} argument. Default: "terms"}
 }
 \value{
 A list with two elements:

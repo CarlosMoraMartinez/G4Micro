@@ -11,6 +11,7 @@
 #'   - \code{pval}: numeric, p-value cutoff threshold.
 #'   - \code{fc}: numeric, fold-change cutoff (linear scale, e.g., 2 for 2-fold).
 #'   - \code{out}: character, output directory where summary tables will be saved.
+#' @param nested_dir Subdirectory within \code{opt$out} to write output.
 #'
 #' @return A list with two contingency tables:
 #'   \describe{
@@ -39,7 +40,7 @@
 #' @rdname getSummaryTablesDeseq
 #' @export
 #' @importFrom dplyr mutate select
-getSummaryTablesDeseq <- function(res, opt){
+getSummaryTablesDeseq <- function(res, opt, nested_dir = ""){
   namestab <- c(paste("p < ", as.character(opt$pval), sep="", collapse="") ,
                 paste("LFC > ", as.character(log2(opt$fc)), sep="", collapse="")
   )
@@ -70,7 +71,7 @@ getSummaryTablesDeseq <- function(res, opt){
                                  paste("p > ", as.character(opt$pval), sep="", collapse=""))
 
   #restab_adj %>% kable(caption="Number of taxons (species) per category using adjusted p-values")
-  write_tsv(as.data.frame(restab), paste0(opt$out, "/num_diff_rawpval.tsv"))
-  write_tsv(as.data.frame(restab_adj), paste0(opt$out, "/num_diff_adjpval.tsv"))
+  write_tsv(as.data.frame(restab), paste0(opt$out, nested_dir, "/num_diff_rawpval.tsv"))
+  write_tsv(as.data.frame(restab_adj), paste0(opt$out, nested_dir, "/num_diff_adjpval.tsv"))
   return(list("restab"=restab, "restab_adj"=restab_adj))
 }

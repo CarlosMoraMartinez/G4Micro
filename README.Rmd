@@ -32,33 +32,40 @@ pak::pak("CarlosMoraMartinez/G4Micro")
 
 ## Alpha Diversity Analysis
 
-Load a list of phyloseq objects and select one of them.
+Load a phyloseq object with filtered and rarefied counts:
 
 ```{r load, warning=FALSE, message=FALSE}
 library(G4Micro)
 
-data("all_phyloseq")
-phobj <- all_phyloseq$remove_tanda2_rarefied_min
-phobj
+data("phobj_raref")
+phobj_raref
 ```
 
-A list with default options is also loaded:
+A list with default options is also loaded. Copy it and modify it to use a custom output directory. 
 
 ```{r load2}
 opt <- opt_default
-print(opt)
+opt$out <- "~/test_g4micro/"
+if(!dir.exists(opt$out)) dir.create(opt$out)
+
+restoreopt <- restauraropt_mk(opt)
 ```
 
-Calculate alpha diversity indices
+The \code{restoreopt} function will allow to reset the options to the state when \code{restauraropt_mk} was called. To do that, execute:
+
+```{r load3}
+opt <- restoreopt(opt)
+```
+
+Calculate alpha diversity indices:
 
 ```{r alpha1, warning=FALSE, message=FALSE}
-opt$out <- "~/"
 outdir <- paste0(opt$out, "/AlphaDiversity/")
 if(!dir.exists(outdir)) dir.create(outdir)
 
 alpha_indices <-  c("Observed", "Chao1", "Shannon", "InvSimpson")
 
-divtab <- calculateAlphaDiversityTable(phseq_obj = phobj, outdir = outdir, 
+divtab <- calculateAlphaDiversityTable(phseq_obj = phobj_raref, outdir = outdir, 
                                        indices = alpha_indices, name = "AlphaDiv" )
 
 divtab %>% select(sampleID, Condition, all_of(alpha_indices)) %>% 
@@ -70,7 +77,7 @@ Test statistical differences between alpha diversity indices:
 ```{r alpha2, warning=FALSE, message=FALSE}
 
 alphadif <- testDiversityDifferences(divtab, alpha_indices, 
-                                     groupvars = c("Condition", "Sexo"), 
+                                     groupvars = c("Condition", "Sex"), 
                                      outdir = outdir, name = "AlphaDiv_test")
 
 alphadif %>% kableExtra::kable()
@@ -80,7 +87,7 @@ Fit linear models using a main variable and several covariates:
 
 ```{r alpha3, warning=FALSE, warning=FALSE, message=FALSE}
 interestvar <- "Condition"
-extravars <- c("BMI", "bristol_scale", "Sexo")
+extravars <- c("BMI", "Age", "Sex")
 
 models <- makeLinearModelsSingleVariable(divtab, interestvar,
                                             extravars,
@@ -99,16 +106,25 @@ models$single_anovas %>% select(-mod1, -mod2, nvars, Index,
   kableExtra::kable()
 ```
 
+Show tests using covariates:
+
+```{r alpha5}
+models$anovas %>% select(-mod1, -mod2, nvars, Index, 
+                                model, reduced_model, Df, 
+                                `Pr(>F)`, padj_all) %>% 
+  kableExtra::kable()
+```
+
 Finally, plot differences (recalculating statistical tests):
 
 
-```{r alpha6, fig.width=12, fig.height=12, warning=FALSE, message=FALSE}
+```{r alpha6, fig.width=12, fig.height=14, warning=FALSE, message=FALSE}
 library(cowplot)
 
-cat_vars <- c("Condition", "Sexo")
+cat_vars <- c("Condition", "Sex")
 num_vars <- c("BMI", "bristol_scale")
 
-divplots <- getAlphaDiversity(phobj, 
+divplots <- getAlphaDiversity(phobj_raref, 
                               vars = cat_vars, 
                               qvars = num_vars,
                               opt,
@@ -123,11 +139,11 @@ cowplot::plot_grid(plotlist = divplots, nrow = 4)
 
 PCoA on Bray-Curtis distances:
 
-```{r beta1, fig.width=12, fig.height=12, warning=FALSE, message=FALSE}
+```{r beta1, fig.width=13, fig.height=12, warning=FALSE, message=FALSE}
 library(cowplot)
 
-vars <- c("Condition", "Sexo", "BMI")
-betaplots <- makeAllPCoAs(phobj, outdir,
+vars <- c("Condition", "Sex", "BMI")
+betaplots <- makeAllPCoAs(phobj_raref, outdir,
                           method = "PCoA",
                           name = "PCoA_Bray",
                           dist_type = "bray",
@@ -142,12 +158,11 @@ cowplot::plot_grid(plotlist = betaplots, nrow = 3)
 
 NMDS on Bray-Curtis distances:
 
-
-```{r beta2, fig.width=12, fig.height=6, warning=FALSE, message=FALSE}
+```{r beta2, fig.width=12, fig.height=4, warning=FALSE}
 library(cowplot)
 
-vars <- c("Condition", "Sexo")
-betaplots <- makeAllPCoAs(phobj, outdir,
+vars <- c("Condition", "Sex")
+betaplots <- makeAllPCoAs(phobj_raref, outdir,
                           method = "NMDS",
                           name = "NMDS_Bray",
                           dist_type = "bray",
@@ -159,3 +174,169 @@ betaplots <- makeAllPCoAs(phobj, outdir,
 
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
+
+Perform PERMANOVA with the \code{vegan::adonis2} function:
+
+```{r beta3, fig.width=12, fig.height=4, warning=FALSE}
+exclude_vars <- names(sample_data(phobj_raref))
+exclude_vars <- exclude_vars[!exclude_vars %in% c("Condition", "Sex", "smoking_status")]
+result <- makePermanova(phobj_raref,
+              dist_method = "bray", 
+              seed = 123, 
+              exclude_vars = exclude_vars, 
+              outname = "permatest") 
+
+result %>% kableExtra::kable()
+```
+
+Perform PERMANOVA with the \code{vegan::adonis2} function, using covariates:
+
+```{r beta4, fig.width=12, fig.height=4, warning=FALSE}
+permaformulas <- c(
+  "braydist ~ Condition + Sex",
+  "braydist ~ Condition + BMI",
+  "braydist ~ Condition + Age",
+  "braydist ~ Condition + Sex + BMI",
+  "braydist ~ Condition + BMI + Sex + Age"
+)
+
+result <- makePermanovaFormulas(phobj_raref,
+                  permaformulas,
+                  dist_method = "bray", 
+                  seed = 123, 
+                  outname = "adonis2formulas")
+
+result$res %>% select(model, variable, DF_var, DF_Residual, DF_Total, R2_var, R2_Residual, R2_Total, F_statistic, P, padj) %>% kableExtra::kable()
+```
+
+Model objects can also be accessed:
+
+```{r beta5, fig.width=12, fig.height=4, warning=FALSE}
+result$modelos[[4]]
+
+```
+
+## Differential Abundance Analysis with DESeq2
+
+First, use Sex and Age as covariates. We will use the \code{phyloseq} object with the raw counts, since \code{DESeq2} normalizes data internally.
+
+Several tables and plots will be saved to the \code{opt$out} directory. 
+
+```{r deseq1, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide'}
+data("phobj_filtonly")
+test_vars <- c("Condition", "Sex", "Age")
+
+result <- deseq_full_pipeline(phobj_filtonly, name = "CondSexAge", vars2deseq = test_vars, opt = opt)
+
+```
+
+Several tables and plots will be saved to the \code{opt$out} directory. 
+
+See results table for the contrast of Condition:
+
+```{r deseq2, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
+
+taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
+     arrange(padj) %>% pull(taxon) 
+result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
+
+```
+
+See results table for the contrast of Sex:
+
+```{r deseq3, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
+
+taxa2plot <- result$all_contrasts$Sex_Female_vs_Male$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
+     arrange(padj) %>% pull(taxon) 
+result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
+
+```
+
+See results table for the contrast of Age:
+
+```{r deseq4, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
+
+taxa2plot <- result$all_contrasts$Age$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
+     arrange(padj) %>% pull(taxon) 
+result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa with Age")
+
+```
+
+
+Make heatmap:
+
+```{r deseq5, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
+
+taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
+     arrange(padj) %>% pull(taxon) 
+
+makeHeatmap(result$all_contrasts$Condition_Depression_vs_Control$resdf, 
+            result$dds, 
+            result$vst_counts_df, 
+            c("Condition", "Sex", "Age"),
+            opt, 
+            name ="test_heatmap",
+            logscale = F, 
+            ptype="padj", 
+            trim_values = TRUE, 
+            taxalist=taxa2plot, 
+            max_hm_h=10, max_hm_w=12)
+
+```
+
+Also, different contrasts can be compared:
+
+```{r deseq6, fig.width=12, fig.height=5, warning=FALSE, error=FALSE}
+
+mainContrast <- result$all_contrasts$Condition_Depression_vs_Control
+contrastlist2 <- list(
+  result$all_contrasts$Sex_Female_vs_Male$resdf,
+  result$all_contrasts$Age$resdf
+) %>% lapply(\(x)return(list(resdf=x)))
+
+names(contrastlist2) <- c( "Sex", "Age")
+
+contrast_names_pretty <- c("Depression vs Control",  gsub("_", " ", names(contrastlist2)))
+
+compareLFCContrats2(contrastlist2, mainContrast, 
+                   contrast_names_pretty, "Depression_vs_Control", 
+                   plim_select= 0.001, plim_plot=0.05,
+                   name2remove = "xxx",
+                   resdfname="resdf", 
+                   outdir = opt$out, 
+                   name="LFC_Comparison_AgeAndBMI_allCombos_p05", 
+                   w=12, h=12, scale_mode = "free")
+
+restoreopt <- restauraropt_mk(opt)
+```
+
+## DESeq2 analysis with interaction
+
+Instead of using several covariates in an additive way, one may specify more complex formulas with interactions:
+
+```{r deseq7, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide'}
+
+phobj_filtered <- subset_samples(
+  phobj_filtonly,
+  !is.na(Condition) &
+  !is.na(Sex) &
+  !is.na(BMI) &
+  !is.na(Age)
+)
+result_int <- getDeseqResults(phobj_filtered, opt = opt, name = "CBSA_interaction", 
+                          variables=NULL, formula="~ Condition + BMI + Sex * Age")
+
+
+
+
+taxa2plot <- result_int$all_contrasts$Condition_Depression_vs_Control$resdf %>% 
+  filter(!is.na(padj ) & padj < 0.01) %>% 
+  arrange(padj) %>% pull(taxon) 
+result_int$all_contrasts$Condition_Depression_vs_Control$res %>% 
+  getGTTableFromRes(taxa2plot, "DAA between Depr and C controlling for  BMI + Sex * Age")
+
+restoreopt <- restauraropt_mk(opt)
+```
+
+
+

@@ -84,6 +84,8 @@ makePermanova <- function(phobj, dist_method = "bray", seed = 123,
   meta <- sample_data(phobj)
   braydist <- phyloseq::distance(phobj, method = dist_method)
   sampledf <- data.frame(sample_data(phobj))
+  exclude_vars <- stri_trans_general(str = exclude_vars, id = "Latin-ASCII") %>%
+    gsub(" ", "_", .)
   names(sampledf) <- stri_trans_general(str = names(sampledf), id = "Latin-ASCII") %>%
     gsub(" ", "_", .)
 
