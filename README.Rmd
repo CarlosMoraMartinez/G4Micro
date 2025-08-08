@@ -67,7 +67,7 @@ divtab %>% select(sampleID, Condition, all_of(alpha_indices)) %>%
 
 Test statistical differences between alpha diversity indices:
 
-```{r alpha2}
+```{r alpha2, warning=FALSE, message=FALSE}
 
 alphadif <- testDiversityDifferences(divtab, alpha_indices, 
                                      groupvars = c("Condition", "Sexo"), 
@@ -78,7 +78,7 @@ alphadif %>% kableExtra::kable()
 
 Fit linear models using a main variable and several covariates:
 
-```{r alpha3, warning=FALSE}
+```{r alpha3, warning=FALSE, warning=FALSE, message=FALSE}
 interestvar <- "Condition"
 extravars <- c("BMI", "bristol_scale", "Sexo")
 
@@ -116,7 +116,7 @@ divplots <- getAlphaDiversity(phobj,
                               correct_pvalues = T, correct_pvalues_indices = T,
                               name = "alphaplots1", w = 10, h = 4)
 
-cowplot::plot_grid(plotlist = divplots, ncol = 4)
+cowplot::plot_grid(plotlist = divplots, nrow = 4)
 ```
 
 

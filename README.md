@@ -161,12 +161,6 @@ alphadif <- testDiversityDifferences(divtab, alpha_indices,
                                      outdir = outdir, name = "AlphaDiv_test")
 
 alphadif %>% kableExtra::kable()
-#> Warning: 'xfun::attr()' is deprecated.
-#> Use 'xfun::attr2()' instead.
-#> See help("Deprecated")
-#> Warning: 'xfun::attr()' is deprecated.
-#> Use 'xfun::attr2()' instead.
-#> See help("Deprecated")
 ```
 
 | variable | groups | comparison | anova_F | anova_p | t_test | wilcox_test | shapiro_normality_test | bartlett_test | levene_test | t_corrected | wilcox_corrected |
@@ -244,7 +238,7 @@ divplots <- getAlphaDiversity(phobj,
                               correct_pvalues = T, correct_pvalues_indices = T,
                               name = "alphaplots1", w = 10, h = 4)
 
-cowplot::plot_grid(plotlist = divplots, ncol = 4)
+cowplot::plot_grid(plotlist = divplots, nrow = 4)
 ```
 
 <img src="man/figures/README-alpha6-1.png" width="100%" />
