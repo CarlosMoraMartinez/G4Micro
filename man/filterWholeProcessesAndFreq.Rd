@@ -2,30 +2,44 @@
 % Please edit documentation in R/filterWholeProcessesAndFreq.R
 \name{filterWholeProcessesAndFreq}
 \alias{filterWholeProcessesAndFreq}
-\title{FUNCTION_TITLE}
+\title{Filter Functional Processes by Count and Frequency}
 \usage{
 filterWholeProcessesAndFreq(df, opt)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame or tibble containing functional pathways as rows
+and samples as columns. The first column should be named "Pathway".}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing filtering thresholds:
+\itemize{
+\item \code{mincount}: Minimum count threshold to consider a value as present.
+\item \code{minsampleswithcount}: Minimum number of samples that must have counts above \code{mincount}.
+}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A filtered data frame retaining only rows meeting the criteria:
+\itemize{
+\item The \code{Pathway} does not contain the "|" character (i.e., whole processes).
+\item The \code{Pathway} does not contain "UNINTEGRATED", "UNMAPPED", or "UNGROUPED".
+\item Rows where the count is above \code{mincount} in at least \code{minsampleswithcount} samples.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Filters a functional matrix data frame to retain only whole (non-combined) processes,
+excludes unwanted categories, and retains rows with sufficient counts across samples.
 }
 \details{
-DETAILS
+This function removes aggregated or ambiguous pathways and filters rows based on count thresholds.
+It assumes that \code{df} has pathways in the first column named "Pathway" and numeric counts in other columns.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  opt <- list(mincount = 5, minsampleswithcount = 3)
+  df_filtered <- filterWholeProcessesAndFreq(df, opt)
 }
+}
+
 }
 \seealso{
 \code{\link[dplyr]{filter}}

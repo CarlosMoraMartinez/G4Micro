@@ -56,3 +56,17 @@ thin_barplot_lines <- theme(panel.grid.major.y = element_line(color = "lightgray
                                                               size = 0.05,
                                                               linetype = 2))
 
+
+#' @export
+opt_default <- list(out ="./",
+            minfreq = 0.05,
+            mincountspersample = 0,
+            mincount= 1,
+            minsampleswithcount = 0,
+            raref_quant = 0.15,
+            fc=1,
+            pval=0.05,
+            ptype="adjusted",
+            fctype="shrunk",
+            num_genes_default=5 # meaning genes or taxa, depending on the context
+)

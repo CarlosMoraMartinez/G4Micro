@@ -2,30 +2,39 @@
 % Please edit documentation in R/detectOutliers.R
 \name{detectOutliers}
 \alias{detectOutliers}
-\title{FUNCTION_TITLE}
+\title{@title Detect Outliers in a Numeric Variable Using Grubbs' Test}
 \usage{
 detectOutliers(s_meta, vname, p_lim = 0.05)
 }
 \arguments{
-\item{s_meta}{PARAM_DESCRIPTION}
+\item{s_meta}{A data frame containing the variable to test.}
 
-\item{vname}{PARAM_DESCRIPTION}
+\item{vname}{Character string, name of the numeric variable/column to test for outliers.}
 
-\item{p_lim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{p_lim}{Numeric, significance level threshold for Grubbs' test. Default is 0.05.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with rows identified as outliers. Includes \code{sampleID} and the tested variable.
 }
 \description{
-FUNCTION_DESCRIPTION
+Iteratively identifies outliers in a numeric variable within a data frame
+using Grubbs' test, returning the detected outlier rows.
 }
 \details{
-DETAILS
+The function removes NA values for the tested variable, then repeatedly applies
+Grubbs' test to detect the largest outlier until no outliers are detected or fewer
+than 3 observations remain. Detected outliers are returned in a data frame.
+
+Requires the \code{outliers} package for \code{grubbs.test}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(dplyr)
+  library(outliers)
+  df <- data.frame(sampleID = 1:10, value = c(1,2,2,3,3,4,4,100,5,6))
+  detectOutliers(df, "value")
 }
+}
+
 }

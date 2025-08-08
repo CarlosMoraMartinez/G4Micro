@@ -1,33 +1,57 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param contrastlist PARAM_DESCRIPTION
-#' @param firstContrast PARAM_DESCRIPTION
-#' @param contrastNamesOrdered PARAM_DESCRIPTION
-#' @param mainContrastName PARAM_DESCRIPTION
-#' @param plim_select PARAM_DESCRIPTION, Default: 1e-06
-#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
-#' @param name2remove PARAM_DESCRIPTION, Default: ''
-#' @param resdfname PARAM_DESCRIPTION, Default: 'resdf'
-#' @param outdir PARAM_DESCRIPTION, Default: './'
-#' @param name PARAM_DESCRIPTION, Default: 'LFC_compare'
-#' @param w PARAM_DESCRIPTION, Default: 12
-#' @param h PARAM_DESCRIPTION, Default: 8
-#' @param scale_mode PARAM_DESCRIPTION, Default: 'fixed'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Compare Log Fold Changes Between Contrasts
+#' @description
+#' Given a list of contrasts and a main contrast, this function compares log2 fold changes
+#' for significantly different taxa, computes correlation statistics, generates Venn diagrams
+#' of shared/unique significant taxa, and produces mosaic plots showing directionality overlaps.
+#'
+#' @param contrastlist A named list of contrast result objects, each containing a data frame
+#'   (named in `resdfname`) with differential abundance results.
+#' @param firstContrast A single contrast result object representing the main contrast.
+#' @param contrastNamesOrdered Character vector of contrast names in the desired plotting order.
+#' @param mainContrastName Character string naming the main contrast in plots.
+#' @param plim_select Numeric p-value threshold for selecting taxa for correlation and plots. Default: 1e-06.
+#' @param plim_plot Numeric p-value threshold for visualization plots. Default: 0.05.
+#' @param name2remove Character string to filter out taxa whose names contain this pattern. Default: ''.
+#' @param resdfname Name of the element in each contrast object containing the results data frame. Default: 'resdf'.
+#' @param outdir Output directory for saved plots and result tables. Default: './'.
+#' @param name Base name for output files. Default: 'LFC_compare'.
+#' @param w Numeric plot width for saved plots. Default: 12.
+#' @param h Numeric plot height for saved plots. Default: 8.
+#' @param scale_mode Character indicating scale behavior for plots ('fixed' or 'free'). Default: 'fixed'.
+#'
+#' @return A list with:
+#'   \item{correlations}{A data frame of Pearson, Spearman, and Kendall correlations between contrasts.}
+#'   \item{vennplots}{A named list of Venn diagram plots comparing significant taxa.}
+#'   \item{mosaicplots}{A named list of mosaic plots showing overlap in directionality.}
+#'
+#' @details
+#' The function works in three stages:
+#' 1. **Correlation analysis** – Identifies significantly changing taxa in the main contrast and calculates correlations with all other contrasts.
+#' 2. **Venn diagrams** – For each contrast, compares sets of significantly up- and down-regulated taxa against the main contrast.
+#' 3. **Mosaic plots** – Visualizes overlap in significance and directionality between the main contrast and each other contrast.
+#'
+#' The function writes a TSV file with correlation statistics and saves all plots to `outdir`.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   res <- compareLFCContratsNumeric(
+#'     contrastlist = contrast_results_list,
+#'     firstContrast = main_contrast,
+#'     contrastNamesOrdered = c("contrast1", "contrast2"),
+#'     mainContrastName = "contrast1"
+#'   )
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+#' }
+#'
+#' @seealso
+#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}},
 #'  \code{\link[tidyr]{spread}}
 #' @rdname compareLFCContratsNumeric
-#' @export 
+#' @export
 #' @importFrom dplyr filter select mutate
 #' @importFrom tidyr spread
+#' @importFrom ggmosaic geom_mosaic_text geom_mosaic product
 compareLFCContratsNumeric <- function(contrastlist, firstContrast,
                                       contrastNamesOrdered, mainContrastName,
                                       plim_select= 0.000001, plim_plot=0.05,
@@ -85,9 +109,8 @@ compareLFCContratsNumeric <- function(contrastlist, firstContrast,
     return(list(groups=vars2venn, plot = gvenn))
   })
   names(venplots)<- names(mat2cor[, names(mat2cor)!=i])
-  ## 3) Mosaic plot
-  library(ggmosaic)
 
+  ## 3) Mosaic plot
   df2mosaic <- alldeatables %>%
     dplyr::mutate(direction = ifelse(padj > plim_select | is.na(padj), "NS",
                                      ifelse(log2FoldChangeShrink < 0, "Down", "Up"))) %>%

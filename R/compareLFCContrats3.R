@@ -1,31 +1,37 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param contrastlist PARAM_DESCRIPTION
-#' @param firstContrast PARAM_DESCRIPTION
-#' @param contrastNamesOrdered PARAM_DESCRIPTION
-#' @param mainContrastName PARAM_DESCRIPTION
-#' @param plim_select PARAM_DESCRIPTION, Default: 1e-06
-#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
-#' @param name2remove PARAM_DESCRIPTION, Default: ''
-#' @param resdfname PARAM_DESCRIPTION, Default: 'resdf'
-#' @param outdir PARAM_DESCRIPTION, Default: './'
-#' @param name PARAM_DESCRIPTION, Default: 'LFC_compare3'
-#' @param w PARAM_DESCRIPTION, Default: 8
-#' @param h PARAM_DESCRIPTION, Default: 4
-#' @param scale_mode PARAM_DESCRIPTION, Default: 'fixed'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Compare Log Fold Changes Across Multiple Contrasts
+#' @description Combines and visualizes shrunken log2 fold changes from multiple contrasts,
+#' filtering taxa by adjusted p-value (in all contrasts) and ordering them based on a main contrast.
+#' @param contrastlist A named list where each element contains a results data frame (e.g., "resdf") from a DESeq2 contrast, with columns \code{taxon}, \code{log2FoldChangeShrink}, and \code{padj}.
+#' @param firstContrast A single contrast results object (list containing a \code{resdf}) used as the reference for ordering taxa.
+#' @param contrastNamesOrdered Character vector giving the order of contrasts in the plot facets.
+#' @param mainContrastName Name to assign to the \code{firstContrast} when plotting.
+#' @param plim_select Adjusted p-value threshold for selecting taxa to display (taxa must have adjusted p-value < threshold in all contrasts). Default: \code{1e-6}.
+#' @param plim_plot Adjusted p-value threshold for significance coloring in the plot. Default: \code{0.05}.
+#' @param name2remove Pattern to remove from contrast names before plotting. Default: \code{""}.
+#' @param resdfname Name of the data frame within each list element that contains the results. Default: \code{"resdf"}.
+#' @param outdir Directory where the PDF will be saved. Default: \code{"./"}.
+#' @param name Filename prefix for the saved plot. Default: \code{"LFC_compare3"}.
+#' @param w Width of the saved PDF in inches. Default: \code{8}.
+#' @param h Height of the saved PDF in inches. Default: \code{4}.
+#' @param scale_mode Facet scale mode for ggplot: \code{"fixed"} or \code{"free"}. Default: \code{"fixed"}.
+#' @return A \code{ggplot} object with the barplot comparison of log2 fold changes.
+#' @details
+#' The function merges results from all contrasts, selects taxa with adjusted p-values below the threshold in all contrasts,
+#' orders taxa by the main contrast, and creates a horizontal barplot with facets for each contrast.
+#' Significance is indicated by color. Underscores in taxon and contrast names are replaced with spaces for readability.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   g <- compareLFCContrats3(contrastlist, firstContrast,
+#'                            contrastNamesOrdered = c("Contrast1", "Contrast2"),
+#'                            mainContrastName = "Main")
+#'   print(g)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}
+#' }
+#' @seealso \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[tidyr]{spread}}
 #' @rdname compareLFCContrats3
-#' @export 
-#' @importFrom dplyr select filter mutate
+#' @export
+#' @importFrom dplyr filter mutate
 compareLFCContrats3 <- function(contrastlist, firstContrast,
                                 contrastNamesOrdered, mainContrastName,
                                 plim_select= 0.000001, plim_plot=0.05,

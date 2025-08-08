@@ -2,7 +2,7 @@
 % Please edit documentation in R/getSignif2.R
 \name{getSignif2}
 \alias{getSignif2}
-\title{FUNCTION_TITLE}
+\title{Convert P-values to Significance Symbols}
 \usage{
 getSignif2(
   vector,
@@ -11,25 +11,27 @@ getSignif2(
 )
 }
 \arguments{
-\item{vector}{PARAM_DESCRIPTION}
+\item{vector}{A numeric vector of p-values to be converted.}
 
-\item{limits}{PARAM_DESCRIPTION, Default: c(0.05, 0.01, 0.001)}
+\item{limits}{Numeric vector of cutoff thresholds for significance levels, sorted from largest to smallest. Default is c(0.05, 0.01, 0.001).}
 
-\item{legends}{PARAM_DESCRIPTION, Default: c("", "\emph{", "\strong{", "}}")}
+\item{legends}{Character vector of symbols corresponding to significance levels, where the first element is for non-significant values and subsequent elements represent increasing significance. Default is c("", "\emph{", "\strong{", "}}").}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character vector of the same length as \code{vector}, containing significance symbols.
 }
 \description{
-FUNCTION_DESCRIPTION
+Translates numeric p-values into significance symbols for easier interpretation in plots or tables.
 }
 \details{
-DETAILS
+The function compares each p-value to the provided \code{limits} and assigns the corresponding symbol from \code{legends}. This is useful for annotating statistical test results visually.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  pvals <- c(0.2, 0.04, 0.005, 0.0005)
+  getSignif2(pvals)
+  # Output: ""  "*"  "**"  "***"
+}
 }
 }

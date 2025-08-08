@@ -2,33 +2,34 @@
 % Please edit documentation in R/filter_taxa_praw.R
 \name{filter_taxa_praw}
 \alias{filter_taxa_praw}
-\title{FUNCTION_TITLE}
+\title{Filter Taxa by Raw p-value and Fold Change Threshold}
 \usage{
 filter_taxa_praw(resdf, plim = 0.05, fc = 1)
 }
 \arguments{
-\item{resdf}{PARAM_DESCRIPTION}
+\item{resdf}{A data frame containing differential abundance or expression results. Must include
+columns \code{pvalue} (adjusted p-value), \code{log2FoldChangeShrink} (log2 fold change), and \code{taxon} (taxon names).}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim}{Numeric cutoff for p-value to select significant taxa. Default is 0.05.}
 
-\item{fc}{PARAM_DESCRIPTION, Default: 1}
+\item{fc}{Numeric minimum fold change threshold (non-log scale). Taxa with absolute log2 fold change
+greater or equal to \code{log2(fc)} are selected. Default is 1 (i.e., any change).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character vector of taxa names meeting the p-value and fold change criteria.
 }
 \description{
-FUNCTION_DESCRIPTION
+Filters taxa from a differential expression results data frame based on a significance threshold
+(raw p-value) and a minimum fold change.
 }
 \details{
-DETAILS
+This function extracts taxa that pass both an unadjusted p-value cutoff and a fold change threshold.
+Fold change is evaluated on a log2 scale, so the input \code{fc} is converted internally.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  sig_taxa <- filter_taxa_padj(resdf = my_results_df, plim = 0.01, fc = 2)
 }
 }
-\seealso{
-\code{\link[dplyr]{filter}}
 }

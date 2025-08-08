@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeCCAfromMatrixVegan.R
 \name{makeCCAfromMatrixVegan}
 \alias{makeCCAfromMatrixVegan}
-\title{FUNCTION_TITLE}
+\title{Perform Canonical Correlation Analysis (CCA) Using Vegan on CLR-transformed Data}
 \usage{
 makeCCAfromMatrixVegan(
   datamat,
@@ -13,29 +13,50 @@ makeCCAfromMatrixVegan(
 )
 }
 \arguments{
-\item{datamat}{PARAM_DESCRIPTION}
+\item{datamat}{Numeric matrix or data frame of samples (rows) by features (columns),
+usually representing environmental or phenotypic variables.}
 
-\item{tax_matrix_clr}{PARAM_DESCRIPTION}
+\item{tax_matrix_clr}{Numeric matrix of CLR-transformed taxonomic abundances,
+with taxa/features as rows and samples as columns.}
 
-\item{pcvar2retain}{PARAM_DESCRIPTION, Default: 0.9}
+\item{pcvar2retain}{Numeric value between 0 and 1 indicating the cumulative proportion
+of variance in the taxonomy PCA to retain for downstream CCA. Default is 0.9.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Character string specifying the output directory where results
+(RData and PDF biplot) will be saved. Default is current working directory ("").}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'CCA_from_CLR'}
+\item{name}{Character string base name for output files. Default is "CCA_from_CLR".}
 }
 \value{
-OUTPUT_DESCRIPTION
+An object of class \code{CCorA} (from the \pkg{vegan} package)
+containing results of the canonical correlation analysis.
 }
 \description{
-FUNCTION_DESCRIPTION
+Conducts a canonical correlation analysis (CCA) between a data matrix and
+principal components derived from a CLR-transformed taxonomy matrix.
+This approach reduces dimensionality of the taxonomy matrix before
+performing CCA, retaining components explaining a specified proportion
+of variance.
 }
 \details{
-DETAILS
+The function assumes that \code{datamat} and \code{tax_matrix_clr} have the same
+number of rows (samples) and are ordered identically. It performs PCA on the
+transposed CLR taxonomic matrix to reduce dimensionality, retaining the number
+of principal components needed to reach the specified variance proportion.
+CCA is then performed between \code{datamat} and these principal components.
+Results are saved as an RData file, and a biplot of the CCA is saved as a PDF.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Simulated example with dummy data:
+  datamat <- matrix(rnorm(100), nrow=10, ncol=10)
+  tax_matrix_clr <- matrix(rnorm(200), nrow=20, ncol=10)
+  results <- makeCCAfromMatrixVegan(datamat, tax_matrix_clr, pcvar2retain=0.9, outdir=".", name="TestCCA")
 }
+}
+
+}
+\seealso{
+\code{\link[vegan]{CCorA}}, \code{\link[stats]{prcomp}}, \code{\link[graphics]{biplot}}
 }

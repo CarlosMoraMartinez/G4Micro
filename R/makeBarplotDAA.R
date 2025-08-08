@@ -1,23 +1,38 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param daalist PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param plim PARAM_DESCRIPTION, Default: 0.05
-#' @param name PARAM_DESCRIPTION, Default: ''
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Generate and Save Barplots for Differential Abundance Analysis Results
+#' @description Creates multiple barplots showing log2 fold changes of taxa across contrasts with significance filtering.
+#'   The function combines results from a list of differential abundance analysis outputs, applies p-value filtering, annotates significance categories,
+#'   and generates facetted barplots that are saved as PDF files along with a summary TSV table.
+#' @param daalist A named list of data frames, each representing differential abundance analysis results for a specific contrast.
+#'   Each data frame must contain columns: \code{taxon}, \code{log2FoldChangeShrink}, and \code{padj}.
+#' @param outdir A character string specifying the directory where output files (PDFs and TSV) will be saved.
+#' @param plim Numeric threshold for adjusted p-value significance filtering. Default is 0.05.
+#' @param name Character string prefix for output file names. Default is an empty string.
+#' @return A list with two elements:
+#'   \item{plots}{A named list of \code{ggplot} objects representing different subsets of significant taxa and their fold changes.}
+#'   \item{tab}{A processed data frame summarizing the differential abundance results, including significance categories and plotting colors.}
+#' @details
+#'   The function first combines and reformats the input list of DAA results, adds categories based on adjusted p-value thresholds,
+#'   and creates multiple barplots to visualize taxa log2 fold changes across contrasts.
+#'   Significant taxa are highlighted with colors indicating direction (Up/Down), and the plots are arranged vertically with cowplot.
+#'   The results are saved as PDF files and a TSV summary in the specified output directory.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Example usage with a list of DAA results named by contrast
+#'   daa_list <- list(
+#'     "D_vs_C" = daa_result1,
+#'     "D_vs_C_adj_BMIplusAge" = daa_result2,
+#'     "BMI_adj_DeprplusAge" = daa_result3,
+#'     "Age_adj_DeprplusBMI" = daa_result4
+#'   )
+#'   output <- makeBarplotDAA(daalist = daa_list, outdir = "results/plots", plim = 0.05, name = "MyStudy")
+#'   print(output$plots$CondAdjusted)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
-#'  \code{\link[tidyr]{unite}}
-#'  \code{\link[cowplot]{plot_grid}}
+#' }
+#' @seealso
+#' \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}, \code{\link[tidyr]{unite}}, \code{\link[cowplot]{plot_grid}}, \code{\link[ggplot2]{ggplot}}
 #' @rdname makeBarplotDAA
-#' @export 
+#' @export
 #' @importFrom dplyr select mutate filter
 #' @importFrom tidyr unite
 #' @importFrom cowplot plot_grid

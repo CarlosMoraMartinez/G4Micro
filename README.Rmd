@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/CarlosMoraMartinez/G4Micro/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CarlosMoraMartinez/G4Micro/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-G4Micro contains functions used to analyze microbiome data in the Mora-Martinez, Molina-Mendoza et al. paper. 
+G4Micro contains helper functions used to analyze microbiome data in the Mora-Martinez, Molina-Mendoza et al. paper. 
 
 ## Installation
 
@@ -32,18 +32,92 @@ pak::pak("CarlosMoraMartinez/G4Micro")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Load a list of phyloseq objects and select one of them.
 
-```{r example}
+```{r load}
 library(G4Micro)
-## basic example code
+
+data("all_phyloseq")
+phobj <- all_phyloseq$remove_tanda2_rarefied_min
+phobj
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+A list with default options is also loaded:
 
-```{r cars}
-summary(cars)
+```{r load2}
+opt <- opt_default
+print(opt)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+Calculate alpha diversity indices
+
+```{r alpha1}
+opt$out <- "~/"
+outdir <- paste0(opt$out, "/AlphaDiversity/")
+if(!dir.exists(outdir)) dir.create(outdir)
+
+alpha_indices <-  c("Observed", "Chao1", "Shannon", "InvSimpson")
+
+divtab <- calculateAlphaDiversityTable(phseq_obj = phobj, outdir = outdir, 
+                                       indices = alpha_indices, name = "AlphaDiv" )
+
+divtab %>% select(sampleID, Condition, all_of(alpha_indices)) %>% 
+  head %>% kableExtra::kable()
+```
+
+Test statistical differences between alpha diversity indices:
+
+```{r alpha2}
+
+alphadif <- testDiversityDifferences(divtab, alpha_indices, 
+                                     groupvars = c("Condition", "Sexo"), 
+                                     outdir = outdir, name = "AlphaDiv_test")
+
+alphadif %>% kableExtra::kable()
+```
+
+Fit linear models using a main variable and several covariates:
+
+```{r alpha3, warning=FALSE}
+interestvar <- "Condition"
+extravars <- c("BMI", "bristol_scale", "Sexo")
+
+models <- makeLinearModelsSingleVariable(divtab, interestvar,
+                                            extravars,
+                                            alpha_indices,
+                                            combos=1,
+                                            outdir = outdir, 
+                                            name = "linmodels1")
+```
+
+Now show tests for single variables:
+
+```{r alpha4}
+models$single_anovas %>% select(-mod1, -mod2, nvars, Index, 
+                                model, reduced_model, Df, 
+                                `Pr(>F)`, padj_all) %>% 
+  kableExtra::kable()
+```
+
+Finally, plot differences (recalculating statistical tests):
+
+
+```{r alpha6, fig.width=12, fig.height=12, warning=FALSE, message=FALSE}
+library(cowplot)
+
+cat_vars <- c("Condition", "Sexo")
+num_vars <- c("BMI", "bristol_scale")
+
+divplots <- getAlphaDiversity(phobj, 
+                              vars = cat_vars, 
+                              qvars = num_vars,
+                              opt,
+                              indices = alpha_indices,
+                              correct_pvalues = T, correct_pvalues_indices = T,
+                              name = "alphaplots1", w = 10, h = 4)
+
+cowplot::plot_grid(plotlist = divplots, ncol = 4)
+```
+
+
 

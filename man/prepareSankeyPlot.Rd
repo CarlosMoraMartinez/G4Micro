@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepareSankeyPlot.R
 \name{prepareSankeyPlot}
 \alias{prepareSankeyPlot}
-\title{FUNCTION_TITLE}
+\title{Prepare Data for Sankey Plot Visualization}
 \usage{
 prepareSankeyPlot(
   daa_proc_all,
@@ -22,51 +22,78 @@ prepareSankeyPlot(
 )
 }
 \arguments{
-\item{daa_proc_all}{PARAM_DESCRIPTION}
+\item{daa_proc_all}{Data frame with process-level differential abundance analysis results.
+Must include columns with adjusted p-values (\code{padj}) and log2 fold changes (\code{log2FoldChange}).}
 
-\item{daa_by_sp_all}{PARAM_DESCRIPTION}
+\item{daa_by_sp_all}{Data frame with process-species level differential abundance results,
+including columns \code{Pathway}, \code{Species}, \code{padj}, \code{log2FoldChange}, \code{AveExpr}, and taxonomic info.}
 
-\item{quant_by_proc}{PARAM_DESCRIPTION}
+\item{quant_by_proc}{Data frame with abundance quantifications by process across samples.
+Rows are processes, columns are sample IDs.}
 
-\item{metadf}{PARAM_DESCRIPTION}
+\item{metadf}{Data frame with sample metadata, including a \code{Condition} column and \code{sampleID} matching \code{quant_by_proc} columns.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.01}
+\item{plim}{Numeric threshold for adjusted p-value cutoff to select significant processes (default 0.01).}
 
-\item{plim_sp}{PARAM_DESCRIPTION, Default: 0.01}
+\item{plim_sp}{Numeric threshold for adjusted p-value cutoff to select significant species within processes (default 0.01).}
 
-\item{include_others}{PARAM_DESCRIPTION, Default: FALSE}
+\item{include_others}{Logical, whether to aggregate non-significant species into a single 'others' category (default FALSE).}
 
-\item{include_longnames}{PARAM_DESCRIPTION, Default: FALSE}
+\item{include_longnames}{Logical, whether to use long descriptive names for processes if available (default FALSE).}
 
-\item{others_name}{PARAM_DESCRIPTION, Default: 'Aggr. taxa'}
+\item{others_name}{Character string naming the aggregated non-significant taxa group (default "Aggr. taxa").}
 
-\item{case_name}{PARAM_DESCRIPTION, Default: 'Depression'}
+\item{case_name}{Character string for the case group name in the metadata (default "Depression").}
 
-\item{control_name}{PARAM_DESCRIPTION, Default: 'Control'}
+\item{control_name}{Character string for the control group name in the metadata (default "Control").}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: '~/'}
+\item{outdir}{Character string path where output TSV files for nodes and links will be saved (default "~/").}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'test'}
+\item{name}{Character string prefix for output file names (default "test").}
 
-\item{ntop}{PARAM_DESCRIPTION, Default: 0}
+\item{ntop}{Integer indicating the maximum number of top significant processes to select by adjusted p-value;
+if 0, all processes passing \code{plim} are included (default 0).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\item{nodelist}{Data frame describing nodes with columns for node ID, label, position, color, and size.}
+\item{linklist}{Data frame describing links between nodes with source, target, size, and color for Sankey plotting.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Prepares node and link tables for creating a Sankey plot that shows relationships
+between biological processes and species, including log-fold changes and expression values.
+Supports filtering by adjusted p-values, aggregating non-significant species, and customizing
+plot aesthetics such as node colors and sizes.
 }
 \details{
-DETAILS
+This function filters and processes differential abundance results at the process and species levels
+based on specified significance thresholds. It normalizes abundance data within conditions and processes,
+creates color gradients based on log-fold changes, and constructs node/link tables ready for Sankey plot
+visualization tools. It optionally aggregates low-significance species and can annotate processes
+with longer descriptive names.
+
+Output node and link tables are saved as TSV files in the specified output directory with
+filenames based on the provided name prefix.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  result <- prepareSankeyPlot(
+    daa_proc_all = process_da_df,
+    daa_by_sp_all = species_da_df,
+    quant_by_proc = quant_df,
+    metadf = metadata_df,
+    plim = 0.05,
+    include_others = TRUE,
+    outdir = "results/",
+    name = "mySankey"
+  )
+  # Use result$nodelist and result$linklist for plotting
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{arrange}}
-\code{\link[scales]{pal_gradient_n}}
+\code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_if}},
+\code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}, \code{\link[scales]{gradient_n_pal}}
 }

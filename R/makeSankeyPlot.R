@@ -1,25 +1,27 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param nodelist PARAM_DESCRIPTION
-#' @param linklist PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @param fname PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param fontsize PARAM_DESCRIPTION, Default: 18
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Create and Save a Sankey Plot Using Plotly
+#' @description Generates an interactive Sankey diagram from given nodes and links data frames and saves it as an HTML file.
+#' @param nodelist A data frame containing node information. Must include columns: \code{value} (node labels), \code{color} (node colors), \code{nodesize} (size values), and \code{xpos} (horizontal position of nodes).
+#' @param linklist A data frame containing link information. Must include columns: \code{source} (index of source node), \code{target} (index of target node), \code{Size} (link values), \code{LFC} (link labels), and \code{color} (link colors).
+#' @param name A character string specifying the plot title.
+#' @param fname A character string specifying the filename (without extension) for the saved HTML widget.
+#' @param outdir A character string specifying the directory path where the HTML file will be saved.
+#' @param fontsize Numeric value specifying the font size for the plot title and labels. Default is 18.
+#' @return Returns a \code{plotly} object representing the Sankey plot.
+#' @details This function uses the \code{plotly} package to create an interactive Sankey diagram, with nodes and links colored according to the supplied data frames. It also truncates node labels longer than 60 characters by removing parentheses content to improve plot readability.
+#' The resulting plot is saved as an HTML file in the specified output directory.
+#' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # Example data frames nodelist and linklist must be created first
+#'   plot <- makeSankeyPlot(nodelist, linklist, name = "My Sankey", fname = "mysankey", outdir = tempdir())
+#'   print(plot)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}
-#'  \code{\link[htmlwidgets]{saveWidget}}
+#' }
+#' @seealso
+#' \code{\link[dplyr]{mutate}}, \code{\link[htmlwidgets]{saveWidget}}, \code{\link[plotly]{plot_ly}}
 #' @rdname makeSankeyPlot
-#' @export 
+#' @export
 #' @importFrom dplyr mutate
 #' @importFrom htmlwidgets saveWidget
 makeSankeyPlot <- function(nodelist, linklist, name, fname, outdir, fontsize=18){

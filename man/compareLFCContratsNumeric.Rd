@@ -2,7 +2,7 @@
 % Please edit documentation in R/compareLFCContratsNumeric.R
 \name{compareLFCContratsNumeric}
 \alias{compareLFCContratsNumeric}
-\title{FUNCTION_TITLE}
+\title{Compare Log Fold Changes Between Contrasts}
 \usage{
 compareLFCContratsNumeric(
   contrastlist,
@@ -21,49 +21,68 @@ compareLFCContratsNumeric(
 )
 }
 \arguments{
-\item{contrastlist}{PARAM_DESCRIPTION}
+\item{contrastlist}{A named list of contrast result objects, each containing a data frame
+(named in \code{resdfname}) with differential abundance results.}
 
-\item{firstContrast}{PARAM_DESCRIPTION}
+\item{firstContrast}{A single contrast result object representing the main contrast.}
 
-\item{contrastNamesOrdered}{PARAM_DESCRIPTION}
+\item{contrastNamesOrdered}{Character vector of contrast names in the desired plotting order.}
 
-\item{mainContrastName}{PARAM_DESCRIPTION}
+\item{mainContrastName}{Character string naming the main contrast in plots.}
 
-\item{plim_select}{PARAM_DESCRIPTION, Default: 1e-06}
+\item{plim_select}{Numeric p-value threshold for selecting taxa for correlation and plots. Default: 1e-06.}
 
-\item{plim_plot}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim_plot}{Numeric p-value threshold for visualization plots. Default: 0.05.}
 
-\item{name2remove}{PARAM_DESCRIPTION, Default: ''}
+\item{name2remove}{Character string to filter out taxa whose names contain this pattern. Default: ''.}
 
-\item{resdfname}{PARAM_DESCRIPTION, Default: 'resdf'}
+\item{resdfname}{Name of the element in each contrast object containing the results data frame. Default: 'resdf'.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: './'}
+\item{outdir}{Output directory for saved plots and result tables. Default: './'.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'LFC_compare'}
+\item{name}{Base name for output files. Default: 'LFC_compare'.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 12}
+\item{w}{Numeric plot width for saved plots. Default: 12.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 8}
+\item{h}{Numeric plot height for saved plots. Default: 8.}
 
-\item{scale_mode}{PARAM_DESCRIPTION, Default: 'fixed'}
+\item{scale_mode}{Character indicating scale behavior for plots ('fixed' or 'free'). Default: 'fixed'.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with:
+\item{correlations}{A data frame of Pearson, Spearman, and Kendall correlations between contrasts.}
+\item{vennplots}{A named list of Venn diagram plots comparing significant taxa.}
+\item{mosaicplots}{A named list of mosaic plots showing overlap in directionality.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Given a list of contrasts and a main contrast, this function compares log2 fold changes
+for significantly different taxa, computes correlation statistics, generates Venn diagrams
+of shared/unique significant taxa, and produces mosaic plots showing directionality overlaps.
 }
 \details{
-DETAILS
+The function works in three stages:
+\enumerate{
+\item \strong{Correlation analysis} – Identifies significantly changing taxa in the main contrast and calculates correlations with all other contrasts.
+\item \strong{Venn diagrams} – For each contrast, compares sets of significantly up- and down-regulated taxa against the main contrast.
+\item \strong{Mosaic plots} – Visualizes overlap in significance and directionality between the main contrast and each other contrast.
+}
+
+The function writes a TSV file with correlation statistics and saves all plots to \code{outdir}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  res <- compareLFCContratsNumeric(
+    contrastlist = contrast_results_list,
+    firstContrast = main_contrast,
+    contrastNamesOrdered = c("contrast1", "contrast2"),
+    mainContrastName = "contrast1"
+  )
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}},
 \code{\link[tidyr]{spread}}
 }

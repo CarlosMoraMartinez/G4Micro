@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeHeatmapFunctional.R
 \name{makeHeatmapFunctional}
 \alias{makeHeatmapFunctional}
-\title{FUNCTION_TITLE}
+\title{Heatmap Visualization of Differential Functional Pathways}
 \usage{
 makeHeatmapFunctional(
   resdf,
@@ -18,42 +18,62 @@ makeHeatmapFunctional(
 )
 }
 \arguments{
-\item{resdf}{PARAM_DESCRIPTION}
+\item{resdf}{A data frame of differential analysis results, typically including columns such as \code{padj}, \code{pvalue}, and \code{log2FoldChange}. Row names should correspond to pathway identifiers.}
 
-\item{met2use}{PARAM_DESCRIPTION}
+\item{met2use}{A metadata data frame containing sample annotations. Must include a column with sample IDs (named \code{sampleID}) and a grouping variable specified by \code{variable}.}
 
-\item{df2plot}{PARAM_DESCRIPTION}
+\item{df2plot}{A data frame of pathway abundance values with at least columns \code{Pathway} (pathway IDs) and sample columns matching those in \code{met2use$sampleID}.}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'condition'}
+\item{variable}{Character string naming the metadata column to use for heatmap annotation (default: \code{"condition"}).}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options controlling filtering and plotting, expected to contain at least \code{pval} (p-value cutoff), \code{fc} (fold-change cutoff), and \code{out} (output directory path).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'heatmap.pdf'}
+\item{name}{Character string filename for the output PDF heatmap file (default: \code{"heatmap.pdf"}).}
 
-\item{logscale}{PARAM_DESCRIPTION, Default: FALSE}
+\item{logscale}{Logical flag indicating whether to log-transform the abundance values prior to plotting (default: \code{FALSE}).}
 
-\item{ptype}{PARAM_DESCRIPTION, Default: 'padj'}
+\item{ptype}{Character string indicating which p-value column to use for filtering pathways: \code{"padj"} for adjusted p-values or \code{"pvalue"} for raw p-values (default: \code{"padj"}).}
 
-\item{w}{PARAM_DESCRIPTION, Default: 20}
+\item{w}{Numeric width of the output PDF in inches (default: 20).}
 
-\item{h}{PARAM_DESCRIPTION, Default: 14}
+\item{h}{Numeric height of the output PDF in inches (default: 14).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A pheatmap object representing the heatmap plot. Additionally, saves the heatmap as a PDF file in the directory specified by \code{opt$out}.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates a clustered heatmap of pathway abundances for pathways identified as significantly differential according to provided statistical results. The heatmap is annotated by sample metadata and optionally log-transformed and scaled.
 }
 \details{
-DETAILS
+This function filters the pathways based on statistical significance and fold-change thresholds defined in \code{opt}. It selects pathways with adjusted or raw p-values below the cutoff and absolute log2 fold-changes above the threshold.
+
+If the number of selected pathways is below a default minimum (\code{.GlobalEnv$opt$num_genes_default}), the function selects the top pathways by p-value to ensure a meaningful heatmap size.
+
+The abundance data for the selected pathways is extracted from \code{df2plot}, optionally log-transformed, and then row-scaled (z-score normalization) across samples.
+
+The heatmap is annotated with sample groupings from \code{met2use} and colored using a default palette.
+
+The plot is generated using the \code{pheatmap} package with clustering of both rows and columns. Font sizes for row and column labels are adjusted dynamically based on heatmap dimensions to improve readability.
+
+The heatmap is saved as a PDF file to the specified path.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming 'resdf' is a differential results dataframe,
+  # 'metadata' contains sample info,
+  # and 'abundances' contains pathway abundances
+  opt <- list(pval=0.05, fc=1.5, out="results")
+  heatmap_plot <- makeHeatmapFunctional(resdf = resdf,
+                                       met2use = metadata,
+                                       df2plot = abundances,
+                                       variable = "Condition",
+                                       opt = opt,
+                                       logscale = TRUE)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{filter}}
+\code{\link[dplyr]{filter}}, \code{\link[pheatmap]{pheatmap}}
 }

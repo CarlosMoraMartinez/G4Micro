@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeBarplotFunctional.R
 \name{makeBarplotFunctional}
 \alias{makeBarplotFunctional}
-\title{FUNCTION_TITLE}
+\title{Create Barplot of Significant Pathways with Log2 Fold Change}
 \usage{
 makeBarplotFunctional(
   tab,
@@ -15,36 +15,57 @@ makeBarplotFunctional(
 )
 }
 \arguments{
-\item{tab}{PARAM_DESCRIPTION}
+\item{tab}{A data frame containing differential abundance results with row names representing
+pathways or features, and columns including \code{padj} (adjusted p-value), \code{log2FoldChange}, and optionally \code{process_name}.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.001}
+\item{plim}{Numeric threshold for adjusted p-value significance filtering. Only pathways with \code{padj} less than this
+threshold will be plotted. Default is 0.001.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Character string used as the plot title prefix and PDF filename.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{Character string specifying the directory path where the PDF plot will be saved.}
 
-\item{include_longnames}{PARAM_DESCRIPTION, Default: FALSE}
+\item{include_longnames}{Logical indicating whether to append long descriptive names (from \code{process_name} column)
+to pathway names in the plot. Default is FALSE.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 12}
+\item{w}{Numeric width of the output PDF in inches. Default is 12.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 12}
+\item{h}{Numeric height of the output PDF in inches. Default is 12.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 object representing the generated barplot.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates a horizontal barplot visualizing pathways or processes that are significantly
+differentially abundant based on adjusted p-values and log2 fold changes.
+The bars are colored by direction (more or less abundant), and optionally the pathway names
+can be augmented with longer descriptive names if available.
+The plot is saved as a PDF file to the specified output directory.
 }
 \details{
-DETAILS
+The function first converts the row names of the input data frame into a column named \code{Pathway}.
+If \code{include_longnames} is TRUE and the \code{process_name} column exists, it cleans and appends descriptive
+names to the pathway labels for better interpretability.
+
+It then filters the table to keep only pathways with an adjusted p-value below \code{plim} and orders them
+by log2 fold change. The \code{Pathway} factor levels are set to maintain the sorted order for plotting.
+
+The barplot shows the log2 fold change on the x-axis, with bars colored to indicate whether the
+pathway is more or less abundant (positive or negative fold change). The plot includes a horizontal
+reference line at zero and is flipped to show pathway names on the y-axis for readability.
+
+The plot is saved as a PDF to the specified output directory using the provided name.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assuming `df_results` contains differential abundance results with appropriate columns
+  makeBarplotFunctional(df_results, plim = 0.01, name = "Differential_Pathways",
+                        outdir = "./plots", include_longnames = TRUE)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{filter}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{filter}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate}}, \code{\link[ggplot2]{ggplot}}, \code{\link[ggplot2]{geom_bar}}
 }

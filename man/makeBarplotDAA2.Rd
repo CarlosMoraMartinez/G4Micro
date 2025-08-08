@@ -2,37 +2,57 @@
 % Please edit documentation in R/makeBarplotDAA2.R
 \name{makeBarplotDAA2}
 \alias{makeBarplotDAA2}
-\title{FUNCTION_TITLE}
+\title{Create Barplots for Differential Abundance Analysis Results}
 \usage{
 makeBarplotDAA2(daalist, outdir, plim = 0.05, name = "")
 }
 \arguments{
-\item{daalist}{PARAM_DESCRIPTION}
+\item{daalist}{A named list of data frames, each representing differential abundance
+results for a contrast. Each data frame must contain columns: \code{taxon},
+\code{log2FoldChangeShrink}, and \code{padj}.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{Character. Directory path where plots and tables will be saved.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim}{Numeric. Adjusted p-value threshold for significance (default 0.05).}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{Character. Prefix for output filenames (default "").}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\item{plots}{A list of ggplot2 objects for different significance categories.}
+\item{tab}{A processed data frame with combined results and significance flags.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates barplots visualizing log2 fold changes of taxa across multiple contrasts
+from a list of differential abundance analysis results. It highlights taxa significant
+under different conditions including adjustments for BMI and depression status.
 }
 \details{
-DETAILS
+This function merges differential abundance results from multiple contrasts,
+computes significance categories based on p-value thresholds,
+and generates multiple barplots showing log2 fold changes (LFC) colored by direction
+(Up/Down/Not Significant). The plots are saved as PDF files in the specified output directory.
+
+The contrasts considered include:
+\itemize{
+\item "D vs C" (Disease vs Control)
+\item "D vs C adj. BMI" (adjusted for BMI)
+\item "BMI" (BMI effect)
+\item "BMI adj. Depr." (BMI adjusted for Depression)
+}
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  # Assuming daalist is prepared as a named list of data.frames with required columns
+  result <- makeBarplotDAA2(daalist = my_da_results, outdir = "plots", plim = 0.05, name = "my_analysis")
+  # Access plots:
+  print(result$plots$CondAdjusted$plot)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
-\code{\link[tidyr]{unite}}
-\code{\link[cowplot]{plot_grid}}
+\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}},
+\code{\link[tidyr]{unite}}, \code{\link[cowplot]{plot_grid}}, \code{\link[ggplot2]{ggplot}}
 }

@@ -1,21 +1,28 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param vars2venn PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: 'VennDiagram'
-#' @param opt PARAM_DESCRIPTION
-#' @param w PARAM_DESCRIPTION, Default: 5
-#' @param h PARAM_DESCRIPTION, Default: 5
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Generate a Venn Diagram Plot
+#' @description Creates a Venn diagram visualization using the `ggvenn` package, saves it as a PDF file, and returns the plot object.
+#' @param vars2venn A named list of vectors, each containing elements to be plotted as a set in the Venn diagram.
+#' @param name A character string specifying the base name for the output PDF file. Default is `"VennDiagram"`.
+#' @param opt A list containing output options. Must include an `out` element specifying the directory path where the PDF will be saved.
+#' @param w Numeric value specifying the width of the output PDF in inches. Default is 5.
+#' @param h Numeric value specifying the height of the output PDF in inches. Default is 5.
+#' @return A ggplot object representing the generated Venn diagram.
+#' @details The function uses fixed colors for the diagram sections and disables the display of set elements inside the plot. Adjust `fill_color` and other graphical parameters as needed.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   set1 <- c("A", "B", "C")
+#'   set2 <- c("B", "C", "D")
+#'   sets <- list(Group1 = set1, Group2 = set2)
+#'   outdir <- list(out = "./plots/")
+#'   dir.create(outdir$out, showWarnings = FALSE)
+#'   venn_plot <- makeVenn(vars2venn = sets, name = "ExampleVenn", opt = outdir)
+#'   print(venn_plot)
+#' }
 #' }
 #' @rdname makeVenn
-#' @export 
+#' @export
+#' @importFrom ggvenn ggvenn
 makeVenn <- function(vars2venn, name="VennDiagram", opt, w=5, h=5){
   gv <- ggvenn(
     vars2venn, columns = names(vars2venn),

@@ -1,45 +1,65 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param vstdf PARAM_DESCRIPTION
-#' @param df_all PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param getVarsFunction PARAM_DESCRIPTION
-#' @param mediator_name PARAM_DESCRIPTION, Default: 'IMC'
-#' @param y_name PARAM_DESCRIPTION, Default: 'Condition_bin'
-#' @param plim PARAM_DESCRIPTION, Default: 0.05
-#' @param plim_plot PARAM_DESCRIPTION, Default: 0.05
-#' @param name PARAM_DESCRIPTION, Default: 'analysis_IMC_separateModel_vjust'
-#' @param wnet PARAM_DESCRIPTION, Default: 14
-#' @param hnet PARAM_DESCRIPTION, Default: 12
-#' @param wbars PARAM_DESCRIPTION, Default: 8
-#' @param hbars PARAM_DESCRIPTION, Default: 10
-#' @param wbars2 PARAM_DESCRIPTION, Default: 10
-#' @param hbars2 PARAM_DESCRIPTION, Default: 12
-#' @param use_color_scale PARAM_DESCRIPTION, Default: FALSE
-#' @param fix_barplot_limits PARAM_DESCRIPTION, Default: FALSE
-#' @param custom_colors PARAM_DESCRIPTION, Default: NULL
-#' @param make_boxplots PARAM_DESCRIPTION, Default: TRUE
-#' @param list2merge PARAM_DESCRIPTION, Default: NULL
-#' @param make_power_test PARAM_DESCRIPTION, Default: FALSE
-#' @param min_power PARAM_DESCRIPTION, Default: 0.9
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Full Mediation Analysis for IMC (BMI) Effects
+#' @description
+#' Performs mediation analysis testing the effect of a mediator (default: IMC/BMI)
+#' on the relationship between a predictor (e.g. microbial taxa) and a binary outcome (e.g. condition).
+#' The function supports visualization (Venn diagrams, boxplots), power analysis,
+#' and exports summary tables of mediation results.
+#'
+#' @param vstdf Data frame with vst-transformed expression/abundance data; contains variable names in column 'gene'.
+#' @param df_all Full data frame including all variables for mediation analysis.
+#' @param opt List of options, must include at least `out` (output directory path).
+#' @param getVarsFunction Function that takes a summary dataframe and returns variables to test for mediation.
+#' @param mediator_name Name of the mediator variable (default: "IMC").
+#' @param y_name Name of the dependent/outcome variable (default: "Condition_bin").
+#' @param plim p-value cutoff for selecting significant variables (default: 0.05).
+#' @param plim_plot p-value cutoff for plotting (default: 0.05).
+#' @param name Base name prefix for output plots and files (default: "analysis_IMC_separateModel_vjust").
+#' @param wnet Width of network plots (default: 14).
+#' @param hnet Height of network plots (default: 12).
+#' @param wbars Width of barplots (default: 8).
+#' @param hbars Height of barplots (default: 10).
+#' @param wbars2 Width of secondary barplots (default: 10).
+#' @param hbars2 Height of secondary barplots (default: 12).
+#' @param use_color_scale Logical, whether to use color scale in plots (default: FALSE).
+#' @param fix_barplot_limits Logical, whether to fix limits in barplots (default: FALSE).
+#' @param custom_colors Optional vector of custom colors for plots (default: NULL).
+#' @param make_boxplots Logical, whether to create boxplots (default: TRUE).
+#' @param list2merge Optional named list of data.frames with p-values to merge for analysis; if NULL, defaults will be used.
+#' @param make_power_test Logical, whether to perform power analysis on mediation results (default: FALSE).
+#' @param min_power Minimum power threshold for power analysis (default: 0.9).
+#'
+#' @return
+#' A list containing:
+#' - plotNet: List of plots including Venn diagrams and mediation network plots.
+#' - barplots: List of boxplots and barplots (if `make_boxplots` is TRUE).
+#' - results: Data frame of mediation analysis results.
+#' - power: Power analysis results (if `make_power_test` is TRUE).
+#'
+#' @details
+#' The function expects the `vstdf` variable names to be cleaned and matched to variables in `df_all`.
+#' It merges p-values from contrasts (default or user-provided `list2merge`),
+#' applies the user-defined variable selection function (`getVarsFunction`),
+#' runs simple mediation models using lavaan,
+#' generates plots, saves results and optionally runs power analyses.
+#'
+#' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   res <- makeFullMediationAnalysisIMC(vstdf, df_all, opt, getVarsFunction)
 #' }
-#' @seealso 
-#'  \code{\link[assertthat]{assert_that}}
-#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}
-#'  \code{\link[tidyr]{unite}}
+#' }
+#' @seealso
+#' \code{\link[assertthat]{assert_that}},
+#' \code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}},
+#' \code{\link[tidyr]{unite}},
+#' \code{\link[ggplot2]{ggplot}}
+#'
 #' @rdname makeFullMediationAnalysisIMC
-#' @export 
+#' @export
 #' @importFrom assertthat assert_that
-#' @importFrom dplyr filter select mutate summarise_all
-#' @importFrom tidyr unite
+#' @importFrom dplyr filter select mutate summarise_all pull
+#' @importFrom tidyr unite gather spread
 makeFullMediationAnalysisIMC <- function(vstdf, df_all, opt, getVarsFunction, mediator_name="IMC", y_name="Condition_bin",
                                          plim=0.05, plim_plot=0.05, name="analysis_IMC_separateModel_vjust",
                                          wnet=14, hnet=12, wbars=8, hbars=10, wbars2=10, hbars2=12, use_color_scale=FALSE,

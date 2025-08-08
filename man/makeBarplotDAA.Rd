@@ -2,37 +2,51 @@
 % Please edit documentation in R/makeBarplotDAA.R
 \name{makeBarplotDAA}
 \alias{makeBarplotDAA}
-\title{FUNCTION_TITLE}
+\title{Generate and Save Barplots for Differential Abundance Analysis Results}
 \usage{
 makeBarplotDAA(daalist, outdir, plim = 0.05, name = "")
 }
 \arguments{
-\item{daalist}{PARAM_DESCRIPTION}
+\item{daalist}{A named list of data frames, each representing differential abundance analysis results for a specific contrast.
+Each data frame must contain columns: \code{taxon}, \code{log2FoldChangeShrink}, and \code{padj}.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{A character string specifying the directory where output files (PDFs and TSV) will be saved.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim}{Numeric threshold for adjusted p-value significance filtering. Default is 0.05.}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{Character string prefix for output file names. Default is an empty string.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with two elements:
+\item{plots}{A named list of \code{ggplot} objects representing different subsets of significant taxa and their fold changes.}
+\item{tab}{A processed data frame summarizing the differential abundance results, including significance categories and plotting colors.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates multiple barplots showing log2 fold changes of taxa across contrasts with significance filtering.
+The function combines results from a list of differential abundance analysis outputs, applies p-value filtering, annotates significance categories,
+and generates facetted barplots that are saved as PDF files along with a summary TSV table.
 }
 \details{
-DETAILS
+The function first combines and reformats the input list of DAA results, adds categories based on adjusted p-value thresholds,
+and creates multiple barplots to visualize taxa log2 fold changes across contrasts.
+Significant taxa are highlighted with colors indicating direction (Up/Down), and the plots are arranged vertically with cowplot.
+The results are saved as PDF files and a TSV summary in the specified output directory.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Example usage with a list of DAA results named by contrast
+  daa_list <- list(
+    "D_vs_C" = daa_result1,
+    "D_vs_C_adj_BMIplusAge" = daa_result2,
+    "BMI_adj_DeprplusAge" = daa_result3,
+    "Age_adj_DeprplusBMI" = daa_result4
+  )
+  output <- makeBarplotDAA(daalist = daa_list, outdir = "results/plots", plim = 0.05, name = "MyStudy")
+  print(output$plots$CondAdjusted)
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
-\code{\link[tidyr]{unite}}
-\code{\link[cowplot]{plot_grid}}
+\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}, \code{\link[tidyr]{unite}}, \code{\link[cowplot]{plot_grid}}, \code{\link[ggplot2]{ggplot}}
 }

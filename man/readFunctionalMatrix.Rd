@@ -2,28 +2,38 @@
 % Please edit documentation in R/readFunctionalMatrix.R
 \name{readFunctionalMatrix}
 \alias{readFunctionalMatrix}
-\title{FUNCTION_TITLE}
+\title{Read Functional Matrix from File}
 \usage{
 readFunctionalMatrix(opt, fname)
 }
 \arguments{
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing at least the element \code{input_funcional},
+which specifies the directory path where the file is located.}
 
-\item{fname}{PARAM_DESCRIPTION}
+\item{fname}{A character string specifying the filename of the functional matrix to read.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A tibble/data frame containing the functional matrix with cleaned column names.
+The first column is renamed to "Pathway".
 }
 \description{
-FUNCTION_DESCRIPTION
+Reads a tab-delimited functional matrix file from a specified directory,
+processes the column names to remove suffixes after underscores,
+and standardizes specific patterns in column names.
 }
 \details{
-DETAILS
+This function reads a tab-separated file using \code{read_delim} from the \code{readr} package.
+Column names are truncated at the first underscore (_) and occurrences of "G4M0" are replaced with "G4M".
+The first column is renamed to "Pathway" to indicate functional pathway names.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  opt <- list(input_funcional = "data/functional/")
+  fname <- "functional_matrix.tsv"
+  ftab <- readFunctionalMatrix(opt, fname)
+  head(ftab)
 }
+}
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeFullMediationAnalysisIMC.R
 \name{makeFullMediationAnalysisIMC}
 \alias{makeFullMediationAnalysisIMC}
-\title{FUNCTION_TITLE}
+\title{Full Mediation Analysis for IMC (BMI) Effects}
 \usage{
 makeFullMediationAnalysisIMC(
   vstdf,
@@ -30,68 +30,82 @@ makeFullMediationAnalysisIMC(
 )
 }
 \arguments{
-\item{vstdf}{PARAM_DESCRIPTION}
+\item{vstdf}{Data frame with vst-transformed expression/abundance data; contains variable names in column 'gene'.}
 
-\item{df_all}{PARAM_DESCRIPTION}
+\item{df_all}{Full data frame including all variables for mediation analysis.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{List of options, must include at least \code{out} (output directory path).}
 
-\item{getVarsFunction}{PARAM_DESCRIPTION}
+\item{getVarsFunction}{Function that takes a summary dataframe and returns variables to test for mediation.}
 
-\item{mediator_name}{PARAM_DESCRIPTION, Default: 'IMC'}
+\item{mediator_name}{Name of the mediator variable (default: "IMC").}
 
-\item{y_name}{PARAM_DESCRIPTION, Default: 'Condition_bin'}
+\item{y_name}{Name of the dependent/outcome variable (default: "Condition_bin").}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim}{p-value cutoff for selecting significant variables (default: 0.05).}
 
-\item{plim_plot}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim_plot}{p-value cutoff for plotting (default: 0.05).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'analysis_IMC_separateModel_vjust'}
+\item{name}{Base name prefix for output plots and files (default: "analysis_IMC_separateModel_vjust").}
 
-\item{wnet}{PARAM_DESCRIPTION, Default: 14}
+\item{wnet}{Width of network plots (default: 14).}
 
-\item{hnet}{PARAM_DESCRIPTION, Default: 12}
+\item{hnet}{Height of network plots (default: 12).}
 
-\item{wbars}{PARAM_DESCRIPTION, Default: 8}
+\item{wbars}{Width of barplots (default: 8).}
 
-\item{hbars}{PARAM_DESCRIPTION, Default: 10}
+\item{hbars}{Height of barplots (default: 10).}
 
-\item{wbars2}{PARAM_DESCRIPTION, Default: 10}
+\item{wbars2}{Width of secondary barplots (default: 10).}
 
-\item{hbars2}{PARAM_DESCRIPTION, Default: 12}
+\item{hbars2}{Height of secondary barplots (default: 12).}
 
-\item{use_color_scale}{PARAM_DESCRIPTION, Default: FALSE}
+\item{use_color_scale}{Logical, whether to use color scale in plots (default: FALSE).}
 
-\item{fix_barplot_limits}{PARAM_DESCRIPTION, Default: FALSE}
+\item{fix_barplot_limits}{Logical, whether to fix limits in barplots (default: FALSE).}
 
-\item{custom_colors}{PARAM_DESCRIPTION, Default: NULL}
+\item{custom_colors}{Optional vector of custom colors for plots (default: NULL).}
 
-\item{make_boxplots}{PARAM_DESCRIPTION, Default: TRUE}
+\item{make_boxplots}{Logical, whether to create boxplots (default: TRUE).}
 
-\item{list2merge}{PARAM_DESCRIPTION, Default: NULL}
+\item{list2merge}{Optional named list of data.frames with p-values to merge for analysis; if NULL, defaults will be used.}
 
-\item{make_power_test}{PARAM_DESCRIPTION, Default: FALSE}
+\item{make_power_test}{Logical, whether to perform power analysis on mediation results (default: FALSE).}
 
-\item{min_power}{PARAM_DESCRIPTION, Default: 0.9}
+\item{min_power}{Minimum power threshold for power analysis (default: 0.9).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\itemize{
+\item plotNet: List of plots including Venn diagrams and mediation network plots.
+\item barplots: List of boxplots and barplots (if \code{make_boxplots} is TRUE).
+\item results: Data frame of mediation analysis results.
+\item power: Power analysis results (if \code{make_power_test} is TRUE).
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs mediation analysis testing the effect of a mediator (default: IMC/BMI)
+on the relationship between a predictor (e.g. microbial taxa) and a binary outcome (e.g. condition).
+The function supports visualization (Venn diagrams, boxplots), power analysis,
+and exports summary tables of mediation results.
 }
 \details{
-DETAILS
+The function expects the \code{vstdf} variable names to be cleaned and matched to variables in \code{df_all}.
+It merges p-values from contrasts (default or user-provided \code{list2merge}),
+applies the user-defined variable selection function (\code{getVarsFunction}),
+runs simple mediation models using lavaan,
+generates plots, saves results and optionally runs power analyses.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  res <- makeFullMediationAnalysisIMC(vstdf, df_all, opt, getVarsFunction)
+}
 }
 }
 \seealso{
-\code{\link[assertthat]{assert_that}}
-\code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}
-\code{\link[tidyr]{unite}}
+\code{\link[assertthat]{assert_that}},
+\code{\link[dplyr]{filter}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}},
+\code{\link[tidyr]{unite}},
+\code{\link[ggplot2]{ggplot}}
 }

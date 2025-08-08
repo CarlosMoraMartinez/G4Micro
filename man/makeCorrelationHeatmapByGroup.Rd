@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeCorrelationHeatmapByGroup.R
 \name{makeCorrelationHeatmapByGroup}
 \alias{makeCorrelationHeatmapByGroup}
-\title{FUNCTION_TITLE}
+\title{Generate Correlation Heatmaps by Group}
 \usage{
 makeCorrelationHeatmapByGroup(
   mat1,
@@ -22,50 +22,82 @@ makeCorrelationHeatmapByGroup(
 )
 }
 \arguments{
-\item{mat1}{PARAM_DESCRIPTION}
+\item{mat1}{A numeric matrix or data frame (samples in rows, variables/features in columns). Typically microbial abundances or similar quantitative data.}
 
-\item{mat2}{PARAM_DESCRIPTION}
+\item{mat2}{A numeric matrix or data frame (samples in rows, variables/features in columns). Typically metadata variables, functional abundances, or other measurements to correlate with \code{mat1}.}
 
-\item{metadata}{PARAM_DESCRIPTION}
+\item{metadata}{A data frame containing metadata for the samples. Must include both \code{var2plot} and \code{varwithnames} columns.}
 
-\item{var2plot}{PARAM_DESCRIPTION, Default: 'Psoriasis'}
+\item{var2plot}{Character string specifying the name of the metadata column used to group samples (default: \code{"Psoriasis"}).}
 
-\item{varwithnames}{PARAM_DESCRIPTION, Default: 'sampleID'}
+\item{varwithnames}{Character string specifying the column in \code{metadata} that contains sample identifiers (default: \code{"sampleID"}).}
 
-\item{cormethod}{PARAM_DESCRIPTION, Default: 'pearson'}
+\item{cormethod}{Character string indicating the correlation method to use. Passed to \code{\link[stats]{cor}} (default: \code{"pearson"}).}
 
-\item{pval}{PARAM_DESCRIPTION, Default: 0.05}
+\item{pval}{Numeric value specifying the p-value threshold for including correlations in the heatmap (default: \code{0.05}).}
 
-\item{select_asvs}{PARAM_DESCRIPTION, Default: c()}
+\item{select_asvs}{Character vector of ASVs or feature names to plot. Overrides the \code{pval} threshold if provided (default: empty vector).}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Character string specifying the directory where the output PDF file will be saved (default: \code{""} = current directory).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'corrHeatmap'}
+\item{name}{Character string specifying the base name for output files (default: \code{"corrHeatmap"}).}
 
-\item{clust}{PARAM_DESCRIPTION, Default: T}
+\item{clust}{Logical, whether to cluster rows and columns in the heatmap (default: \code{TRUE}).}
 
-\item{order_rows}{PARAM_DESCRIPTION, Default: c()}
+\item{order_rows}{Optional character vector specifying a custom row order for the heatmap (default: empty vector).}
 
-\item{order_cols}{PARAM_DESCRIPTION, Default: c()}
+\item{order_cols}{Optional character vector specifying a custom column order for the heatmap (default: empty vector).}
 
-\item{annot_asvs}{PARAM_DESCRIPTION, Default: NULL}
+\item{annot_asvs}{Optional data frame with annotations for ASVs/features (default: \code{NULL}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{\link[pheatmap]{pheatmap}} object representing the final combined correlation heatmap.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates correlation heatmaps between two matrices (e.g., microbial abundances and metadata values) for all samples combined and for each group within a given metadata variable.
+The function first generates a global correlation heatmap and then produces separate heatmaps for each level of a grouping variable, arranging them together for comparison.
 }
 \details{
-DETAILS
+This function is designed to compare correlation patterns between two datasets across different groups defined in a metadata column.
+The workflow:
+\enumerate{
+\item Generate a correlation heatmap for all samples.
+\item Generate separate heatmaps for each group (level of \code{var2plot}).
+\item Combine results into one figure, showing the global pattern followed by group-specific patterns.
+Only significant correlations (based on \code{pval}) or features in \code{select_asvs} are plotted.
+}
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  # Example data
+  set.seed(123)
+  mat1 <- matrix(rnorm(50), nrow = 10)
+  rownames(mat1) <- paste0("Sample", 1:10)
+  colnames(mat1) <- paste0("ASV", 1:5)
+
+  mat2 <- matrix(rnorm(30), nrow = 10)
+  rownames(mat2) <- paste0("Sample", 1:10)
+  colnames(mat2) <- paste0("Var", 1:3)
+
+  metadata <- data.frame(
+    sampleID = paste0("Sample", 1:10),
+    Group = rep(c("A", "B"), each = 5)
+  )
+
+  makeCorrelationHeatmapByGroup(
+    mat1 = mat1,
+    mat2 = mat2,
+    metadata = metadata,
+    var2plot = "Group",
+    varwithnames = "sampleID",
+    outdir = tempdir(),
+    name = "example_corrHeatmap"
+  )
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{select}}
+\code{\link[dplyr]{select}}, \code{\link[pheatmap]{pheatmap}}
 }

@@ -2,38 +2,53 @@
 % Please edit documentation in R/makeContingencyPlot.R
 \name{makeContingencyPlot}
 \alias{makeContingencyPlot}
-\title{FUNCTION_TITLE}
+\title{Create and Save a Mosaic Plot for Two Categorical Variables}
 \usage{
 makeContingencyPlot(df, var1, var2, outdir, name, w = 8, h = 6)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame containing the categorical variables to be plotted.}
 
-\item{var1}{PARAM_DESCRIPTION}
+\item{var1}{Character string, name of the first categorical variable (displayed on the y-axis).}
 
-\item{var2}{PARAM_DESCRIPTION}
+\item{var2}{Character string, name of the second categorical variable (displayed on the x-axis).}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{Character string, directory path where the plot will be saved.}
 
-\item{name}{PARAM_DESCRIPTION}
+\item{name}{Character string, base name for the output file (without extension).}
 
-\item{w}{PARAM_DESCRIPTION, Default: 8}
+\item{w}{Numeric, plot width in inches. Default: 8.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 6}
+\item{h}{Numeric, plot height in inches. Default: 6.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object containing the mosaic plot.
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates a mosaic plot showing the relationship between two categorical variables
+and saves the resulting figure as a PDF.
 }
 \details{
-DETAILS
+The function uses \code{\link[ggmosaic]{geom_mosaic}} to generate a mosaic plot and
+\code{\link[ggmosaic]{geom_mosaic_text}} to display cell proportions as labels.
+The plot is styled with \code{theme_classic()} and a custom theme (\code{mytheme}).
+The output PDF file is named as \code{paste0(outdir, "/", name, "_mosaic.pdf")}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  df <- data.frame(
+    Group = sample(c("A", "B"), 100, replace = TRUE),
+    Outcome = sample(c("Yes", "No"), 100, replace = TRUE)
+  )
+  makeContingencyPlot(df, var1 = "Group", var2 = "Outcome",
+                      outdir = tempdir(), name = "example_plot")
 }
+}
+
+}
+\seealso{
+\code{\link[ggmosaic]{geom_mosaic}},
+\code{\link[ggmosaic]{geom_mosaic_text}},
+\code{\link[ggplot2]{ggsave}}
 }

@@ -2,34 +2,40 @@
 % Please edit documentation in R/makeVenn.R
 \name{makeVenn}
 \alias{makeVenn}
-\title{FUNCTION_TITLE}
+\title{Generate a Venn Diagram Plot}
 \usage{
 makeVenn(vars2venn, name = "VennDiagram", opt, w = 5, h = 5)
 }
 \arguments{
-\item{vars2venn}{PARAM_DESCRIPTION}
+\item{vars2venn}{A named list of vectors, each containing elements to be plotted as a set in the Venn diagram.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'VennDiagram'}
+\item{name}{A character string specifying the base name for the output PDF file. Default is \code{"VennDiagram"}.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing output options. Must include an \code{out} element specifying the directory path where the PDF will be saved.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 5}
+\item{w}{Numeric value specifying the width of the output PDF in inches. Default is 5.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 5}
+\item{h}{Numeric value specifying the height of the output PDF in inches. Default is 5.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot object representing the generated Venn diagram.
 }
 \description{
-FUNCTION_DESCRIPTION
+Creates a Venn diagram visualization using the \code{ggvenn} package, saves it as a PDF file, and returns the plot object.
 }
 \details{
-DETAILS
+The function uses fixed colors for the diagram sections and disables the display of set elements inside the plot. Adjust \code{fill_color} and other graphical parameters as needed.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  set1 <- c("A", "B", "C")
+  set2 <- c("B", "C", "D")
+  sets <- list(Group1 = set1, Group2 = set2)
+  outdir <- list(out = "./plots/")
+  dir.create(outdir$out, showWarnings = FALSE)
+  venn_plot <- makeVenn(vars2venn = sets, name = "ExampleVenn", opt = outdir)
+  print(venn_plot)
+}
 }
 }

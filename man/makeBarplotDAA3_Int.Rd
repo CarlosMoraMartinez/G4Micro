@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeBarplotDAA3_Int.R
 \name{makeBarplotDAA3_Int}
 \alias{makeBarplotDAA3_Int}
-\title{FUNCTION_TITLE}
+\title{Barplot Visualization of Differential Abundance Analysis Results}
 \usage{
 makeBarplotDAA3_Int(
   daalist,
@@ -13,34 +13,54 @@ makeBarplotDAA3_Int(
 )
 }
 \arguments{
-\item{daalist}{PARAM_DESCRIPTION}
+\item{daalist}{A named list of data.frames, each representing a DAA result for one contrast.
+Each data.frame must contain columns: \code{taxon}, \code{log2FoldChangeShrink}, and \code{padj}.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{Character string specifying the directory where output plots and tables will be saved.}
 
-\item{plim}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim}{Numeric value for adjusted p-value cutoff used to determine significance. Default is 0.05.}
 
-\item{name}{PARAM_DESCRIPTION, Default: ''}
+\item{name}{Character string prefix for output filenames. Default is an empty string.}
 
-\item{cond_names}{PARAM_DESCRIPTION, Default: list()}
+\item{cond_names}{Character vector or list of adjusted p-value column names used internally to evaluate significance across contrasts.
+If empty (default), names are derived from \code{daalist}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\item{plots}{A named list of ggplot objects for different significance subsets.}
+\item{tab}{A data.frame with merged DAA results and added significance flags.}
 }
 \description{
-FUNCTION_DESCRIPTION
+Generates barplots of log2 fold changes from differential abundance analyses (DAA) across multiple contrasts,
+highlighting taxa that pass specific significance thresholds under different model adjustments.
 }
 \details{
-DETAILS
+The function merges multiple DAA results, reshapes the data, and creates barplots of log2 fold changes for taxa.
+It identifies taxa significant under different model conditions:
+\itemize{
+\item \code{AllSig}: significant in all contrasts.
+\item \code{CondAdjusted}: significant in the first two contrasts.
+\item \code{CondOnly}: significant only in the first contrast.
+\item \code{CondAdjustedOnly}: significant only in the second contrast.
+\item \code{BMIAdjusted}: significant only after BMI adjustment.
+}
+The plots are saved as PDF files in \code{outdir}, and a TSV table with results is also written.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Example usage assuming daalist contains differential abundance result data.frames:
+  # daalist <- list(
+  #   "D_vs_C" = daa_res1,
+  #   "D_vs_C_adj" = daa_res2,
+  #   "BMI" = daa_res3,
+  #   "BMI_adj" = daa_res4
+  # )
+  # makeBarplotDAA3_Int(daalist, outdir = "results/", plim = 0.05, name = "example")
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
-\code{\link[tidyr]{unite}}
-\code{\link[cowplot]{plot_grid}}
+\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}},
+\code{\link[tidyr]{unite}}, \code{\link[tidyr]{spread}}, \code{\link[cowplot]{plot_grid}}
 }

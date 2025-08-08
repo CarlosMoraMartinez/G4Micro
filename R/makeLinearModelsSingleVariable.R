@@ -59,7 +59,7 @@ makeLinearModelsSingleVariable <- function(divtab,
   models <- list()
   anovas_singlevar <- data.frame()
   anovas <- data.frame()
-  for(aind in alpha_indices){
+  for(aind in alphaindices){
     formulanull_ch <- paste0(aind, " ~ 1")
     formulanull <- as.formula(formulanull_ch)
     models[[formulanull_ch]] <- lm(formula = formulanull, data = divtab )

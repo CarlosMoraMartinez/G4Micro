@@ -1,34 +1,70 @@
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param daa_proc_all PARAM_DESCRIPTION
-#' @param daa_by_sp_all PARAM_DESCRIPTION
-#' @param quant_by_proc PARAM_DESCRIPTION
-#' @param metadf PARAM_DESCRIPTION
-#' @param plim PARAM_DESCRIPTION, Default: 0.01
-#' @param plim_sp PARAM_DESCRIPTION, Default: 0.01
-#' @param include_others PARAM_DESCRIPTION, Default: FALSE
-#' @param include_longnames PARAM_DESCRIPTION, Default: FALSE
-#' @param others_name PARAM_DESCRIPTION, Default: 'Aggr. taxa'
-#' @param case_name PARAM_DESCRIPTION, Default: 'Depression'
-#' @param control_name PARAM_DESCRIPTION, Default: 'Control'
-#' @param outdir PARAM_DESCRIPTION, Default: '~/'
-#' @param name PARAM_DESCRIPTION, Default: 'test'
-#' @param ntop PARAM_DESCRIPTION, Default: 0
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Prepare Data for Sankey Plot Visualization
+#' @description
+#' Prepares node and link tables for creating a Sankey plot that shows relationships
+#' between biological processes and species, including log-fold changes and expression values.
+#' Supports filtering by adjusted p-values, aggregating non-significant species, and customizing
+#' plot aesthetics such as node colors and sizes.
+#'
+#' @param daa_proc_all Data frame with process-level differential abundance analysis results.
+#'   Must include columns with adjusted p-values (`padj`) and log2 fold changes (`log2FoldChange`).
+#' @param daa_by_sp_all Data frame with process-species level differential abundance results,
+#'   including columns `Pathway`, `Species`, `padj`, `log2FoldChange`, `AveExpr`, and taxonomic info.
+#' @param quant_by_proc Data frame with abundance quantifications by process across samples.
+#'   Rows are processes, columns are sample IDs.
+#' @param metadf Data frame with sample metadata, including a `Condition` column and `sampleID` matching `quant_by_proc` columns.
+#' @param plim Numeric threshold for adjusted p-value cutoff to select significant processes (default 0.01).
+#' @param plim_sp Numeric threshold for adjusted p-value cutoff to select significant species within processes (default 0.01).
+#' @param include_others Logical, whether to aggregate non-significant species into a single 'others' category (default FALSE).
+#' @param include_longnames Logical, whether to use long descriptive names for processes if available (default FALSE).
+#' @param others_name Character string naming the aggregated non-significant taxa group (default "Aggr. taxa").
+#' @param case_name Character string for the case group name in the metadata (default "Depression").
+#' @param control_name Character string for the control group name in the metadata (default "Control").
+#' @param outdir Character string path where output TSV files for nodes and links will be saved (default "~/").
+#' @param name Character string prefix for output file names (default "test").
+#' @param ntop Integer indicating the maximum number of top significant processes to select by adjusted p-value;
+#'   if 0, all processes passing `plim` are included (default 0).
+#'
+#' @return A list with two elements:
+#' \item{nodelist}{Data frame describing nodes with columns for node ID, label, position, color, and size.}
+#' \item{linklist}{Data frame describing links between nodes with source, target, size, and color for Sankey plotting.}
+#'
+#' @details
+#' This function filters and processes differential abundance results at the process and species levels
+#' based on specified significance thresholds. It normalizes abundance data within conditions and processes,
+#' creates color gradients based on log-fold changes, and constructs node/link tables ready for Sankey plot
+#' visualization tools. It optionally aggregates low-significance species and can annotate processes
+#' with longer descriptive names.
+#'
+#' Output node and link tables are saved as TSV files in the specified output directory with
+#' filenames based on the provided name prefix.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   result <- prepareSankeyPlot(
+#'     daa_proc_all = process_da_df,
+#'     daa_by_sp_all = species_da_df,
+#'     quant_by_proc = quant_df,
+#'     metadf = metadata_df,
+#'     plim = 0.05,
+#'     include_others = TRUE,
+#'     outdir = "results/",
+#'     name = "mySankey"
+#'   )
+#'   # Use result$nodelist and result$linklist for plotting
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_all}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{arrange}}
-#'  \code{\link[scales]{pal_gradient_n}}
+#' }
+#'
+#' @seealso
+#' \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise_if}},
+#' \code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}, \code{\link[scales]{gradient_n_pal}}
+#'
 #' @rdname prepareSankeyPlot
-#' @export 
-#' @importFrom dplyr filter mutate summarise_if select summarise arrange
+#' @export
+#' @importFrom dplyr filter mutate summarise_if select arrange group_by ungroup slice_min
+#' @importFrom tidyr pivot_longer
+#' @importFrom readr write_tsv
 #' @importFrom scales gradient_n_pal
 prepareSankeyPlot <- function(daa_proc_all,
                               daa_by_sp_all,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dreamLimma.R
 \name{dreamLimma}
 \alias{dreamLimma}
-\title{FUNCTION_TITLE}
+\title{Differential expression analysis with variancePartition's dream and limma-voom}
 \usage{
 dreamLimma(
   phobj,
@@ -14,34 +14,74 @@ dreamLimma(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \pkg{phyloseq} object containing an OTU/ASV count table
+and associated sample metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list of options, must contain:
+\itemize{
+\item \code{mincount}: minimum count per feature to be kept.
+\item \code{minsampleswithcount}: minimum number of samples with counts above \code{mincount} to retain a feature.
+}}
 
-\item{variables}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{variables}{Character vector specifying the fixed-effect variables
+to include in the model. Default: \code{c("Condition")}.}
 
-\item{individual}{PARAM_DESCRIPTION, Default: 'pacienteID'}
+\item{individual}{Name of the metadata column identifying individuals
+for the random effect term. Default: \code{"pacienteID"}.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Output directory for saving results. Default: \code{""}.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'dream'}
+\item{name}{Base name for output files. Default: \code{"dream"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list with:
+\itemize{
+\item \code{result}: topTable output from \code{dream}.
+\item \code{vobj_tmp}: voom-transformed object with precision weights.
+\item \code{fitmm}: fitted model object from \code{dream}.
+\item \code{L}: contrast matrix used in the analysis.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Runs a repeated-measures differential expression analysis on count data
+(e.g., microbiome or RNA-seq) using the \code{dream} method from the
+\pkg{variancePartition} package, which extends \code{limma-voom} to handle
+random effects such as subject IDs.
 }
 \details{
-DETAILS
+The workflow follows these steps:
+\enumerate{
+\item Extract counts from the \pkg{phyloseq} object and filter low-abundance features.
+\item Create an \pkg{edgeR} \code{DGEList} and normalize library sizes with \code{calcNormFactors}.
+\item Apply \code{voomWithDreamWeights} to transform counts to logCPM and estimate observation-level weights.
+\item Specify contrasts with \code{getContrast} and fit the model with \code{dream}, including random effects.
+\item Extract top results with \code{topTable} and save outputs as TSV and RData.
+}
+The \code{dream} method allows modeling of repeated measures (e.g., multiple samples from the same subject) by
+adding a random effect term \code{(1|individual)} in the model formula.
+
+For details on the methodology, see:
+\url{https://bioconductor.org/packages/release/bioc/vignettes/variancePartition/inst/doc/variancePartition.html}
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(phyloseq)
+  library(variancePartition)
+  ps <- phyloseq(otu_table(matrix(rpois(200, lambda=5), ncol=10), taxa_are_rows=TRUE),
+                 sample_data(data.frame(Condition=rep(c("A","B"), each=5),
+                                        pacienteID=rep(1:5, each=2))))
+  opt <- list(mincount=5, minsampleswithcount=2)
+  results <- dreamLimma(ps, opt, variables="Condition", individual="pacienteID",
+                        outdir="results", name="dream_test")
 }
+}
+
 }
 \seealso{
-\code{\link[variancePartition]{topTable}}
+\code{\link[variancePartition]{dream}},
+\code{\link[variancePartition]{topTable}},
+\code{\link[variancePartition]{voomWithDreamWeights}},
+\code{\link[limma]{voom}},
+\code{\link[edgeR]{calcNormFactors}}
 }

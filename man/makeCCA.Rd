@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeCCA.R
 \name{makeCCA}
 \alias{makeCCA}
-\title{FUNCTION_TITLE}
+\title{Perform Canonical Correlation Analysis Between Microbiome and Metadata}
 \usage{
 makeCCA(
   datamat,
@@ -15,33 +15,55 @@ makeCCA(
 )
 }
 \arguments{
-\item{datamat}{PARAM_DESCRIPTION}
+\item{datamat}{A numeric matrix or data frame with samples in rows and variables in columns.}
 
-\item{tax_matrix_clr}{PARAM_DESCRIPTION}
+\item{tax_matrix_clr}{A CLR-transformed microbiome feature matrix (taxa in rows, samples in columns).}
 
-\item{metadata}{PARAM_DESCRIPTION}
+\item{metadata}{A data frame containing sample metadata. Must include a column named as in \code{metadatavar}.}
 
-\item{metadatavar}{PARAM_DESCRIPTION, Default: 'Psoriasis'}
+\item{metadatavar}{Character string giving the metadata variable to color plots by. Default: \code{"Psoriasis"}.}
 
-\item{pcvar2retain}{PARAM_DESCRIPTION, Default: 0.9}
+\item{pcvar2retain}{Proportion of variance to retain when selecting microbiome PCs. Default: \code{0.9}.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: ''}
+\item{outdir}{Output directory where plots and results will be saved. Default: \code{""} (current directory).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'CCA_from_CLR'}
+\item{name}{Base name for output files (without extension). Default: \code{"CCA_from_CLR"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A list containing:
+\item{ccares}{The result of \code{stats::cancor} (canonical correlation analysis).}
+\item{g1–g6}{Six ggplot objects corresponding to different CCA visualizations.}
 }
 \description{
-FUNCTION_DESCRIPTION
+This function performs canonical correlation analysis (CCA) between a CLR-transformed
+microbiome feature matrix and another data matrix (e.g., clinical variables), using
+principal components of the microbiome matrix that explain up to a given proportion of variance.
+It produces multiple ggplot visualizations of the canonical variates and saves them to PDF,
+along with the CCA results in an \code{.RData} file.
 }
 \details{
-DETAILS
+The function first performs PCA on the CLR-transformed microbiome matrix and selects the number of PCs
+needed to explain at least \code{pcvar2retain} proportion of variance.
+These PCs are then correlated with the variables in \code{datamat} using canonical correlation analysis (\code{stats::cancor}).
+The function generates six plots:
+\enumerate{
+\item Boxplot of CC1 (microbiome) scores by \code{metadatavar}.
+\item Boxplot of CC1 (metadata) scores by \code{metadatavar}.
+\item Scatterplot of CC1 vs CC2 (metadata) with variable loadings (arrows).
+\item Scatterplot of CC1 vs CC2 (microbiome) with metadata variable loadings.
+\item Scatterplot of CC1 vs CC2 (metadata) with microbiome variable loadings.
+\item Scatterplot of CC1 vs CC2 (microbiome) with microbiome variable loadings.
+}
+All plots are saved to a single PDF file, and the CCA results are saved to an \code{.RData} file.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  res <- makeCCA(datamat, tax_matrix_clr, metadata,
+                 metadatavar = "Psoriasis",
+                 pcvar2retain = 0.9,
+                 outdir = "results",
+                 name = "myCCA")
+}
 }
 }

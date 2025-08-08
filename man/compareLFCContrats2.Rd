@@ -2,7 +2,7 @@
 % Please edit documentation in R/compareLFCContrats2.R
 \name{compareLFCContrats2}
 \alias{compareLFCContrats2}
-\title{FUNCTION_TITLE}
+\title{Compare Log Fold Changes Across Multiple Contrasts}
 \usage{
 compareLFCContrats2(
   contrastlist,
@@ -21,46 +21,51 @@ compareLFCContrats2(
 )
 }
 \arguments{
-\item{contrastlist}{PARAM_DESCRIPTION}
+\item{contrastlist}{A named list where each element contains a results data frame (e.g., "resdf") from a DESeq2 contrast, with a column \code{taxon}, \code{log2FoldChangeShrink}, and \code{padj}.}
 
-\item{firstContrast}{PARAM_DESCRIPTION}
+\item{firstContrast}{A single contrast results object (list containing a \code{resdf}) used as the reference for ordering taxa.}
 
-\item{contrastNamesOrdered}{PARAM_DESCRIPTION}
+\item{contrastNamesOrdered}{Character vector giving the order of contrasts in the plot facets.}
 
-\item{mainContrastName}{PARAM_DESCRIPTION}
+\item{mainContrastName}{Name to assign to the \code{firstContrast} when plotting.}
 
-\item{plim_select}{PARAM_DESCRIPTION, Default: 1e-06}
+\item{plim_select}{Adjusted p-value threshold for selecting taxa to display (applied to any contrast). Default: \code{1e-6}.}
 
-\item{plim_plot}{PARAM_DESCRIPTION, Default: 0.05}
+\item{plim_plot}{Adjusted p-value threshold for significance coloring in the plot. Default: \code{0.05}.}
 
-\item{name2remove}{PARAM_DESCRIPTION, Default: ''}
+\item{name2remove}{Pattern to remove from contrast names before plotting. Default: \code{""}.}
 
-\item{resdfname}{PARAM_DESCRIPTION, Default: 'resdf'}
+\item{resdfname}{Name of the data frame within each list element that contains the results. Default: \code{"resdf"}.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: './'}
+\item{outdir}{Directory where the PDF will be saved. Default: \code{"./"}.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'LFC_compare'}
+\item{name}{Filename prefix for the saved plot. Default: \code{"LFC_compare"}.}
 
-\item{w}{PARAM_DESCRIPTION, Default: 12}
+\item{w}{Width of the saved PDF in inches. Default: \code{12}.}
 
-\item{h}{PARAM_DESCRIPTION, Default: 8}
+\item{h}{Height of the saved PDF in inches. Default: \code{8}.}
 
-\item{scale_mode}{PARAM_DESCRIPTION, Default: 'fixed'}
+\item{scale_mode}{Facet scale mode for ggplot: \code{"fixed"} or \code{"free"}. Default: \code{"fixed"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{ggplot} object with the barplot comparison of log2 fold changes.
 }
 \description{
-FUNCTION_DESCRIPTION
+Combines and visualizes shrunken log2 fold changes from multiple contrasts,
+filtering taxa by adjusted p-value and ordering them based on a main contrast.
 }
 \details{
-DETAILS
+The function merges results from all contrasts, selects taxa significant in at least one contrast, orders taxa by the main contrast, and creates a horizontal barplot with facets for each contrast. Significance is indicated by color.
+Underscores in taxon and contrast names are replaced with spaces for readability.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  g <- compareLFCContrats2(contrastlist, firstContrast,
+                           contrastNamesOrdered = c("Contrast1", "Contrast2"),
+                           mainContrastName = "Main")
+  print(g)
+}
 }
 }
 \seealso{

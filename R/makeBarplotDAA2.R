@@ -1,25 +1,50 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param daalist PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param plim PARAM_DESCRIPTION, Default: 0.05
-#' @param name PARAM_DESCRIPTION, Default: ''
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Create Barplots for Differential Abundance Analysis Results
+#' @description
+#' Generates barplots visualizing log2 fold changes of taxa across multiple contrasts
+#' from a list of differential abundance analysis results. It highlights taxa significant
+#' under different conditions including adjustments for BMI and depression status.
+#'
+#' @param daalist A named list of data frames, each representing differential abundance
+#' results for a contrast. Each data frame must contain columns: `taxon`,
+#' `log2FoldChangeShrink`, and `padj`.
+#' @param outdir Character. Directory path where plots and tables will be saved.
+#' @param plim Numeric. Adjusted p-value threshold for significance (default 0.05).
+#' @param name Character. Prefix for output filenames (default "").
+#'
+#' @return A list with two elements:
+#' \item{plots}{A list of ggplot2 objects for different significance categories.}
+#' \item{tab}{A processed data frame with combined results and significance flags.}
+#'
+#' @details
+#' This function merges differential abundance results from multiple contrasts,
+#' computes significance categories based on p-value thresholds,
+#' and generates multiple barplots showing log2 fold changes (LFC) colored by direction
+#' (Up/Down/Not Significant). The plots are saved as PDF files in the specified output directory.
+#'
+#' The contrasts considered include:
+#' - "D vs C" (Disease vs Control)
+#' - "D vs C adj. BMI" (adjusted for BMI)
+#' - "BMI" (BMI effect)
+#' - "BMI adj. Depr." (BMI adjusted for Depression)
+#'
+#' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   # Assuming daalist is prepared as a named list of data.frames with required columns
+#'   result <- makeBarplotDAA2(daalist = my_da_results, outdir = "plots", plim = 0.05, name = "my_analysis")
+#'   # Access plots:
+#'   print(result$plots$CondAdjusted$plot)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}
-#'  \code{\link[tidyr]{unite}}
-#'  \code{\link[cowplot]{plot_grid}}
+#' }
+#'
+#' @seealso
+#' \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}},
+#' \code{\link[tidyr]{unite}}, \code{\link[cowplot]{plot_grid}}, \code{\link[ggplot2]{ggplot}}
+#'
 #' @rdname makeBarplotDAA2
-#' @export 
+#' @export
 #' @importFrom dplyr select mutate filter
-#' @importFrom tidyr unite
+#' @importFrom tidyr unite gather spread separate
 #' @importFrom cowplot plot_grid
 makeBarplotDAA2 <- function(daalist, outdir, plim=0.05, name=""){
   daatab <- lapply(names(daalist), \(x){daalist[[x]]$contrast <- x; return(daalist[[x]])}) %>% bind_rows() %>%

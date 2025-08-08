@@ -2,23 +2,37 @@
 % Please edit documentation in R/filterBySpeciesAndFreq.R
 \name{filterBySpeciesAndFreq}
 \alias{filterBySpeciesAndFreq}
-\title{FUNCTION_TITLE}
+\title{Filter Species-Level Processes by Count and Frequency}
 \usage{
 filterBySpeciesAndFreq(df, opt)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A data frame or tibble with functional pathways as rows (first column named "Pathway")
+and numeric counts or abundances in the subsequent columns.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{A list containing filtering parameters:
+\itemize{
+\item \code{mincount}: Minimum count threshold to consider a value as present.
+\item \code{minsampleswithcount}: Minimum number of samples that must have counts above \code{mincount}.
+}}
 }
 \value{
-OUTPUT_DESCRIPTION
+A filtered data frame retaining only rows where:
+\itemize{
+\item \code{Pathway} contains "|" indicating species-level resolution.
+\item \code{Pathway} does not contain "UNINTEGRATED", "UNMAPPED", or "UNGROUPED".
+\item The count is above \code{mincount} in at least \code{minsampleswithcount} samples.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Filters a functional matrix data frame to retain only species-level processes
+(identified by the presence of "|" in the pathway name), excludes unwanted categories,
+and retains rows with sufficient counts across samples.
 }
 \details{
-DETAILS
+This function focuses on species-level pathway abundances, filtering out ambiguous or unassigned entries
+and ensuring that pathways are sufficiently represented across samples.
+It assumes the first column of \code{df} is named "Pathway" and contains pathway identifiers.
 }
 \examples{
 \dontrun{

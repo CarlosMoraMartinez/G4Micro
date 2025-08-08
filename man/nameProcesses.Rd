@@ -2,28 +2,40 @@
 % Please edit documentation in R/nameProcesses.R
 \name{nameProcesses}
 \alias{nameProcesses}
-\title{FUNCTION_TITLE}
+\title{Assign Descriptive Process Names to Table Rows}
 \usage{
 nameProcesses(tab, namedtab)
 }
 \arguments{
-\item{tab}{PARAM_DESCRIPTION}
+\item{tab}{A data frame or matrix whose row names correspond to short process identifiers.}
 
-\item{namedtab}{PARAM_DESCRIPTION}
+\item{namedtab}{A data frame with at least two columns: \code{short} containing short process codes,
+and \code{long} containing the corresponding descriptive process names.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The original data frame \code{tab} with an additional column \code{process_name} containing
+descriptive names matched by row names from \code{namedtab}. Rows without matches will have \code{NA}.
 }
 \description{
-FUNCTION_DESCRIPTION
+This function adds a descriptive process name column to a data table based on a mapping table.
+It matches row names of the input table (\code{tab}) to short process codes in \code{namedtab} and
+appends the corresponding long descriptive names as a new column.
+If the \code{namedtab} is \code{NULL}, the original table is returned unchanged.
 }
 \details{
-DETAILS
+The function performs a vectorized match of \code{rownames(tab)} against the \code{short} column of \code{namedtab}.
+It then adds the \code{long} names from \code{namedtab} to a new column \code{process_name} in \code{tab}.
+This is useful to enhance tables with human-readable labels for processes or features.
+If \code{namedtab} is \code{NULL}, the function simply returns the input table as is.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  tab <- data.frame(value = c(10, 15), row.names = c("p1", "p2"))
+  namedtab <- data.frame(short = c("p1", "p2"), long = c("Process A", "Process B"))
+  tab_named <- nameProcesses(tab, namedtab)
+  print(tab_named)
 }
+}
+
 }
