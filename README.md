@@ -206,8 +206,6 @@ models$anovas %>% select(-mod1, -mod2, nvars, Index,
 Finally, plot differences (recalculating statistical tests):
 
 ``` r
-library(cowplot)
-
 cat_vars <- c("Condition", "Sex")
 num_vars <- c("BMI", "bristol_scale")
 
@@ -229,8 +227,6 @@ cowplot::plot_grid(plotlist = divplots, nrow = 4)
 PCoA on Bray-Curtis distances:
 
 ``` r
-library(cowplot)
-
 vars <- c("Condition", "Sex", "BMI")
 betaplots <- makeAllPCoAs(phobj_raref, outdir,
                           method = "PCoA",
@@ -250,8 +246,6 @@ cowplot::plot_grid(plotlist = betaplots, nrow = 3)
 NMDS on Bray-Curtis distances:
 
 ``` r
-library(cowplot)
-
 vars <- c("Condition", "Sex")
 betaplots <- makeAllPCoAs(phobj_raref, outdir,
                           method = "NMDS",
@@ -265,37 +259,35 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 #> Square root transformation
 #> Wisconsin double standardization
 #> Run 0 stress 0.2424031 
-#> Run 1 stress 0.2450441 
-#> Run 2 stress 0.2418238 
+#> Run 1 stress 0.2450175 
+#> Run 2 stress 0.2413875 
 #> ... New best solution
-#> ... Procrustes: rmse 0.03592079  max resid 0.2039121 
-#> Run 3 stress 0.2425736 
-#> Run 4 stress 0.2425657 
-#> Run 5 stress 0.2479826 
-#> Run 6 stress 0.2470064 
-#> Run 7 stress 0.243741 
-#> Run 8 stress 0.2436178 
-#> Run 9 stress 0.2453063 
-#> Run 10 stress 0.2422513 
-#> ... Procrustes: rmse 0.03546092  max resid 0.2062974 
-#> Run 11 stress 0.2447231 
-#> Run 12 stress 0.2504898 
-#> Run 13 stress 0.2412017 
+#> ... Procrustes: rmse 0.03453249  max resid 0.2040516 
+#> Run 3 stress 0.2479525 
+#> Run 4 stress 0.241074 
 #> ... New best solution
-#> ... Procrustes: rmse 0.01976362  max resid 0.1553633 
-#> Run 14 stress 0.2414831 
-#> ... Procrustes: rmse 0.01629938  max resid 0.1545399 
-#> Run 15 stress 0.2422512 
-#> Run 16 stress 0.2429346 
-#> Run 17 stress 0.2414664 
-#> ... Procrustes: rmse 0.01344268  max resid 0.09110863 
-#> Run 18 stress 0.2413492 
-#> ... Procrustes: rmse 0.01180794  max resid 0.08008196 
-#> Run 19 stress 0.2416823 
-#> ... Procrustes: rmse 0.01485076  max resid 0.08648119 
-#> Run 20 stress 0.2441167 
+#> ... Procrustes: rmse 0.01783737  max resid 0.1590581 
+#> Run 5 stress 0.2443354 
+#> Run 6 stress 0.2418592 
+#> Run 7 stress 0.2698389 
+#> Run 8 stress 0.2411031 
+#> ... Procrustes: rmse 0.003079735  max resid 0.02145552 
+#> Run 9 stress 0.2413875 
+#> ... Procrustes: rmse 0.01783647  max resid 0.158801 
+#> Run 10 stress 0.2418271 
+#> Run 11 stress 0.2423542 
+#> Run 12 stress 0.2453918 
+#> Run 13 stress 0.2451823 
+#> Run 14 stress 0.2418291 
+#> Run 15 stress 0.2425758 
+#> Run 16 stress 0.2426894 
+#> Run 17 stress 0.2454342 
+#> Run 18 stress 0.2423002 
+#> Run 19 stress 0.2429148 
+#> Run 20 stress 0.2418242 
 #> *** Best solution was not repeated -- monoMDS stopping criteria:
-#>     20: stress ratio > sratmax
+#>      3: no. of iterations >= maxit
+#>     17: stress ratio > sratmax
 
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
@@ -417,7 +409,7 @@ taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filt
 gtt <- result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
 ```
 
-<img src="man/figures/gt_table.png" width="50%" style="display: block; margin: auto;" />
+<img src="man/figures/gt_table.png" width="70%" style="display: block; margin: auto;" />
 
 See results table for the contrast of Sex:
 
@@ -428,7 +420,7 @@ taxa2plot <- result$all_contrasts$Sex_Female_vs_Male$resdf %>% filter(!is.na(pad
 gtt <- result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
 ```
 
-<img src="man/figures/gt_table2.png" width="50%" style="display: block; margin: auto;" />
+<img src="man/figures/gt_table2.png" width="70%" style="display: block; margin: auto;" />
 
 See results table for the contrast of Age:
 
@@ -439,7 +431,7 @@ taxa2plot <- result$all_contrasts$Age$resdf %>% filter(!is.na(padj ) & padj < 0.
 gtt <- result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa with Age")
 ```
 
-<img src="man/figures/gt_table3.png" width="50%" style="display: block; margin: auto;" />
+<img src="man/figures/gt_table3.png" width="70%" style="display: block; margin: auto;" />
 
 Make heatmap:
 
@@ -520,4 +512,4 @@ gtt <- result_int$all_contrasts$Condition_Depression_vs_Control$res %>%
   getGTTableFromRes(taxa2plot, "DAA between Depr and C controlling for  BMI + Sex * Age")
 ```
 
-<img src="man/figures/gt_table4.png" width="50%" style="display: block; margin: auto;" />
+<img src="man/figures/gt_table4.png" width="70%" style="display: block; margin: auto;" />
