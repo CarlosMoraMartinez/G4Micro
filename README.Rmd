@@ -51,7 +51,7 @@ if(!dir.exists(opt$out)) dir.create(opt$out)
 restoreopt <- restauraropt_mk(opt)
 ```
 
-The \code{restoreopt} function will allow to reset the options to the state when \code{restauraropt_mk} was called. To do that, execute:
+The `restoreopt` function will allow to reset the options to the state when `restauraropt_mk` was called. To do that, execute:
 
 ```{r load3}
 opt <- restoreopt(opt)
@@ -158,7 +158,7 @@ cowplot::plot_grid(plotlist = betaplots, nrow = 3)
 
 NMDS on Bray-Curtis distances:
 
-```{r beta2, fig.width=12, fig.height=4, warning=FALSE}
+```{r beta2, fig.width=12, fig.height=5, warning=FALSE, message=FALSE}
 library(cowplot)
 
 vars <- c("Condition", "Sex")
@@ -175,7 +175,7 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
 
-Perform PERMANOVA with the \code{vegan::adonis2} function:
+Perform PERMANOVA with the `vegan::adonis2` function:
 
 ```{r beta3, fig.width=12, fig.height=4, warning=FALSE}
 exclude_vars <- names(sample_data(phobj_raref))
@@ -189,7 +189,7 @@ result <- makePermanova(phobj_raref,
 result %>% kableExtra::kable()
 ```
 
-Perform PERMANOVA with the \code{vegan::adonis2} function, using covariates:
+Perform PERMANOVA with the `vegan::adonis2` function, using covariates:
 
 ```{r beta4, fig.width=12, fig.height=4, warning=FALSE}
 permaformulas <- c(
@@ -218,11 +218,11 @@ result$modelos[[4]]
 
 ## Differential Abundance Analysis with DESeq2
 
-First, use Sex and Age as covariates. We will use the \code{phyloseq} object with the raw counts, since \code{DESeq2} normalizes data internally.
+First, use Sex and Age as covariates. We will use the `phyloseq` object with the raw counts, since `DESeq2` normalizes data internally.
 
-Several tables and plots will be saved to the \code{opt$out} directory. 
+Several tables and plots will be saved to the `opt$out` directory. 
 
-```{r deseq1, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide'}
+```{r deseq1, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE}
 data("phobj_filtonly")
 test_vars <- c("Condition", "Sex", "Age")
 
@@ -230,7 +230,7 @@ result <- deseq_full_pipeline(phobj_filtonly, name = "CondSexAge", vars2deseq = 
 
 ```
 
-Several tables and plots will be saved to the \code{opt$out} directory. 
+Several tables and plots will be saved automatically to the `opt$out` directory. 
 
 See results table for the contrast of Condition:
 
@@ -238,8 +238,11 @@ See results table for the contrast of Condition:
 
 taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
      arrange(padj) %>% pull(taxon) 
-result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
-
+gtt <- result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
+```
+```{r deseq2b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE, echo=FALSE}
+gt::gtsave(gtt, "man/figures/gt_table.png")
+knitr::include_graphics("man/figures/gt_table.png")
 ```
 
 See results table for the contrast of Sex:
@@ -248,24 +251,32 @@ See results table for the contrast of Sex:
 
 taxa2plot <- result$all_contrasts$Sex_Female_vs_Male$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
      arrange(padj) %>% pull(taxon) 
-result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
-
+gtt <- result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
+```
+```{r deseq5b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE, echo=FALSE}
+gt::gtsave(gtt, "man/figures/gt_table2.png")
+knitr::include_graphics("man/figures/gt_table2.png")
 ```
 
 See results table for the contrast of Age:
 
-```{r deseq4, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
+```{r deseq4, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE}
 
 taxa2plot <- result$all_contrasts$Age$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
      arrange(padj) %>% pull(taxon) 
-result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa with Age")
+gtt <- result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa with Age")
 
+```
+
+```{r deseq6b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE, echo=FALSE}
+gt::gtsave(gtt, "man/figures/gt_table3.png")
+knitr::include_graphics("man/figures/gt_table3.png")
 ```
 
 
 Make heatmap:
 
-```{r deseq5, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
+```{r deseq5, fig.width=12, fig.height=5, warning=FALSE, error=FALSE}
 
 taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filter(!is.na(padj ) & padj < 0.01) %>% 
      arrange(padj) %>% pull(taxon) 
@@ -286,7 +297,7 @@ makeHeatmap(result$all_contrasts$Condition_Depression_vs_Control$resdf,
 
 Also, different contrasts can be compared:
 
-```{r deseq6, fig.width=12, fig.height=5, warning=FALSE, error=FALSE}
+```{r deseq6, fig.width=12, fig.height=4, warning=FALSE, error=FALSE}
 
 mainContrast <- result$all_contrasts$Condition_Depression_vs_Control
 contrastlist2 <- list(
@@ -314,7 +325,7 @@ restoreopt <- restauraropt_mk(opt)
 
 Instead of using several covariates in an additive way, one may specify more complex formulas with interactions:
 
-```{r deseq7, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide'}
+```{r deseq7, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE}
 
 phobj_filtered <- subset_samples(
   phobj_filtonly,
@@ -327,13 +338,17 @@ result_int <- getDeseqResults(phobj_filtered, opt = opt, name = "CBSA_interactio
                           variables=NULL, formula="~ Condition + BMI + Sex * Age")
 
 
-
-
 taxa2plot <- result_int$all_contrasts$Condition_Depression_vs_Control$resdf %>% 
   filter(!is.na(padj ) & padj < 0.01) %>% 
   arrange(padj) %>% pull(taxon) 
-result_int$all_contrasts$Condition_Depression_vs_Control$res %>% 
+
+gtt <- result_int$all_contrasts$Condition_Depression_vs_Control$res %>% 
   getGTTableFromRes(taxa2plot, "DAA between Depr and C controlling for  BMI + Sex * Age")
+```
+
+```{r deseq7b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE, echo=FALSE}
+gt::gtsave(gtt, "man/figures/gt_table4.png")
+knitr::include_graphics("man/figures/gt_table4.png")
 
 restoreopt <- restauraropt_mk(opt)
 ```
