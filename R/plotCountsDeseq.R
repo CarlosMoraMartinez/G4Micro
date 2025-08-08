@@ -1,21 +1,43 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param dds PARAM_DESCRIPTION
-#' @param raw_counts PARAM_DESCRIPTION
-#' @param norm_counts PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Plot Raw and Normalized Counts from DESeq2 Data
+#' @description Generates plots summarizing raw and normalized counts for DESeq2
+#' experiment samples, including total counts per condition and the distribution
+#' of normalized counts across samples.
+#' @param dds A DESeqDataSet object containing the DESeq2 experiment data, including sample metadata.
+#' @param raw_counts A matrix or data frame of raw counts with genes as rows and samples as columns.
+#' @param norm_counts A matrix or data frame of normalized counts matching \code{raw_counts} dimensions.
+#' @return NULL (plots are drawn to the current graphics device).
+#' @details
+#' This function creates three plots arranged in a single row:
+#' \itemize{
+#'   \item Total raw counts per sample by condition with sample labels.
+#'   \item Total normalized counts per sample by condition with sample labels.
+#'   \item Density distribution of normalized counts per sample on a log2 scale,
+#'         truncated at the 95th percentile for visualization clarity.
+#' }
+#' The function uses the \code{Condition} column from \code{colData(dds)} to group samples.
+#' It requires \code{ggplot2}, \code{ggrepel}, \code{dplyr}, and \code{gridExtra} packages.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   dds <- DESeq2::makeExampleDESeqDataSet()
+#'   raw_counts <- counts(dds)
+#'   norm_counts <- DESeq2::counts(dds, normalized=TRUE)
+#'   plotCountsDeseq(dds, raw_counts, norm_counts)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}
+#' }
+#' @seealso
+#' \code{\link[DESeq2]{plotCounts}},
+#' \code{\link[ggplot2]{ggplot}},
+#' \code{\link[dplyr]{mutate}},
+#' \code{\link[ggrepel]{geom_text_repel}},
+#' \code{\link[gridExtra]{grid.arrange}}
 #' @rdname plotCountsDeseq
-#' @export 
-#' @importFrom dplyr mutate
+#' @export
+#' @import DESeq2
+#' @importFrom dplyr mutate filter
+#' @importFrom tidyr gather
+#' @importFrom ggplot2 ggplot aes geom_point geom_text_repel geom_density scale_x_continuous guides theme_bw ggtitle
+#' @importFrom gridExtra grid.arrange
 plotCountsDeseq <- function(dds, raw_counts, norm_counts){
   d <- plotCounts(dds, gene=which.min(res$padj), intgroup="Condition", normalized = T,
                   returnData=TRUE)

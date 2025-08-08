@@ -1,21 +1,66 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param divtab PARAM_DESCRIPTION
-#' @param vars PARAM_DESCRIPTION
-#' @param groupvars PARAM_DESCRIPTION
-#' @param pairvar PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: 'alpha_diversity'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Test Differences in Alpha Diversity Indices with Paired Samples
+#' @description
+#' Tests for differences in alpha diversity indices (or other continuous variables) across
+#' grouping variables while accounting for paired samples defined by a pairing variable.
+#' Performs repeated measures ANOVA, paired t-tests, and paired Wilcoxon tests where applicable.
+#' Also conducts diagnostic tests including Shapiro-Wilk normality, Bartlett’s and Levene’s
+#' tests for homogeneity of variance. Results are saved as a TSV file and returned as a data frame.
+#'
+#' @param divtab A data frame containing alpha diversity indices (or continuous numeric variables) as columns, along with grouping and pairing variables.
+#' @param vars A character vector specifying the column names in \code{divtab} that contain the continuous variables to test (e.g., diversity indices).
+#' @param groupvars A character vector specifying the column names in \code{divtab} that contain the grouping variables (factors) across which differences will be tested.
+#' @param pairvar A single character string specifying the column name in \code{divtab} that identifies paired samples (e.g., subject ID).
+#' @param outdir A character string specifying the path to the output directory where the results TSV file will be saved.
+#' @param name A character string prefix for the output filename (default: \code{"alpha_diversity"}).
+#'
+#' @return A data frame containing the results of the statistical tests for each combination
+#' of variable and grouping variable. Includes repeated measures ANOVA F-statistics and p-values,
+#' paired t-test and paired Wilcoxon p-values (when applicable), Shapiro-Wilk normality test,
+#' Bartlett’s and Levene’s tests for homogeneity of variance. Also includes Benjamini-Hochberg
+#' corrected p-values for t-tests and Wilcoxon tests.
+#'
+#' @details
+#' For each continuous variable in \code{vars} and each grouping variable in \code{groupvars}, the function:
+#'
+#' 1. Orders the data frame by the pairing variable to ensure paired samples align.
+#' 2. Performs repeated measures ANOVA using the formula \code{variable ~ group + Error(pair/group)}.
+#' 3. If the grouping variable has exactly two levels:
+#'    - Performs a paired Student's t-test.
+#'    - Performs a paired Wilcoxon signed-rank test.
+#' 4. Applies diagnostic tests:
+#'    - Shapiro-Wilk test for normality of the continuous variable.
+#'    - Bartlett’s test for homogeneity of variances.
+#'    - Levene’s test for homogeneity of variances.
+#' 5. If the grouping variable has more than two levels:
+#'    - Performs all pairwise comparisons between groups using t-tests and Wilcoxon tests (via the helper function \code{getTestsForAllCombinations}).
+#'
+#' The results are saved as a TSV file named \code{<name>_QualitVarsTestsPaired.tsv} in the specified output directory, and also returned as a data frame.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   res <- testDiversityDifferences_paired(
+#'     divtab = my_diversity_data,
+#'     vars = c("Shannon", "Chao1"),
+#'     groupvars = c("Treatment"),
+#'     pairvar = "SubjectID",
+#'     outdir = "results/",
+#'     name = "paired_diversity_stats"
+#'   )
 #' }
+#' }
+#'
+#' @seealso
+#' \code{\link[stats]{aov}},
+#' \code{\link[stats]{t.test}},
+#' \code{\link[stats]{wilcox.test}},
+#' \code{\link[stats]{shapiro.test}},
+#' \code{\link[stats]{bartlett.test}},
+#' \code{\link[car]{leveneTest}},
+#' \code{\link[stats]{p.adjust}}
+#'
 #' @rdname testDiversityDifferences_paired
-#' @export 
+#' @export
 testDiversityDifferences_paired <- function(divtab, vars, groupvars, pairvar ,outdir, name="alpha_diversity"){
   library(car)
   divtab <- divtab[order(divtab[,pairvar]) , ]

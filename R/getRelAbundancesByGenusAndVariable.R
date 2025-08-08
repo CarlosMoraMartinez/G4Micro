@@ -13,7 +13,8 @@
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
+#'  df <- getRelAbundancesByGenusAndVariable(phyloseq_obj, variable="Condition")
+#'   print(df)
 #'  }
 #' }
 #' @seealso

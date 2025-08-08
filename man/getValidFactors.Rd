@@ -2,7 +2,7 @@
 % Please edit documentation in R/getValidFactors.R
 \name{getValidFactors}
 \alias{getValidFactors}
-\title{FUNCTION_TITLE}
+\title{Identify Valid Factor Variables in a Data Frame}
 \usage{
 getValidFactors(
   df,
@@ -13,32 +13,57 @@ getValidFactors(
 )
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A \code{data.frame} containing the variables to evaluate.}
 
-\item{max_nas}{PARAM_DESCRIPTION, Default: 0.2}
+\item{max_nas}{Maximum allowed proportion of missing values (including "-" entries)
+for a variable to be considered valid. Default is \code{0.2} (20\\%).}
 
-\item{min_pct}{PARAM_DESCRIPTION, Default: 0.1}
+\item{min_pct}{Minimum proportion of the least frequent class for a factor to be considered balanced.
+Default is \code{0.1} (10\\%).}
 
-\item{max_classes}{PARAM_DESCRIPTION, Default: 5}
+\item{max_classes}{Maximum number of unique values for a numeric variable to be considered categorical.
+Default is \code{5}.}
 
-\item{exclude}{PARAM_DESCRIPTION, Default: c()}
+\item{exclude}{A character vector of variable names to exclude from consideration. Default is \code{c()}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{data.frame} with the following columns:
+\itemize{
+\item \code{var} – variable name
+\item \code{is_factor} – whether the variable is a factor, character, or categorical numeric
+\item \code{meet_nas} – whether the variable meets the \code{max_nas} criterion
+\item \code{is_balanced} – whether the variable meets the \code{min_pct} balance criterion
+\item \code{not_excluded} – whether the variable is not in the \code{exclude} list
+\item \code{is_valid} – overall validity based on all above criteria
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Scans a data frame and determines which variables qualify as valid factors based on type,
+missing values, class balance, and optional exclusion criteria.
 }
 \details{
-DETAILS
+A variable is considered a valid factor if:
+\enumerate{
+\item It is a factor, a character variable, or a numeric variable with
+no more than \code{max_classes} unique values.
+\item The proportion of missing values (including "-") does not exceed \code{max_nas}.
+\item It has more than one class and the least frequent class occurs in at least \code{min_pct} of cases.
+\item It is not in the exclusion list.
+}
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+df <- data.frame(
+  group = rep(c("A", "B"), each = 5),
+  score = c(1, 2, 2, 1, 1, 3, 3, 2, 1, 2),
+  missing_var = c(NA, "-", NA, "-", "-", 1, 1, 1, 1, 1)
+)
+getValidFactors(df, max_nas = 0.3, min_pct = 0.2)
 }
+
 }
 \seealso{
-\code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{mutate}},
+\code{\link[base]{is.factor}},
+\code{\link[base]{table}}
 }

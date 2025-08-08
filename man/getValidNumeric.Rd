@@ -2,33 +2,53 @@
 % Please edit documentation in R/getValidNumeric.R
 \name{getValidNumeric}
 \alias{getValidNumeric}
-\title{FUNCTION_TITLE}
+\title{Identify Valid Numeric Variables in a Data Frame}
 \usage{
 getValidNumeric(df, max_nas = 0, max_classes = 4)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
+\item{df}{A \code{data.frame} containing the variables to evaluate.}
 
-\item{max_nas}{PARAM_DESCRIPTION, Default: 0}
+\item{max_nas}{Maximum allowed proportion of missing values (including "-" entries)
+for a variable to be considered valid. Default is \code{0} (no missing values allowed).}
 
-\item{max_classes}{PARAM_DESCRIPTION, Default: 4}
+\item{max_classes}{Minimum number of unique values a numeric variable must have
+to be considered valid. Default is \code{4}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{data.frame} with the following columns:
+\itemize{
+\item \code{var} – variable name
+\item \code{is_number} – whether the variable is numeric and has at least \code{max_classes} unique values
+\item \code{meet_nas} – whether the variable meets the \code{max_nas} criterion
+\item \code{is_valid} – overall validity based on both criteria
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Scans a data frame and determines which variables qualify as valid numeric variables
+based on type, number of unique values, and missing value thresholds.
 }
 \details{
-DETAILS
+A variable is considered a valid numeric if:
+\enumerate{
+\item It is of numeric type.
+\item It contains at least \code{max_classes} unique values.
+\item The proportion of missing values (including "-") does not exceed \code{max_nas}.
+}
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+df <- data.frame(
+  age = c(25, 30, 35, 40, NA),
+  score = c(1, 2, 2, 1, 1),
+  text = c("A", "B", "C", "A", "B")
+)
+getValidNumeric(df, max_nas = 0.2, max_classes = 3)
 }
+
 }
 \seealso{
-\code{\link[dplyr]{mutate}}
+\code{\link[dplyr]{mutate}},
+\code{\link[base]{is.numeric}},
+\code{\link[base]{unique}}
 }

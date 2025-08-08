@@ -2,35 +2,65 @@
 % Please edit documentation in R/getTestsForAllCombinations.R
 \name{getTestsForAllCombinations}
 \alias{getTestsForAllCombinations}
-\title{FUNCTION_TITLE}
+\title{Perform Multiple Statistical Tests for All Pairwise Group Comparisons}
 \usage{
 getTestsForAllCombinations(var, group, sep = "-", paired = F)
 }
 \arguments{
-\item{var}{PARAM_DESCRIPTION}
+\item{var}{A numeric vector containing the values to be tested.}
 
-\item{group}{PARAM_DESCRIPTION}
+\item{group}{A factor or character vector indicating group membership for each value in \code{var}.}
 
-\item{sep}{PARAM_DESCRIPTION, Default: '-'}
+\item{sep}{Character string used to separate group names in the \code{groups_compared} column.
+Default: \code{"-"}.}
 
-\item{paired}{PARAM_DESCRIPTION, Default: F}
+\item{paired}{Logical. Should paired tests be performed? Default: \code{FALSE}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{data.frame} where each row corresponds to a unique pairwise group comparison and contains:
+\itemize{
+\item \code{groups_compared} — The two groups being compared, separated by \code{sep}
+\item \code{t_pval} — p-value from a two-sample t-test (paired or unpaired)
+\item \code{wilcox_pval} — p-value from a Wilcoxon rank-sum (Mann–Whitney) test
+\item \code{shapiro_test} — p-value from a Shapiro–Wilk normality test applied to the pooled data
+\item \code{bartlett_test} — p-value from Bartlett's test for homogeneity of variances
+\item \code{levene_test} — p-value from Levene's test for equality of variances
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Given a numeric variable and a grouping factor, this function performs a series of statistical tests
+(t-test, Wilcoxon rank-sum test, Shapiro-Wilk normality test, Bartlett's variance test, and Levene's test)
+for all unique pairwise group combinations.
 }
 \details{
-DETAILS
+The function:
+\enumerate{
+\item Identifies all unique pairs of groups in \code{group} (excluding \code{NA})
+\item Subsets \code{var} for each group
+\item Runs the selected tests
+\item Combines results into a single table
+}
+
+Bartlett's test assumes normality and is sensitive to deviations from it.
+Levene's test is more robust to non-normal data.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  set.seed(123)
+  values <- rnorm(12)
+  groups <- rep(c("A", "B", "C"), each = 4)
+  results <- getTestsForAllCombinations(values, groups)
+  print(results)
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{arrange}}
+\code{\link[dplyr]{arrange}},
+\code{\link[stats]{t.test}},
+\code{\link[stats]{wilcox.test}},
+\code{\link[stats]{shapiro.test}},
+\code{\link[stats]{bartlett.test}},
+\code{\link[car]{leveneTest}}
 }

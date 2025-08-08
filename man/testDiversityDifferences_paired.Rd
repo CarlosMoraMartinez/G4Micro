@@ -2,7 +2,7 @@
 % Please edit documentation in R/testDiversityDifferences_paired.R
 \name{testDiversityDifferences_paired}
 \alias{testDiversityDifferences_paired}
-\title{FUNCTION_TITLE}
+\title{Test Differences in Alpha Diversity Indices with Paired Samples}
 \usage{
 testDiversityDifferences_paired(
   divtab,
@@ -14,31 +14,77 @@ testDiversityDifferences_paired(
 )
 }
 \arguments{
-\item{divtab}{PARAM_DESCRIPTION}
+\item{divtab}{A data frame containing alpha diversity indices (or continuous numeric variables) as columns, along with grouping and pairing variables.}
 
-\item{vars}{PARAM_DESCRIPTION}
+\item{vars}{A character vector specifying the column names in \code{divtab} that contain the continuous variables to test (e.g., diversity indices).}
 
-\item{groupvars}{PARAM_DESCRIPTION}
+\item{groupvars}{A character vector specifying the column names in \code{divtab} that contain the grouping variables (factors) across which differences will be tested.}
 
-\item{pairvar}{PARAM_DESCRIPTION}
+\item{pairvar}{A single character string specifying the column name in \code{divtab} that identifies paired samples (e.g., subject ID).}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{A character string specifying the path to the output directory where the results TSV file will be saved.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'alpha_diversity'}
+\item{name}{A character string prefix for the output filename (default: \code{"alpha_diversity"}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame containing the results of the statistical tests for each combination
+of variable and grouping variable. Includes repeated measures ANOVA F-statistics and p-values,
+paired t-test and paired Wilcoxon p-values (when applicable), Shapiro-Wilk normality test,
+Bartlett’s and Levene’s tests for homogeneity of variance. Also includes Benjamini-Hochberg
+corrected p-values for t-tests and Wilcoxon tests.
 }
 \description{
-FUNCTION_DESCRIPTION
+Tests for differences in alpha diversity indices (or other continuous variables) across
+grouping variables while accounting for paired samples defined by a pairing variable.
+Performs repeated measures ANOVA, paired t-tests, and paired Wilcoxon tests where applicable.
+Also conducts diagnostic tests including Shapiro-Wilk normality, Bartlett’s and Levene’s
+tests for homogeneity of variance. Results are saved as a TSV file and returned as a data frame.
 }
 \details{
-DETAILS
+For each continuous variable in \code{vars} and each grouping variable in \code{groupvars}, the function:
+\enumerate{
+\item Orders the data frame by the pairing variable to ensure paired samples align.
+\item Performs repeated measures ANOVA using the formula \code{variable ~ group + Error(pair/group)}.
+\item If the grouping variable has exactly two levels:
+\itemize{
+\item Performs a paired Student's t-test.
+\item Performs a paired Wilcoxon signed-rank test.
+}
+\item Applies diagnostic tests:
+\itemize{
+\item Shapiro-Wilk test for normality of the continuous variable.
+\item Bartlett’s test for homogeneity of variances.
+\item Levene’s test for homogeneity of variances.
+}
+\item If the grouping variable has more than two levels:
+\itemize{
+\item Performs all pairwise comparisons between groups using t-tests and Wilcoxon tests (via the helper function \code{getTestsForAllCombinations}).
+}
+}
+
+The results are saved as a TSV file named \code{<name>_QualitVarsTestsPaired.tsv} in the specified output directory, and also returned as a data frame.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  res <- testDiversityDifferences_paired(
+    divtab = my_diversity_data,
+    vars = c("Shannon", "Chao1"),
+    groupvars = c("Treatment"),
+    pairvar = "SubjectID",
+    outdir = "results/",
+    name = "paired_diversity_stats"
+  )
 }
+}
+
+}
+\seealso{
+\code{\link[stats]{aov}},
+\code{\link[stats]{t.test}},
+\code{\link[stats]{wilcox.test}},
+\code{\link[stats]{shapiro.test}},
+\code{\link[stats]{bartlett.test}},
+\code{\link[car]{leveneTest}},
+\code{\link[stats]{p.adjust}}
 }

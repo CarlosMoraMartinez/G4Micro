@@ -2,28 +2,38 @@
 % Please edit documentation in R/updatePsWithLogs.R
 \name{updatePsWithLogs}
 \alias{updatePsWithLogs}
-\title{FUNCTION_TITLE}
+\title{Add Log-Transformed Metadata Variables to a Phyloseq Object}
 \usage{
 updatePsWithLogs(phobj, vars = c("nreads"))
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A \code{\link[phyloseq]{phyloseq}} object containing
+sample metadata.}
 
-\item{vars}{PARAM_DESCRIPTION, Default: c("nreads")}
+\item{vars}{Character vector of metadata variable names to log-transform.
+Default is \code{c("nreads")}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A \code{\link[phyloseq]{phyloseq}} object with additional
+log-transformed variables added to its \code{\link[phyloseq]{sample_data}}.
 }
 \description{
-FUNCTION_DESCRIPTION
+Adds log-transformed versions of specified numeric metadata variables
+in a \code{\link[phyloseq]{phyloseq}} object. Each transformed variable is
+named by appending \code{"_log"} to the original variable name and is
+computed as \eqn{\log(x + 1)} to handle zero values safely.
 }
 \details{
-DETAILS
+This transformation is commonly used to stabilize variance and
+normalize skewed distributions, especially for read counts and other
+strictly non-negative metadata variables. The addition of 1 before
+taking the logarithm prevents issues with zero values.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  # Add log-transformed read counts to a phyloseq object
+  ps <- updatePsWithLogs(phobj, vars = c("nreads", "total_abundance"))
+}
 }
 }

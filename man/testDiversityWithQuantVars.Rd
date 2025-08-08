@@ -2,7 +2,7 @@
 % Please edit documentation in R/testDiversityWithQuantVars.R
 \name{testDiversityWithQuantVars}
 \alias{testDiversityWithQuantVars}
-\title{FUNCTION_TITLE}
+\title{Linear Regression of Diversity Variables Against Quantitative Predictors}
 \usage{
 testDiversityWithQuantVars(
   divtab,
@@ -13,33 +13,51 @@ testDiversityWithQuantVars(
 )
 }
 \arguments{
-\item{divtab}{PARAM_DESCRIPTION}
+\item{divtab}{A data frame containing numeric response variables and quantitative predictor variables.}
 
-\item{vars}{PARAM_DESCRIPTION}
+\item{vars}{A character vector specifying the names of the response variables (e.g., diversity indices) to regress.}
 
-\item{qvars}{PARAM_DESCRIPTION}
+\item{qvars}{A character vector specifying the names of quantitative predictor variables.}
 
-\item{outdir}{PARAM_DESCRIPTION}
+\item{outdir}{A character string specifying the directory path to save the output results file.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'AlphaDiv_quant_vars_regressions'}
+\item{name}{A character string prefix for the output filename (default: \code{"AlphaDiv_quant_vars_regressions"}).}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame summarizing regression results for each combination of response variable and predictor.
+Includes estimates for intercept and slope, their standard errors, and overall model statistics
+(e.g., R-squared, F-statistic, p-value, AIC).
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs linear regression analyses of alpha diversity (or other numeric response variables)
+against one or more quantitative predictor variables. Both response and predictor variables
+are scaled prior to fitting. Summarizes regression statistics including intercepts, slopes,
+standard errors, and overall model fit metrics (R-squared, p-values, AIC, etc.).
+Saves results as a TSV file and returns a summary data frame.
 }
 \details{
-DETAILS
+The function scales both response and predictor variables before fitting linear models to
+ensure comparability of coefficients. For each pair of response and predictor, a linear
+model is fit, and tidy model statistics are extracted using the \code{broom} package.
+
+The output file will be saved as \code{<name>.tsv} in the specified \code{outdir}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  results <- testDiversityWithQuantVars(
+    divtab = diversity_data,
+    vars = c("Shannon", "Simpson"),
+    qvars = c("Age", "BMI"),
+    outdir = "results"
+  )
 }
+}
+
 }
 \seealso{
-\code{\link[dplyr]{mutate_all}}, \code{\link[dplyr]{mutate}}
-\code{\link[broom]{reexports}}
+\code{\link[dplyr]{mutate_at}},
+\code{\link[dplyr]{mutate}},
+\code{\link[broom]{glance}},
+\code{\link[stats]{lm}}
 }

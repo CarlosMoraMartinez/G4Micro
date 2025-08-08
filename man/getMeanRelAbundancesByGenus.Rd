@@ -2,27 +2,33 @@
 % Please edit documentation in R/getMeanRelAbundancesByGenus.R
 \name{getMeanRelAbundancesByGenus}
 \alias{getMeanRelAbundancesByGenus}
-\title{FUNCTION_TITLE}
+\title{Calculate Mean Prevalence of ASVs by Genus}
 \usage{
 getMeanRelAbundancesByGenus(phobj)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with columns:
+\itemize{
+\item \code{Genus}: Taxonomic genus name.
+\item \code{prevalence}: Mean prevalence of ASVs within each genus (number of samples where ASV is present).
+\item \code{sum_prevalence}: Total prevalence summed across all ASVs in each genus.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes the mean and total prevalence of Amplicon Sequence Variants (ASVs) grouped by Genus from a phyloseq object.
 }
 \details{
-DETAILS
+This function first obtains the prevalence data per ASV via \code{getRelAbundanceTab}. It also calculates relative abundances internally but does not use them in the summary. The main output summarizes mean and total prevalence by genus using \code{plyr::ddply}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  df <- getMeanRelAbundancesByGenus(phyloseq_obj)
+  print(df)
+}
 }
 }
 \seealso{

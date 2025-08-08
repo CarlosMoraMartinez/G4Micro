@@ -1,40 +1,53 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df3 PARAM_DESCRIPTION
-#' @param corrdf_annot PARAM_DESCRIPTION
-#' @param vars2cor PARAM_DESCRIPTION
-#' @param groupvar PARAM_DESCRIPTION, Default: 'Psoriasis'
-#' @param group_levels PARAM_DESCRIPTION, Default: c("no", "yes")
-#' @param top_n PARAM_DESCRIPTION, Default: 10
-#' @param groupnames PARAM_DESCRIPTION, Default: c("Control", "Psoriasis")
-#' @param ylabel PARAM_DESCRIPTION, Default: 'log(pg/mL)'
-#' @param outdir PARAM_DESCRIPTION, Default: ''
-#' @param name PARAM_DESCRIPTION, Default: 'regr.pdf'
-#' @param w PARAM_DESCRIPTION, Default: 7
-#' @param h PARAM_DESCRIPTION, Default: 14
-#' @param opt PARAM_DESCRIPTION, Default: list()
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Plot Regressions of ASV Abundances vs Variables
+#' @description Generates regression plots between CLR-transformed ASV abundances and selected variables, stratified by groups.
+#'
+#' For each variable in `vars2cor`, the function selects the top `top_n` ASVs based on combined Spearman correlations
+#' from `corrdf_annot`. It then plots regression lines and statistics separately for each group defined in `groupvar`.
+#'
+#' @param df3 A data.frame containing the ASV abundance data and metadata variables.
+#' @param corrdf_annot A data.frame with correlation annotations including columns `Genus`, `var1`, `var2`, and group-specific Spearman correlations (`PSO_spearman_cor`, `CTRL_spearman_cor`).
+#' @param vars2cor Character vector of variable names to correlate against ASVs.
+#' @param groupvar Character string naming the grouping variable in `df3`. Default is `"Psoriasis"`.
+#' @param group_levels Character vector defining the factor levels of `groupvar`. Default is `c("no", "yes")`.
+#' @param top_n Integer specifying the number of top correlated ASVs to plot per variable. Default is `10`.
+#' @param groupnames Character vector of length two for naming the groups in plots. Default is `c("Control", "Psoriasis")`.
+#' @param ylabel Character string for the y-axis label in plots. Default is `"log(pg/mL)"`.
+#' @param outdir Directory path where to save the output plots. Default is current directory `""`.
+#' @param name File name for the combined plot output. Default is `"regr.pdf"`.
+#' @param w Numeric width of the output plot in inches. Default is `7`.
+#' @param h Numeric height of the output plot in inches. Default is `14`.
+#' @param opt List of additional options passed to the plot saving function. Default is empty list `list()`.
+#'
+#' @return A named list of ggplot objects, one per variable in `vars2cor`.
+#'
+#' @details
+#' The function transforms the data to long format for plotting, matches ASVs to genus-level annotations,
+#' selects top correlated ASVs per variable, and generates separate regression plots per group with
+#' linear model fits and polynomial equation statistics.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Assuming df3, corrdf_annot, and vars2cor are pre-loaded:
+#'   plots <- plotRegressionsASV_vs_vars2(df3, corrdf_annot, vars2cor = c("IL6", "TNFa"))
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{desc}}
-#'  \code{\link[cowplot]{plot_grid}}
+#' }
+#'
+#' @seealso
+#' \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{desc}}, \code{\link[cowplot]{plot_grid}}
+#'
 #' @rdname plotRegressionsASV_vs_vars2
-#' @export 
+#' @export
 #' @importFrom dplyr mutate desc
 #' @importFrom cowplot plot_grid
+#' @importFrom ggpmisc stat_poly_eq
+#' @importFrom ggpubr theme_pubr
 plotRegressionsASV_vs_vars2<- function(df3, corrdf_annot, vars2cor, groupvar="Psoriasis",
                                        group_levels = c("no", "yes"),
                                        top_n=10,
                                        groupnames = c("Control", "Psoriasis"),
                                        ylabel = "log(pg/mL)",
                                        outdir = "", name = "regr.pdf", w=7, h=14, opt=list()){
-  library(ggpmisc)
   df4 <- df3 %>% gather("ASV", "Abundance", matches("^ASV"))
   df4[, groupvar] <- factor(df4[, groupvar], levels=group_levels)
 

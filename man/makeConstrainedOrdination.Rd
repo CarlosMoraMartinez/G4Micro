@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeConstrainedOrdination.R
 \name{makeConstrainedOrdination}
 \alias{makeConstrainedOrdination}
-\title{FUNCTION_TITLE}
+\title{@title Make a Constrained Ordination Plot (CAP) from Phyloseq Object}
 \usage{
 makeConstrainedOrdination(
   phobj,
@@ -12,31 +12,44 @@ makeConstrainedOrdination(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data with sample metadata.}
 
-\item{variables}{PARAM_DESCRIPTION, Default: c("Condition")}
+\item{variables}{Character vector of metadata variable names to constrain the ordination by.
+Default is \code{c("Condition")}.}
 
-\item{dist_type}{PARAM_DESCRIPTION, Default: 'bray'}
+\item{dist_type}{Character string specifying the distance metric to use for sample dissimilarity.
+Default is \code{"bray"}.}
 
-\item{color_by}{PARAM_DESCRIPTION, Default: ''}
+\item{color_by}{Character string specifying the metadata variable to use for coloring the points
+in the ordination plot. If empty, defaults to the first variable in \code{variables}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot2 object showing the constrained ordination plot with samples colored by \code{color_by},
+and environmental vectors (arrows) for each constraining variable.
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs a constrained ordination (Canonical Analysis of Principal coordinates - CAP)
+on a phyloseq object using specified metadata variables to constrain the ordination.
+It plots the ordination with environmental vectors (arrows) representing constraining variables.
 }
 \details{
-DETAILS
+This function removes samples with missing values in any of the constraining variables,
+calculates a distance matrix using the specified distance metric, performs CAP ordination,
+and visualizes the results including arrows for environmental variables.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  library(phyloseq)
+  # Assuming ps is a phyloseq object with "Condition" metadata
+  makeConstrainedOrdination(ps, variables = c("Condition", "Timepoint"), dist_type = "bray", color_by = "Condition")
 }
+}
+
 }
 \seealso{
 \code{\link[phyloseq]{distance}}
+\code{\link[phyloseq]{ordinate}}
+\code{\link[phyloseq]{plot_ordination}}
 \code{\link[vegan]{scores}}
 }

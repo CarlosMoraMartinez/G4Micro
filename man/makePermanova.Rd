@@ -2,7 +2,7 @@
 % Please edit documentation in R/makePermanova.R
 \name{makePermanova}
 \alias{makePermanova}
-\title{FUNCTION_TITLE}
+\title{Run PERMANOVA on All Metadata Variables in a Phyloseq Object}
 \usage{
 makePermanova(
   phobj,
@@ -14,43 +14,78 @@ makePermanova(
 )
 }
 \arguments{
-\item{phobj}{A \code{phyloseq} object containing OTU/ASV table and sample metadata.}
+\item{phobj}{A \code{\link[phyloseq]{phyloseq}} object containing the OTU/ASV
+table and sample metadata.}
 
-\item{dist_method}{Dissimilarity method to use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to \code{\link[phyloseq]{distance}}. Default: 'bray'}
+\item{dist_method}{Character string specifying the dissimilarity index to
+use (e.g., \code{"bray"}, \code{"jaccard"}). Passed to
+\code{\link[phyloseq]{distance}}. Default is \code{"bray"}.}
 
-\item{seed}{Random seed for reproducibility of adonis2. Default: 123.}
+\item{seed}{Integer random seed for reproducibility of PERMANOVA results.
+Default is \code{123}.}
 
-\item{exclude_vars}{Character vector of metadata variable names to exclude from PERMANOVA testing. Default: \code{c("sampleID")}.}
+\item{exclude_vars}{Character vector of metadata variable names to exclude
+from PERMANOVA testing. Default is \code{c("sampleID")}.}
 
-\item{outname}{File name to write results table to (.tsv). Default: \code{"permanovas.tsv"}.}
+\item{outname}{Character string with the file name to write results table
+to (TSV format). Default is \code{"permanovas.tsv"}.}
 
-\item{disp_permutations}{Number of permutations to use in PERMANOVA and dispersion tests. Default: \code{1000}.}
+\item{disp_permutations}{Integer number of permutations to use in
+PERMANOVA, dispersion tests, and ordination significance tests.
+Default is \code{1000}.}
 }
 \value{
-A \code{data.frame} with PERMANOVA results, optionally including dispersion, capscale test p-values and adjusted p-values (FDR).
+A \code{data.frame} with PERMANOVA results for each tested metadata
+variable, including:
+\itemize{
+\item \code{P} – raw PERMANOVA p-value
+\item \code{padj} – adjusted p-value (BH FDR)
+\item Optional columns for dispersion and capscale ANOVA p-values and their adjustments
+}
 }
 \description{
-This function performs PERMANOVA, as implemented in the vegan::adonis2 function,
-for all the variables included in the metadata of a phyloseq object,
-except for those included in the 'exclude_vars' argument. Based on:
+Runs PERMANOVA (\code{\link[vegan]{adonis2}}) on all metadata variables in a
+\code{\link[phyloseq]{phyloseq}} object, excluding those specified in
+\code{exclude_vars}. For each variable, the function:
+\enumerate{
+\item Filters samples with non-missing values.
+\item Computes the selected distance matrix (e.g., Bray–Curtis, Jaccard).
+\item Performs PERMANOVA to assess group differences.
+\item Optionally tests for differences in multivariate dispersion
+(\code{\link[vegan]{betadisper}} and \code{\link[vegan]{permutest}}).
+\item Optionally tests the significance of constrained ordination
+(\code{\link[vegan]{capscale}} with \code{\link[vegan]{anova.cca}}).
+}
+Results are adjusted for multiple testing (FDR) and written to a TSV file.
 }
 \details{
-DETAILS
+This function is particularly useful for exploratory screening of
+associations between microbial community composition and metadata variables.
+It is based on the workflow described at:
+\url{https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova}
 }
 \examples{
 \dontrun{
-if(interactive()){
- makePermanova(phobj, dist_method = "bray",
-                 seed = 123,
-                 exclude_vars = c("sampleID", "patient_name"),
-                 outname = "my_output_name")
- }
+if (interactive()) {
+  makePermanova(
+    phobj,
+    dist_method = "bray",
+    seed = 123,
+    exclude_vars = c("sampleID", "patient_name"),
+    outname = "my_output_name.tsv"
+  )
 }
 }
-\references{
-From https://deneflab.github.io/MicrobeMiseq/demos/mothur_2_phyloseq.html#permanova
 }
 \seealso{
-\code{\link[phyloseq]{distance}}, \code{\link[phyloseq]{prune_samples}}
-\code{\link[dplyr]{arrange}}
+\code{\link[phyloseq]{distance}},
+\code{\link[phyloseq]{prune_samples}},
+\code{\link[phyloseq]{sample_data}},
+\code{\link[vegan]{adonis2}},
+\code{\link[vegan]{betadisper}},
+\code{\link[vegan]{permutest}},
+\code{\link[vegan]{capscale}},
+\code{\link[vegan]{anova.cca}},
+\code{\link[dplyr]{arrange}},
+\code{\link[readr]{write_tsv}}
 }

@@ -1,23 +1,48 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param divtab PARAM_DESCRIPTION
-#' @param vars PARAM_DESCRIPTION
-#' @param qvars PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: 'AlphaDiv_quant_vars_regressions'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Linear Regression of Diversity Variables Against Quantitative Predictors
+#' @description
+#' Performs linear regression analyses of alpha diversity (or other numeric response variables)
+#' against one or more quantitative predictor variables. Both response and predictor variables
+#' are scaled prior to fitting. Summarizes regression statistics including intercepts, slopes,
+#' standard errors, and overall model fit metrics (R-squared, p-values, AIC, etc.).
+#' Saves results as a TSV file and returns a summary data frame.
+#'
+#' @param divtab A data frame containing numeric response variables and quantitative predictor variables.
+#' @param vars A character vector specifying the names of the response variables (e.g., diversity indices) to regress.
+#' @param qvars A character vector specifying the names of quantitative predictor variables.
+#' @param outdir A character string specifying the directory path to save the output results file.
+#' @param name A character string prefix for the output filename (default: \code{"AlphaDiv_quant_vars_regressions"}).
+#'
+#' @return A data frame summarizing regression results for each combination of response variable and predictor.
+#' Includes estimates for intercept and slope, their standard errors, and overall model statistics
+#' (e.g., R-squared, F-statistic, p-value, AIC).
+#'
+#' @details
+#' The function scales both response and predictor variables before fitting linear models to
+#' ensure comparability of coefficients. For each pair of response and predictor, a linear
+#' model is fit, and tidy model statistics are extracted using the \code{broom} package.
+#'
+#' The output file will be saved as \code{<name>.tsv} in the specified \code{outdir}.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   results <- testDiversityWithQuantVars(
+#'     divtab = diversity_data,
+#'     vars = c("Shannon", "Simpson"),
+#'     qvars = c("Age", "BMI"),
+#'     outdir = "results"
+#'   )
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate_all}}, \code{\link[dplyr]{mutate}}
-#'  \code{\link[broom]{reexports}}
+#' }
+#'
+#' @seealso
+#' \code{\link[dplyr]{mutate_at}},
+#' \code{\link[dplyr]{mutate}},
+#' \code{\link[broom]{glance}},
+#' \code{\link[stats]{lm}}
+#'
 #' @rdname testDiversityWithQuantVars
-#' @export 
+#' @export
 #' @importFrom dplyr mutate_at mutate_all mutate
 #' @importFrom broom glance
 testDiversityWithQuantVars <- function(divtab, vars, qvars,

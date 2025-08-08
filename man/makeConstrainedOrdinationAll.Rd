@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeConstrainedOrdinationAll.R
 \name{makeConstrainedOrdinationAll}
 \alias{makeConstrainedOrdinationAll}
-\title{FUNCTION_TITLE}
+\title{Generate Multiple Constrained Ordination Plots}
 \usage{
 makeConstrainedOrdinationAll(
   phobj,
@@ -14,31 +14,41 @@ makeConstrainedOrdinationAll(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data and sample metadata.}
 
-\item{opt}{PARAM_DESCRIPTION}
+\item{opt}{List of options used by the \code{WriteManyPlots} function (e.g., graphical parameters).}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'CCA'}
+\item{name}{Character string for the base name used when saving plots. Default is \code{"CCA"}.}
 
-\item{outdir}{PARAM_DESCRIPTION, Default: 'CCA'}
+\item{outdir}{Directory path to save the output plots. Default is \code{"CCA"}.}
 
-\item{variableList}{PARAM_DESCRIPTION, Default: list(c("Condition"))}
+\item{variableList}{A list of character vectors. Each vector specifies one or more variables
+to include in the ordination formula. Default is \code{list(c("Condition"))}.}
 
-\item{dist_type}{PARAM_DESCRIPTION, Default: 'bray'}
+\item{dist_type}{Distance metric to use for ordination (passed to \code{phyloseq::distance}). Default is \code{"bray"}.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A named list of ggplot objects corresponding to each variable set ordination.
 }
 \description{
-FUNCTION_DESCRIPTION
+Performs constrained ordination on a phyloseq object for multiple sets of variables.
+It calls either \code{makeConstrainedOrdinationSingleVar} for single variables or
+\code{makeConstrainedOrdination} for multiple variables, generating ggplot objects for each.
+The plots are saved to disk using the provided output directory and naming options.
 }
 \details{
-DETAILS
+This function iterates over sets of variables provided in \code{variableList} and performs constrained ordination
+using the appropriate function depending on the number of variables in each set.
+It then writes all plots to files using the external \code{WriteManyPlots} function.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  # Assume physeq_obj is your phyloseq object and opt is your plotting options list
+  variable_sets <- list(c("Condition"), c("Treatment", "TimePoint"))
+  plots <- makeConstrainedOrdinationAll(physeq_obj, opt, name="MyOrdination", outdir="results", variableList=variable_sets)
+  print(plots[[1]])
 }
+}
+
 }

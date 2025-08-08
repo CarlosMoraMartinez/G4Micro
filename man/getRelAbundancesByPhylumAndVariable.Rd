@@ -38,7 +38,18 @@ This function:
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ library(phyloseq)
+  # Load example dataset
+  data(GlobalPatterns)
+
+  # Create a binary variable in sample_data
+  sample_data(GlobalPatterns)$MyCondition <- ifelse(sample_data(GlobalPatterns)$SampleType == "Feces", "Control", "Depression")
+
+  # Run the function summarizing by MyCondition
+  result <- getRelAbundancesByPhylumAndVariable(GlobalPatterns, variable="MyCondition", outname="")
+
+  # View the summary table
+  head(result)
  }
 }
 }

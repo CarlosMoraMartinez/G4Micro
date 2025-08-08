@@ -49,7 +49,20 @@ object for further manipulation.
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ data("GlobalPatterns") # example phyloseq dataset
+
+  # Plot top 10 genera faceted by SampleType, save as PDF
+  p <- plotRelativeAbnBars_Fantaxtic(
+    phobj = GlobalPatterns,
+    variable = "SampleType",
+    topn = 10,
+    tax_level = "Genus",
+    outname = "GlobalPatterns_GenusBarplot.pdf",
+    height = 28,
+    width = 10,
+    wespalette = "Darjeeling1"
+  )
+  print(p)
  }
 }
 }

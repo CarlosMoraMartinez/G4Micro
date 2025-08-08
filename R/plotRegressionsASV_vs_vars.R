@@ -1,30 +1,42 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df3 PARAM_DESCRIPTION
-#' @param asvs PARAM_DESCRIPTION
-#' @param vars2cor PARAM_DESCRIPTION
-#' @param groupvar PARAM_DESCRIPTION, Default: 'Psoriasis'
-#' @param group_levels PARAM_DESCRIPTION, Default: c("no", "yes")
-#' @param groupnames PARAM_DESCRIPTION, Default: c("Control", "Psoriasis")
-#' @param xlabel PARAM_DESCRIPTION, Default: 'log(pg/mL)'
-#' @param outdir PARAM_DESCRIPTION, Default: ''
-#' @param name PARAM_DESCRIPTION, Default: 'regr.pdf'
-#' @param w PARAM_DESCRIPTION, Default: 7
-#' @param h PARAM_DESCRIPTION, Default: 14
-#' @param opt PARAM_DESCRIPTION, Default: list()
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Plot Linear Regressions of ASVs vs Variables by Group
+#' @description
+#' Creates scatterplots with linear regression fits of ASVs against variables of interest,
+#' faceted by variable, and separated by group.
+#'
+#' @param df3 Data frame containing ASVs and variables.
+#' @param asvs Character vector of ASV column names to plot as response variables.
+#' @param vars2cor Character vector of variable column names to use as predictors.
+#' @param groupvar Name of the grouping variable in \code{df3}, default is "Psoriasis".
+#' @param group_levels Levels of the grouping variable, default is c("no", "yes").
+#' @param groupnames Names to use in plot titles for each group, default is c("Control", "Psoriasis").
+#' @param xlabel Label for the x-axis, default is "log(pg/mL)".
+#' @param outdir Output directory to save plots, default is "" (current directory).
+#' @param name Filename for the saved plot PDF, default is "regr.pdf".
+#' @param w Width of the output plot(s) in inches, default is 7.
+#' @param h Height of the output plot(s) in inches, default is 14.
+#' @param opt List of additional options to pass to the plotting/saving function.
+#' @return A named list of ggplot objects, one for each ASV.
+#' @details
+#' The function creates separate regression plots for each ASV against all variables in \code{vars2cor},
+#' faceted by variable, and plots them separately for the two groups defined in \code{groupvar}.
+#' The regression line includes equation, R², p-value, and sample size using \pkg{ggpmisc}.
+#' Plots for each group are combined side-by-side using \pkg{cowplot}.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   plotlist <- plotRegressionsASV_vs_vars(df, asvs = c("ASV1", "ASV2"), vars2cor = c("Var1", "Var2"))
 #' }
-#' @seealso 
-#'  \code{\link[cowplot]{plot_grid}}
+#' }
+#' @seealso
+#' \code{\link[cowplot]{plot_grid}}, \code{\link[ggpmisc]{stat_poly_eq}}
 #' @rdname plotRegressionsASV_vs_vars
-#' @export 
+#' @export
 #' @importFrom cowplot plot_grid
+#' @importFrom ggpmisc stat_poly_eq
+#' @importFrom tidyr gather
+#' @importFrom dplyr filter
+#' @importFrom ggpubr theme_pubr
 plotRegressionsASV_vs_vars<- function(df3, asvs, vars2cor, groupvar="Psoriasis",
                                       group_levels = c("no", "yes"),
                                       groupnames = c("Control", "Psoriasis"),

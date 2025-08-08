@@ -1,23 +1,25 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param variable PARAM_DESCRIPTION, Default: 'Condition'
-#' @param outname PARAM_DESCRIPTION, Default: 'prevalence_by_phylum.tsv'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Calculate Relative Abundance and Prevalence by Phylum and Condition
+#' @description Computes mean relative prevalence and abundance of taxa grouped by Phylum and a categorical variable (e.g., Condition). Outputs a summarized table optionally saved to a TSV file.
+#' @param phobj A phyloseq object containing microbiome data.
+#' @param variable A character string specifying the metadata variable to stratify by (default: "Condition").
+#' @param outname Output filename to save the summarized table. If empty string, no file is written (default: "prevalence_by_phylum.tsv").
+#' @return A data frame summarizing prevalence and abundance statistics by Phylum and the specified variable.
+#' @details
+#' The function melts the phyloseq object to long format and computes prevalence and mean abundance statistics per OTU and then aggregates by Phylum. It compares groups defined by the given variable, e.g., before/after conditions.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   df <- getRelAbundancesByPhylumAndVariable_beforeAfter(phyloseq_obj, variable="Condition")
+#'   print(df)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}
-#'  \code{\link[tidyr]{spread}}
+#' }
+#' @seealso
+#'  \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}, \code{\link[tidyr]{pivot_wider}}, \code{\link[phyloseq]{psmelt}}
 #' @rdname getRelAbundancesByPhylumAndVariable_beforeAfter
-#' @export 
-#' @importFrom dplyr summarise mutate
-#' @importFrom tidyr spread
+#' @export
+#' @importFrom dplyr summarise mutate group_by ungroup
+#' @importFrom tidyr pivot_wider unite
+#' @importFrom phyloseq psmelt
 getRelAbundancesByPhylumAndVariable_beforeAfter <- function(phobj, variable="Condition",
                                                             outname="prevalence_by_phylum.tsv"){
   #Mean prevalence of Phyla

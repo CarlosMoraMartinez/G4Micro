@@ -11,29 +11,33 @@ makeConstrainedOrdinationSingleVar(
 )
 }
 \arguments{
-\item{phobj}{phyloseq object}
+\item{phobj}{A phyloseq object containing microbiome data and sample metadata.}
 
-\item{variables}{Vector of variables to include in the ordination formula, Default: c("Condition")}
+\item{variables}{A character vector of variables to include in the ordination formula. Default is \code{c("Condition")}.}
 
-\item{dist_type}{Distance to use, Default: 'bray'}
+\item{dist_type}{Distance metric to use for ordination. Default is \code{"bray"}.}
 }
 \value{
-A ggplot object
+A \code{ggplot2} object representing the constrained ordination plot with environmental variables as arrows.
 }
 \description{
-Uses the phyloseq::ordinate method with the CAP method
+Performs a constrained ordination (CAP) on a phyloseq object using specified variables.
+Uses the \code{\link[phyloseq]{ordinate}} method with the CAP method.
 }
 \details{
-DETAILS
+The function removes samples with NA in the first variable specified, calculates the distance matrix,
+performs CAP ordination constrained by the variables, and plots the ordination with points colored by the first variable.
+Environmental variables are added as arrows with labels.
+Note: This function is redundant with \code{makeConstrainedOrdination}, but this one allows to plot CAP with only 1 variable, whereas the other one needs more than 1.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  # Example assuming `physeq` is a phyloseq object with metadata variable "Condition"
+  makeConstrainedOrdinationSingleVar(physeq, variables = c("Condition"))
+}
 }
 }
 \seealso{
-\code{\link[phyloseq]{distance}}
-\code{\link[vegan]{scores}}
+\code{\link[phyloseq]{distance}}, \code{\link[vegan]{scores}}, \code{\link[phyloseq]{ordinate}}
 }

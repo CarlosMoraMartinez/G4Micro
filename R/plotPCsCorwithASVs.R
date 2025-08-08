@@ -1,22 +1,37 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param tab PARAM_DESCRIPTION
-#' @param contrres PARAM_DESCRIPTION
-#' @param num_model PARAM_DESCRIPTION, Default: 1
-#' @param component PARAM_DESCRIPTION, Default: 'Comp.2'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Plot Correlations Between PCs and ASV Abundances
+#' @description Generates scatterplots showing the relationship between a selected PCA component and log-transformed CLR abundances of selected ASVs,
+#'   faceted by ASV and sample group, with regression lines and statistics.
+#'
+#' @param tab Data frame containing abundance data with columns including 'OTU', 'Abundance', 'Genus', and 'Psoriasis'.
+#' @param contrres Data frame containing contrasts/results with an element 'asvs_p05' that includes ASV identifiers separated by underscores.
+#' @param num_model Numeric index selecting which element of \code{contrres$asvs_p05} to use. Default is 1.
+#' @param component Character string naming the PCA component column in \code{tab} to correlate against. Default is "Comp.2".
+#'
+#' @return A ggplot2 object showing scatterplots of the selected PCA component vs. log-transformed CLR abundance of ASVs,
+#'   faceted by ASV and group, with linear regression lines and polynomial equation stats.
+#'
+#' @details
+#' The function extracts up to the first 10 ASVs from \code{contrres$asvs_p05[num_model]} and filters \code{tab} for these ASVs.
+#' Abundances are CLR-transformed (log ratio to geometric mean), and the genus name is extracted to create a combined label for faceting.
+#' The plot includes points, linear regression smoothing, and R² and p-value annotations.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Assuming 'tab' and 'contrres' are loaded:
+#'   p <- plotPCsCorwithASVs(tab, contrres)
+#'   print(p)
 #' }
-#' @seealso 
-#'  \code{\link[dplyr]{mutate}}
+#' }
+#'
+#' @seealso
+#' \code{\link[dplyr]{mutate}}, \code{\link[ggpmisc]{stat_poly_eq}}, \code{\link[ggplot2]{ggplot}}
+#'
 #' @rdname plotPCsCorwithASVs
-#' @export 
+#' @export
 #' @importFrom dplyr mutate
+#' @importFrom ggpmisc stat_poly_eq
+#' @importFrom ggpubr theme_pubr
 plotPCsCorwithASVs <- function(tab, contrres, num_model=1, component="Comp.2"){
   asvs <- strsplit(contrres$asvs_p05[num_model], "_")[[1]]
   if(length(asvs)>10) asvs <- asvs[1:10]

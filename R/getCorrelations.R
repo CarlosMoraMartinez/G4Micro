@@ -1,17 +1,39 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mat1 PARAM_DESCRIPTION
-#' @param mat2 PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Compute Pairwise Correlations Between Two Matrices
+#' @description
+#' Calculates Pearson and Spearman correlations, corresponding p-values,
+#' normality test p-values (Shapiro-Wilk), and linear model statistics
+#' for all pairs of columns between two matrices.
+#' Returns a detailed results data.frame and correlation matrices.
+#'
+#' @param mat1 A numeric matrix or data.frame. Each column is a variable.
+#' @param mat2 A numeric matrix or data.frame. Each column is a variable.
+#' @return A list containing:
+#'   \item{res}{Data frame with correlation statistics for each variable pair.}
+#'   \item{spcors}{Spearman correlation matrix (columns of mat1 vs columns of mat2).}
+#'   \item{pcors}{Pearson correlation matrix (columns of mat1 vs columns of mat2).}
+#'   \item{sp_pvals}{Matrix of Spearman correlation p-values.}
+#'   \item{pr_pmat}{Matrix of Pearson correlation p-values.}
+#'
+#' @details
+#' For each pair of variables (columns from mat1 and mat2), the function:
+#' - Computes Pearson and Spearman correlations and their p-values.
+#' - Tests normality of each variable with Shapiro-Wilk test.
+#' - Fits a linear model and extracts R-squared and slope p-value.
+#' - Adjusts p-values across all tests for multiple testing using Benjamini-Hochberg.
+#'
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   mat1 <- matrix(rnorm(100*3), ncol=3)
+#'   colnames(mat1) <- c("VarA1", "VarA2", "VarA3")
+#'   mat2 <- matrix(rnorm(100*2), ncol=2)
+#'   colnames(mat2) <- c("VarB1", "VarB2")
+#'   cor_results <- getCorrelations(mat1, mat2)
+#'   print(cor_results$res)
+#' }
 #' }
 #' @rdname getCorrelations
-#' @export 
+#' @export
 getCorrelations <- function(mat1, mat2){
   res <- data.frame()
   sp_pmat <-matrix(nrow=ncol(mat1), ncol=ncol(mat2))

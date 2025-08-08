@@ -2,7 +2,7 @@
 % Please edit documentation in R/testDiversityDifferences.R
 \name{testDiversityDifferences}
 \alias{testDiversityDifferences}
-\title{testDiversityDifferences}
+\title{Test Differences in Alpha Diversity Indices Across Groups}
 \usage{
 testDiversityDifferences(
   divtab,
@@ -13,61 +13,71 @@ testDiversityDifferences(
 )
 }
 \arguments{
-\item{divtab}{A data frame containing alpha diversity indices (or other numeric variables) as columns}
+\item{divtab}{A \code{data.frame} containing alpha diversity indices (or other numeric variables) as columns,
+and grouping variables as additional columns.}
 
-\item{vars}{A character vector of column names in \code{divtab} corresponding to the alpha diversity indices}
+\item{vars}{A character vector with the names of the numeric variables in \code{divtab} to be tested
+(e.g., \code{c("Shannon", "Chao1")}).}
 
-\item{groupvars}{A character vector of column names in \code{divtab} representing the categorical variables}
+\item{groupvars}{A character vector with the names of the categorical grouping variables in \code{divtab}.}
 
-\item{outdir}{ath to the output directory where the results table will be saved.}
+\item{outdir}{Path to the output directory where the results table will be saved.}
 
-\item{name}{Prefix for the output filename (TSV table), Default: 'alpha_diversity'}
+\item{name}{Prefix for the output filename (TSV table), Default: \code{"alpha_diversity"}.}
 }
 \value{
-A data frame containing the results of the statistical tests for each combination
-of variable and grouping variable. Includes ANOVA F-statistics and p-values, t-test and
-Wilcoxon p-values (when applicable), Shapiro-Wilk normality test, and Bartlett and Levene
-tests for homogeneity of variance. Also includes Benjamini-Hochberg corrected p-values
-for t-tests and Wilcoxon tests
+A \code{data.frame} with the results of the statistical tests for each numeric variable–grouping variable
+combination. Columns include:
+\itemize{
+\item \code{variable} – Name of the numeric variable tested.
+\item \code{groups} – Name of the grouping variable.
+\item \code{comparison} – "all" for overall tests, or pairwise group comparisons.
+\item \code{anova_F}, \code{anova_p} – One-way ANOVA F-statistic and p-value.
+\item \code{t_test}, \code{wilcox_test} – p-values for t-test and Wilcoxon rank-sum test (two groups only).
+\item \code{shapiro_normality_test} – p-value from Shapiro-Wilk normality test.
+\item \code{bartlett_test}, \code{levene_test} – p-values for homogeneity of variance tests.
+\item \code{t_corrected}, \code{wilcox_corrected} – Benjamini–Hochberg adjusted p-values.
+}
 }
 \description{
-Test Differences in Alpha Diversity Indices Across Grouping Variables
+Performs statistical tests to compare alpha diversity indices (or other numeric variables)
+across one or more grouping (categorical) variables.
 }
 \details{
-For each continuous variable in \code{vars} and each grouping variable in \code{groupvars},
-the function:
+For each numeric variable in \code{vars} and each categorical grouping variable in \code{groupvars}:
 \enumerate{
-\item Tests for overall differences using one-way ANOVA.
+\item Performs one-way ANOVA to test overall differences.
 \item If the grouping variable has exactly two levels:
 \itemize{
-\item Performs a Student's t-test and a Wilcoxon rank-sum test.
+\item Performs Student's t-test.
+\item Performs Wilcoxon rank-sum test.
 }
-\item Applies diagnostic tests:
+\item Checks assumptions:
 \itemize{
-\item Shapiro-Wilk test for normality.
-\item Bartlett’s and Levene’s tests for homogeneity of variances.
+\item Shapiro–Wilk test for normality.
+\item Bartlett’s and Levene’s tests for homogeneity of variance.
 }
 \item If the grouping variable has more than two levels:
 \itemize{
-\item Performs all pairwise comparisons between groups using t-tests and Wilcoxon tests
-via the helper function \code{getTestsForAllCombinations()}.
+\item Performs all pairwise t-tests and Wilcoxon tests using
+\code{\link{getTestsForAllCombinations}}.
 }
 }
-
-The output is saved as a TSV file and also returned as a data frame.
+The results are saved as a TSV file and also returned as a \code{data.frame}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- res <- testDiversityDifferences(
+  res <- testDiversityDifferences(
     divtab = alpha_div_table,
     vars = c("Shannon", "Chao1"),
     groupvars = c("Sex", "Treatment"),
     outdir = "results/",
     name = "diversity_stats"
   )
- }
 }
+}
+
 }
 \seealso{
 \code{\link[stats]{aov}},
@@ -76,5 +86,7 @@ if(interactive()){
 \code{\link[stats]{shapiro.test}},
 \code{\link[stats]{bartlett.test}},
 \code{\link[car]{leveneTest}},
-\code{\link[stats]{p.adjust}}
+\code{\link[stats]{p.adjust}},
+\code{\link[readr]{write_tsv}},
+\code{\link{getTestsForAllCombinations}}
 }

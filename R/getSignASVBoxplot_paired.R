@@ -1,24 +1,25 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param resdf_annot PARAM_DESCRIPTION
-#' @param raw_counts PARAM_DESCRIPTION
-#' @param outdir PARAM_DESCRIPTION, Default: './'
-#' @param name PARAM_DESCRIPTION, Default: 'sign_asvs_boxplot.pdf'
-#' @param mode PARAM_DESCRIPTION, Default: 'PROP'
-#' @param max_n PARAM_DESCRIPTION, Default: 10
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Generate Paired Boxplots for Significant ASVs
+#' @description Creates violin and boxplots for ASVs significantly associated with conditions in paired samples.
+#' @param resdf_annot Data frame containing ASV differential abundance results with taxonomic annotation and p-values.
+#' @param raw_counts Numeric matrix or data frame of raw counts for ASVs (rows = ASVs, columns = samples).
+#' @param outdir Output directory path where the plot PDF will be saved. Default is current directory ("./").
+#' @param name Output filename for the saved plot PDF. Default is "sign_asvs_boxplot.pdf".
+#' @param mode Character specifying data transformation mode: "PROP" to convert counts to proportions by sample, otherwise raw counts used. Default is "PROP".
+#' @param max_n Maximum number of significant ASVs (p-value < 0.05) to plot. Defaults to 10.
+#' @return A ggplot2 object representing the generated plot.
+#' @details The function filters ASVs by p-value significance, optionally converts counts to proportions, reshapes the data, and plots paired violin and boxplots for each ASV faceted by taxon. The paired nature is shown by lines connecting samples from the same patient across conditions.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   plot <- getSignASVBoxplot_paired(resdf_annot, raw_counts, outdir = "./plots", name = "asvs_plot.pdf")
+#'   print(plot)
 #' }
-#' @seealso 
+#' }
+#' @seealso
 #'  \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate}}
 #'  \code{\link[tidyr]{gather}}
 #' @rdname getSignASVBoxplot_paired
-#' @export 
+#' @export
 #' @importFrom dplyr arrange mutate
 #' @importFrom tidyr gather
 getSignASVBoxplot_paired<-function(resdf_annot, raw_counts, outdir="./", name="sign_asvs_boxplot.pdf", mode="PROP", max_n=10){

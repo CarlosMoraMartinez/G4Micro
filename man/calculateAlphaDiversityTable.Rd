@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculateAlphaDiversityTable.R
 \name{calculateAlphaDiversityTable}
 \alias{calculateAlphaDiversityTable}
-\title{calculateAlphaDiversityTable}
+\title{Calculate Alpha-Diversity Indices for Each Sample}
 \usage{
 calculateAlphaDiversityTable(
   phseq_obj,
@@ -12,28 +12,47 @@ calculateAlphaDiversityTable(
 )
 }
 \arguments{
-\item{phseq_obj}{Phyloseq object}
+\item{phseq_obj}{A \code{\link[phyloseq]{phyloseq}} object containing the microbiome data.}
 
-\item{outdir}{Output directory. The results table will be saved here.}
+\item{outdir}{Character string. Path to the output directory where the results table will be saved.}
 
-\item{indices}{List of diversity indices to calculate, Default: c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}
+\item{indices}{Character vector of diversity indices to calculate. Supported measures include:
+\code{"Observed"}, \code{"Chao1"}, \code{"ACE"}, \code{"Shannon"}, \code{"Simpson"}, \code{"InvSimpson"}, and \code{"Fisher"}.
+Default: \code{c("Observed", "Chao1", "Shannon", "InvSimpson", "Fisher")}.}
 
-\item{name}{PARAM_DESCRIPTION, Default: 'diversity'}
+\item{name}{Character string. Base name for the output file (without extension). Default: \code{"diversity"}.}
 }
 \value{
-A Data Frame with all the metadata and a variable for each diversity index
+A \code{data.frame} containing:
+\itemize{
+\item All sample metadata from the phyloseq object
+\item One column for each calculated diversity index
+}
 }
 \description{
-Calculates several alpha-diversity indices.
+Computes several common alpha-diversity indices for each sample in a phyloseq object and exports the results to a tab-separated file.
 }
 \details{
-alculates several alpha-diversity indices for each sample in a phyloseq object,
-using the phyloseq \code{estimate_richness()} function.
+This function uses \code{\link[phyloseq]{estimate_richness}} to calculate the specified alpha-diversity indices
+for each sample in the phyloseq object.
+The results are merged with the sample metadata and written to a tab-separated values (TSV) file in \code{outdir}.
+
+The \code{sampleID} column in the output table corresponds to the sample names in the phyloseq object.
+Any leading \code{"X"} in sample IDs is removed to match common naming conventions.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+if (interactive()) {
+  library(phyloseq)
+  data(GlobalPatterns)
+  result <- calculateAlphaDiversityTable(GlobalPatterns, outdir = tempdir())
+  head(result)
 }
+}
+
+}
+\seealso{
+\code{\link[phyloseq]{estimate_richness}},
+\code{\link[phyloseq]{sample_data}},
+\code{\link[readr]{write_tsv}}
 }

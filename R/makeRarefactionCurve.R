@@ -1,29 +1,72 @@
-#' @title makeRarefactionCurve
-#' @description Calculates a rarefaction curve for a phyloseq object
-#' @param phyloseq_rawdata Input phyloseq object
-#' @param opt Option list, including a field named 'out' with an existing output directory.
-#' @param add_hlines If TRUE, plot horizontal lines with the depth of each sample, Default: TRUE
-#' @param name name of the output files, including tables, R objects and plots saved to opt$out, Default: 'rarecurve'
-#' @return A list with the following elements:
-#' `plot`: ggplot object with the rarefaction curve
-#' `df`: DataFrame with the rarefaction curve data (number of taxa detected for each number of reads for each sample)
-#' `df_max`: DataFrame with the number of reads of each sample
-#' `min_reads_all`: Overall minimum number of reads
-#' `intersection2`: DataFrame with the number of taxa at the overall minimum number of reads, extrapolated from the curve
-#' @details Calculates a rarefaction curve for a phyloseq object using the vegan \code{rarecurve()} function
+#' @title Generate and Save Rarefaction Curves from a Phyloseq Object
+#'
+#' @description
+#' Calculates rarefaction curves for each sample in a
+#' \code{\link[phyloseq]{phyloseq}} object using \code{\link[vegan]{rarecurve}},
+#' saves the plots and summary tables to disk, and returns the data and plot.
+#'
+#' @param phyloseq_rawdata A \code{\link[phyloseq]{phyloseq}} object containing
+#'   an OTU/ASV table. The table will be extracted and converted to a matrix
+#'   for rarefaction analysis.
+#' @param opt A list containing at least an element named \code{"out"} specifying
+#'   an existing output directory where plots and tables will be saved.
+#' @param add_hlines Logical indicating whether to add horizontal lines at the
+#'   interpolated number of taxa for the minimum read depth across samples.
+#'   Default is \code{TRUE}.
+#' @param name Character string used as the base name for output files
+#'   (tables, plots, and RData). Default is \code{"rarecurve"}.
+#'
+#' @return A named list with the following elements:
+#' \itemize{
+#'   \item \code{plot} — A \code{\link[ggplot2]{ggplot}} object of the rarefaction curves.
+#'   \item \code{df} — A \code{data.frame} with the rarefaction curve data
+#'     (taxa counts at each subsampling depth for each sample).
+#'   \item \code{df_max} — A \code{data.frame} with the maximum read depth per sample.
+#'   \item \code{min_reads_all} — The overall minimum read depth across samples.
+#'   \item \code{intersection2} — A \code{data.frame} with the interpolated taxa
+#'     counts at the overall minimum read depth.
+#' }
+#'
+#' @details
+#' Rarefaction curves visualize the accumulation of observed taxa as a function
+#' of sequencing depth. This function computes them using
+#' \code{\link[vegan]{rarecurve}} and also provides ggplot-based versions for
+#' cleaner presentation. Summary tables include:
+#' \enumerate{
+#'   \item All rarefaction curve points (\code{df}).
+#'   \item Final point for each sample (\code{df_max}).
+#'   \item Interpolated taxa counts at the overall minimum read depth
+#'         (\code{intersection2}).
+#' }
+#'
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' if (interactive()) {
+#'   library(phyloseq)
+#'   # Example: run rarefaction on a phyloseq object 'ps'
+#'   res <- makeRarefactionCurve(ps, opt = list(out = "results"))
+#'   res$plot
 #' }
+#' }
+#'
 #' @seealso
-#'  \code{\link[vegan]{rarecurve}},
-#'  \code{\link[dplyr]{mutate}},
-#'  \code{\link[dplyr]{summarise}}
+#' \code{\link[vegan]{rarecurve}},
+#' \code{\link[ggplot2]{ggplot}},
+#' \code{\link[dplyr]{mutate}},
+#' \code{\link[dplyr]{summarise}},
+#' \code{\link[ggrepel]{geom_text_repel}},
+#' \code{\link[readr]{write_tsv}}
+#'
 #' @rdname makeRarefactionCurve
 #' @export
+#'
 #' @importFrom vegan rarecurve
+#' @importFrom phyloseq otu_table
+#' @importFrom dplyr mutate summarise group_by filter bind_rows slice_min
+#' @importFrom ggplot2 ggplot aes geom_line geom_point geom_vline geom_hline xlab ylab ggtitle scale_x_continuous theme ggsave
+#' @importFrom ggrepel geom_text_repel
+#' @importFrom readr write_tsv
+#' @importFrom stats setNames
 makeRarefactionCurve <- function(phyloseq_rawdata, opt, add_hlines=TRUE, name="rarecurve"){
   otu2rare <- otu_table(phyloseq_rawdata)
   class(otu2rare) <- "matrix"

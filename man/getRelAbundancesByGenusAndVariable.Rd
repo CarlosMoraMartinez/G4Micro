@@ -36,7 +36,8 @@ The function assumes the input \code{phobj} is a valid \code{phyloseq} object wi
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ df <- getRelAbundancesByGenusAndVariable(phyloseq_obj, variable="Condition")
+  print(df)
  }
 }
 }

@@ -2,26 +2,29 @@
 % Please edit documentation in R/getSignif.R
 \name{getSignif}
 \alias{getSignif}
-\title{FUNCTION_TITLE}
+\title{Get Significance Stars from p-values}
 \usage{
 getSignif(vector)
 }
 \arguments{
-\item{vector}{PARAM_DESCRIPTION}
+\item{vector}{A numeric vector of p-values.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A character vector of the same length as \code{vector}, with significance stars or "NS" for each p-value.
 }
 \description{
-FUNCTION_DESCRIPTION
+Converts numeric p-values into significance levels represented as stars:
+"\emph{\strong{" for p < 0.001, "}" for p < 0.01, "}" for p < 0.05, and "NS" otherwise.
 }
 \details{
-DETAILS
+This function is useful for annotating statistical test results with conventional significance symbols.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  pvals <- c(0.0005, 0.007, 0.03, 0.1)
+  getSignif(pvals)
 }
+}
+
 }

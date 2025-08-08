@@ -10,15 +10,23 @@
 #' @param doposcounts Logical; whether to force the use of the `poscounts` normalization method. Default: FALSE.
 #' @return A named list with components:
 #' \itemize{
-#'   \item \code{dds}: DESeq2 object.
-#'   \item \code{raw_counts}, \code{norm_counts}: Raw and normalized count matrices.
-#'   \item \code{res}, \code{resLFC}, \code{resLFC_ape}, \code{resLFC_ashr}: Main DESeq2 results and shrinkage estimates.
-#'   \item \code{resdf}, \code{resdf_ape}, \code{resdf_shr}: Results as data frames.
-#'   \item \code{raw_df}, \code{norm_counts_df}, \code{vst_counts_df}: Count matrices written to files.
-#'   \item \code{vstds}: Variance-stabilized transformed data.
-#'   \item \code{all_contrasts}: List of all contrast results.
-#'   \item \code{all_combos_done}: Logical flag. Indicates whether all the possible contrasts were performed or not.
-#'   \item \code{options}: A list summarizing filtering parameters and whether pseudocounts were used.
+#'   \item \code{dds}: The DESeq2 dataset object after filtering and running DESeq.
+#'   \item \code{raw_counts}: Matrix of raw counts from the original phyloseq object.
+#'   \item \code{all_contrasts}: A list of results for all contrasts performed (categorical and numerical).
+#'   \item \code{res}: DESeq2 results table for the first contrast.
+#'   \item \code{resLFC}: Log fold change shrunk results for the first contrast.
+#'   \item \code{resLFC_ape}: Log fold change shrunk results using apeglm method for the first contrast.
+#'   \item \code{resLFC_ashr}: Log fold change shrunk results using ashr method for the first contrast.
+#'   \item \code{resdf}: Results converted to a data frame for the first contrast.
+#'   \item \code{resdf_ape}: Data frame of results with apeglm shrinkage for the first contrast.
+#'   \item \code{resdf_shr}: Data frame of results with ashr shrinkage for the first contrast.
+#'   \item \code{raw_df}: Raw counts matrix saved as a data frame (used for writing to file).
+#'   \item \code{norm_counts}: Normalized counts matrix from DESeq2.
+#'   \item \code{norm_counts_df}: Normalized counts saved as a data frame (used for writing to file).
+#'   \item \code{vstds}: Variance-stabilized transformed counts matrix (if successfully computed, else NULL).
+#'   \item \code{vst_counts_df}: Variance-stabilized counts saved as a data frame (used for writing to file).
+#'   \item \code{all_combos_done}: Logical flag indicating whether all possible contrasts were performed (always TRUE here).
+#'   \item \code{options}: A list summarizing filtering parameters and whether pseudocount normalization was applied.
 #' }
 #' @details The function supports both categorical and numeric variables.
 #' It automatically generates pairwise contrasts between factor levels or handles numeric

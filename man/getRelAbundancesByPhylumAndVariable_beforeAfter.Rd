@@ -3,7 +3,7 @@
 %   R/getRelAbundancesByPhylumAndVariable_beforeAfter.R
 \name{getRelAbundancesByPhylumAndVariable_beforeAfter}
 \alias{getRelAbundancesByPhylumAndVariable_beforeAfter}
-\title{FUNCTION_TITLE}
+\title{Calculate Relative Abundance and Prevalence by Phylum and Condition}
 \usage{
 getRelAbundancesByPhylumAndVariable_beforeAfter(
   phobj,
@@ -12,29 +12,29 @@ getRelAbundancesByPhylumAndVariable_beforeAfter(
 )
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data.}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'Condition'}
+\item{variable}{A character string specifying the metadata variable to stratify by (default: "Condition").}
 
-\item{outname}{PARAM_DESCRIPTION, Default: 'prevalence_by_phylum.tsv'}
+\item{outname}{Output filename to save the summarized table. If empty string, no file is written (default: "prevalence_by_phylum.tsv").}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame summarizing prevalence and abundance statistics by Phylum and the specified variable.
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes mean relative prevalence and abundance of taxa grouped by Phylum and a categorical variable (e.g., Condition). Outputs a summarized table optionally saved to a TSV file.
 }
 \details{
-DETAILS
+The function melts the phyloseq object to long format and computes prevalence and mean abundance statistics per OTU and then aggregates by Phylum. It compares groups defined by the given variable, e.g., before/after conditions.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  df <- getRelAbundancesByPhylumAndVariable_beforeAfter(phyloseq_obj, variable="Condition")
+  print(df)
+}
 }
 }
 \seealso{
-\code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}
-\code{\link[tidyr]{spread}}
+\code{\link[dplyr]{summarise}}, \code{\link[dplyr]{mutate}}, \code{\link[tidyr]{pivot_wider}}, \code{\link[phyloseq]{psmelt}}
 }

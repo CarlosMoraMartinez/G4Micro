@@ -2,26 +2,32 @@
 % Please edit documentation in R/getMeanRelAbundancesByPhylum.R
 \name{getMeanRelAbundancesByPhylum}
 \alias{getMeanRelAbundancesByPhylum}
-\title{FUNCTION_TITLE}
+\title{Calculate Mean Prevalence of ASVs by Phylum}
 \usage{
 getMeanRelAbundancesByPhylum(phobj)
 }
 \arguments{
-\item{phobj}{PARAM_DESCRIPTION}
+\item{phobj}{A phyloseq object containing microbiome data.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A data frame with columns:
+\itemize{
+\item \code{Phylum}: Taxonomic phylum name.
+\item \code{prevalence}: Mean prevalence of ASVs within each phylum (number of samples where ASV is present).
+\item \code{sum_prevalence}: Total prevalence summed across all ASVs in each phylum.
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+Computes the mean and total prevalence of Amplicon Sequence Variants (ASVs) grouped by Phylum from a phyloseq object.
 }
 \details{
-DETAILS
+This function uses \code{getRelAbundanceTab} to obtain prevalence data per ASV, then summarizes the mean and sum of prevalence by phylum using \code{plyr::ddply}.
 }
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
- }
+  df <- getMeanRelAbundancesByPhylum(phyloseq_obj)
+  print(df)
+}
 }
 }

@@ -1,22 +1,33 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param res PARAM_DESCRIPTION
-#' @param genes PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Generate a Formatted GT Table from Differential Expression Results
+#' @description Creates a styled gt table from a results data frame filtered by specified genes.
+#' Applies color gradients to p-value, adjusted p-value, and log2 fold change columns for easy visualization.
+#' @param res A data.frame or tibble containing differential expression results. Must include row names representing taxa or genes and columns `pvalue`, `padj`, and `log2FoldChange`.
+#' @param genes A character vector of gene or taxa names to filter the results and include in the table.
+#' @param name A character string to be used as the table caption.
+#' @return A `gt` table object with formatted colors and styling applied.
+#' @details
+#' The function filters the results to only include rows corresponding to the specified genes,
+#' then creates a gt table with conditional coloring:
+#' - pvalue and padj are colored from red ("firebrick3") for high values to blue ("dodgerblue2") for low values.
+#' - log2FoldChange is colored from blue for negative values to red for positive values.
+#' The table options adjust font sizes, background colors, padding, and width for clarity.
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   library(DESeq2)
+#'   res <- results(dds)  # DESeq2 result object
+#'   genes_of_interest <- c("GeneA", "GeneB", "GeneC")
+#'   gt_table <- getGTTableFromRes(res, genes_of_interest, "Differential Expression Table")
+#'   print(gt_table)
+#' }
 #' }
 #' @rdname getGTTableFromRes
-#' @export 
+#' @export
+#' @import gt
 getGTTableFromRes <- function(res, genes, name){
   gttable <- res %>% as.data.frame() %>%
     rownames_to_column("Taxa") %>%
-    filter(Taxa %in% genes) %>%
+    dplyr::filter(Taxa %in% genes) %>%
     gt() %>%
     tab_caption(name) %>%
     data_color(

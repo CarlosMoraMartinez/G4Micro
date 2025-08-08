@@ -1,19 +1,36 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param phobj PARAM_DESCRIPTION
-#' @param opt PARAM_DESCRIPTION
-#' @param name PARAM_DESCRIPTION, Default: ''
-#' @param formula PARAM_DESCRIPTION, Default: '~ Condition'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
+#' @title Differential Expression Analysis from Phyloseq Object Using Formula
+#' @description Performs DESeq2 differential expression analysis on a phyloseq object using a specified design formula.
+#' Filters features based on minimum counts and samples, supports multiple contrasts, and returns results including normalized and transformed counts.
+#' @param phobj A phyloseq object containing count data and sample metadata.
+#' @param opt A list of options controlling filtering and output parameters. Expected fields include \code{mincount}, \code{minsampleswithcount}, \code{minfreq}, and \code{out} (output directory).
+#' @param name A string appended to output filenames (default is empty).
+#' @param formula A design formula for DESeq2 (default is \code{"~ Condition"}).
+#' @return A list containing DESeq2 results, raw and normalized counts, contrasts, and additional diagnostic data.
+#' @details
+#' The function:
+#' \itemize{
+#'   \item Extracts variables from the design formula,
+#'   \item Filters OTUs based on count thresholds,
+#'   \item Runs DESeq2 with or without a pseudocount depending on data,
+#'   \item Performs contrasts for all pairwise comparisons of categorical variables or numerical covariates,
+#'   \item Saves intermediate results as TSV files and an RData file.
+#' }
+#' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'   # Assuming 'ps' is a phyloseq object and opt is a list with options
+#'   opt <- list(mincount=10, minsampleswithcount=3, minfreq=0.01, out="./results/")
+#'   results <- getDeseqResults_fromFormula(ps, opt, name="MyAnalysis", formula="~ Condition + Age")
 #' }
+#' }
+#' @seealso
+#' \code{\link[phyloseq]{phyloseq_to_deseq2}}, \code{\link[DESeq2]{DESeq}}, \code{\link[DESeq2]{results}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}
+#' @import DESeq2
+#' @importFrom phyloseq phyloseq_to_deseq2
+#' @importFrom magrittr %>%
+#' @importFrom purrr map map_chr flatten
 #' @rdname getDeseqResults_fromFormula
-#' @export 
+#' @export
 getDeseqResults_fromFormula <- function(phobj, opt, name="", formula= "~ Condition"){
   variables <- gsub("~", "", formula) %>% gsub(" ", "", .) %>% strsplit(split="\\+|\\*") %>% unlist
   dds <- phyloseq_to_deseq2(phobj, design= as.formula(formula))
