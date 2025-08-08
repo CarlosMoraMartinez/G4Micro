@@ -39,6 +39,10 @@ getGTTableFromRes <- function(res, genes = c(), name = "DAA result"){
     gt() %>%
     tab_caption(name) %>%
     fmt_markdown(columns = "Taxa") %>%
+    fmt_number(
+      columns = everything(),
+      decimals = 3
+    ) %>%
     data_color(
       method = "numeric",
       palette = c("firebrick3", "dodgerblue2"),

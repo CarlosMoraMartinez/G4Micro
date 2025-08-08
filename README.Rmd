@@ -23,6 +23,28 @@ G4Micro contains helper functions used to analyze microbiome data in the Mora-Ma
 
 ## Installation
 
+First, it is necessary to install the following packages and linux dependencies:
+
+- sudo libgdal-dev libgeos-dev libproj-dev
+- DMwR2
+- UBL
+- catboost
+
+```bash
+sudo apt-get update
+sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
+```
+
+``` r
+# install.packages("remotes")
+# install.packages("devtools")
+
+remotes::install_url("https://cran.r-project.org/src/contrib/Archive/DMwR2/DMwR2_0.0.2.tar.gz")
+devtools::install_github("paobranco/UBL",ref="master")
+remotes::install_github("catboost/catboost")
+
+```
+
 You can install the development version of G4Micro from [GitHub](https://github.com/) with:
 
 ``` r
@@ -30,8 +52,7 @@ You can install the development version of G4Micro from [GitHub](https://github.
 pak::pak("CarlosMoraMartinez/G4Micro")
 
 # Alternatively
-# install.packages("devtools")
-# devtools::install_github("Displayr/flipPlots")
+devtools::install_github("Displayr/flipPlots")
 
 ```
 
@@ -144,7 +165,7 @@ cowplot::plot_grid(plotlist = divplots, nrow = 4)
 
 PCoA on Bray-Curtis distances:
 
-```{r beta1, fig.width=13, fig.height=12, warning=FALSE, message=FALSE}
+```{r beta1, fig.width=13, fig.height=14, warning=FALSE, message=FALSE}
 library(cowplot)
 
 vars <- c("Condition", "Sex", "BMI")
@@ -163,7 +184,7 @@ cowplot::plot_grid(plotlist = betaplots, nrow = 3)
 
 NMDS on Bray-Curtis distances:
 
-```{r beta2, fig.width=12, fig.height=6, warning=FALSE, message=FALSE, error=FALSE}
+```{r beta2, fig.width=12, fig.height=4, warning=FALSE, message=FALSE, error=FALSE}
 library(cowplot)
 
 vars <- c("Condition", "Sex")

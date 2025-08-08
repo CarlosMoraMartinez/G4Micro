@@ -13,6 +13,28 @@ Mora-Martinez, Molina-Mendoza et al. paper.
 
 ## Installation
 
+First, it is necessary to install the following packages and linux
+dependencies:
+
+- sudo libgdal-dev libgeos-dev libproj-dev
+- DMwR2
+- UBL
+- catboost
+
+``` bash
+sudo apt-get update
+sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
+```
+
+``` r
+# install.packages("remotes")
+# install.packages("devtools")
+
+remotes::install_url("https://cran.r-project.org/src/contrib/Archive/DMwR2/DMwR2_0.0.2.tar.gz")
+devtools::install_github("paobranco/UBL",ref="master")
+remotes::install_github("catboost/catboost")
+```
+
 You can install the development version of G4Micro from
 [GitHub](https://github.com/) with:
 
@@ -21,8 +43,7 @@ You can install the development version of G4Micro from
 pak::pak("CarlosMoraMartinez/G4Micro")
 
 # Alternatively
-# install.packages("devtools")
-# devtools::install_github("Displayr/flipPlots")
+devtools::install_github("Displayr/flipPlots")
 ```
 
 ## Alpha Diversity Analysis
@@ -244,36 +265,37 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 #> Square root transformation
 #> Wisconsin double standardization
 #> Run 0 stress 0.2424031 
-#> Run 1 stress 0.2418233 
+#> Run 1 stress 0.2422512 
 #> ... New best solution
-#> ... Procrustes: rmse 0.03572854  max resid 0.2040072 
-#> Run 2 stress 0.2447099 
-#> Run 3 stress 0.2414991 
+#> ... Procrustes: rmse 0.009474492  max resid 0.07000841 
+#> Run 2 stress 0.243626 
+#> Run 3 stress 0.2429186 
+#> Run 4 stress 0.241829 
 #> ... New best solution
-#> ... Procrustes: rmse 0.01622136  max resid 0.1566057 
-#> Run 4 stress 0.412099 
-#> Run 5 stress 0.2428885 
-#> Run 6 stress 0.2423004 
-#> Run 7 stress 0.2418237 
-#> ... Procrustes: rmse 0.016532  max resid 0.1570263 
-#> Run 8 stress 0.242706 
-#> Run 9 stress 0.2447252 
-#> Run 10 stress 0.2449334 
-#> Run 11 stress 0.2416749 
-#> ... Procrustes: rmse 0.02248396  max resid 0.1317105 
-#> Run 12 stress 0.2451827 
-#> Run 13 stress 0.2565237 
-#> Run 14 stress 0.2418364 
-#> ... Procrustes: rmse 0.01379898  max resid 0.131399 
-#> Run 15 stress 0.2448811 
-#> Run 16 stress 0.244341 
-#> Run 17 stress 0.2421058 
-#> Run 18 stress 0.2451858 
-#> Run 19 stress 0.2478613 
-#> Run 20 stress 0.2451657 
+#> ... Procrustes: rmse 0.03522794  max resid 0.2049714 
+#> Run 5 stress 0.2451826 
+#> Run 6 stress 0.2430095 
+#> Run 7 stress 0.2444327 
+#> Run 8 stress 0.246308 
+#> Run 9 stress 0.242964 
+#> Run 10 stress 0.247947 
+#> Run 11 stress 0.2467233 
+#> Run 12 stress 0.2418705 
+#> ... Procrustes: rmse 0.005713131  max resid 0.03024138 
+#> Run 13 stress 0.2447416 
+#> Run 14 stress 0.2413644 
+#> ... New best solution
+#> ... Procrustes: rmse 0.01397548  max resid 0.09507856 
+#> Run 15 stress 0.2453064 
+#> Run 16 stress 0.24693 
+#> Run 17 stress 0.2428948 
+#> Run 18 stress 0.2426785 
+#> Run 19 stress 0.2738686 
+#> Run 20 stress 0.2451774 
 #> *** Best solution was not repeated -- monoMDS stopping criteria:
 #>      1: no. of iterations >= maxit
-#>     19: stress ratio > sratmax
+#>     18: stress ratio > sratmax
+#>      1: scale factor of the gradient < sfgrmin
 
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
