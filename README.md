@@ -21,57 +21,12 @@ You can install the development version of G4Micro from
 pak::pak("CarlosMoraMartinez/G4Micro")
 ```
 
-## Example
+## Alpha Diversity Analysis
 
 Load a list of phyloseq objects and select one of them.
 
 ``` r
 library(G4Micro)
-#> Loading required package: dplyr
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-#> Loading required package: forcats
-#> Loading required package: ggplot2
-#> Loading required package: phyloseq
-#> Loading required package: purrr
-#> Loading required package: readr
-#> Loading required package: stringr
-#> Loading required package: tibble
-#> Loading required package: tidyr
-#> Warning: replacing previous import 'DESeq2::plotMA' by 'limma::plotMA' when
-#> loading 'G4Micro'
-#> Warning: replacing previous import 'magrittr::set_names' by 'purrr::set_names'
-#> when loading 'G4Micro'
-#> Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading
-#> 'G4Micro'
-#> Warning: replacing previous import 'dplyr::filter' by 'stats::filter' when
-#> loading 'G4Micro'
-#> Warning: replacing previous import 'magrittr::extract' by 'tidyr::extract' when
-#> loading 'G4Micro'
-#> Warning: replacing previous import 'limma::plotMA' by 'DESeq2::plotMA' when
-#> loading 'G4Micro'
-#> Registered S3 methods overwritten by 'bmemLavaan':
-#>   method        from
-#>   summary.bmem  bmem
-#>   summary.power bmem
-#>   plot.bmem     bmem
-#> Registered S3 method overwritten by 'dendextend':
-#>   method     from 
-#>   rev.hclust vegan
-#> Warning: replacing previous import 'stats::filter' by 'dplyr::filter' when
-#> loading 'G4Micro'
-#> Registered S3 methods overwritten by 'ggpp':
-#>   method                  from   
-#>   heightDetails.titleGrob ggplot2
-#>   widthDetails.titleGrob  ggplot2
-#> Warning: replacing previous import 'limma::topTable' by
-#> 'variancePartition::topTable' when loading 'G4Micro'
 
 data("all_phyloseq")
 phobj <- all_phyloseq$remove_tanda2_rarefied_min
@@ -135,12 +90,6 @@ divtab <- calculateAlphaDiversityTable(phseq_obj = phobj, outdir = outdir,
 
 divtab %>% select(sampleID, Condition, all_of(alpha_indices)) %>% 
   head %>% kableExtra::kable()
-#> Warning: 'xfun::attr()' is deprecated.
-#> Use 'xfun::attr2()' instead.
-#> See help("Deprecated")
-#> Warning: 'xfun::attr()' is deprecated.
-#> Use 'xfun::attr2()' instead.
-#> See help("Deprecated")
 ```
 
 | sampleID | Condition | Observed |  Chao1 |  Shannon | InvSimpson |
@@ -242,3 +191,80 @@ cowplot::plot_grid(plotlist = divplots, nrow = 4)
 ```
 
 <img src="man/figures/README-alpha6-1.png" width="100%" />
+
+## Beta Diversity Analysis
+
+PCoA on Bray-Curtis distances:
+
+``` r
+library(cowplot)
+
+vars <- c("Condition", "Sexo", "BMI")
+betaplots <- makeAllPCoAs(phobj, outdir,
+                          method = "PCoA",
+                          name = "PCoA_Bray",
+                          dist_type = "bray",
+                          dist_name = "Bray-Curtis",
+                          vars2plot = vars,
+                          extradims = 2:3,
+                          labelsamples = "sampleID",
+                          create_pdfs = T)
+
+cowplot::plot_grid(plotlist = betaplots, nrow = 3)
+```
+
+<img src="man/figures/README-beta1-1.png" width="100%" />
+
+NMDS on Bray-Curtis distances:
+
+``` r
+library(cowplot)
+
+vars <- c("Condition", "Sexo")
+betaplots <- makeAllPCoAs(phobj, outdir,
+                          method = "NMDS",
+                          name = "NMDS_Bray",
+                          dist_type = "bray",
+                          dist_name = "Bray-Curtis",
+                          vars2plot = vars,
+                          extradims = 2,
+                          labelsamples = "sampleID",
+                          create_pdfs = T)
+#> Square root transformation
+#> Wisconsin double standardization
+#> Run 0 stress 0.2424031 
+#> Run 1 stress 0.2462926 
+#> Run 2 stress 0.241675 
+#> ... New best solution
+#> ... Procrustes: rmse 0.03156459  max resid 0.2054719 
+#> Run 3 stress 0.2453119 
+#> Run 4 stress 0.246173 
+#> Run 5 stress 0.2450324 
+#> Run 6 stress 0.2447746 
+#> Run 7 stress 0.2449588 
+#> Run 8 stress 0.2417085 
+#> ... Procrustes: rmse 0.0203256  max resid 0.1106908 
+#> Run 9 stress 0.2463239 
+#> Run 10 stress 0.2436992 
+#> Run 11 stress 0.2589501 
+#> Run 12 stress 0.2428143 
+#> Run 13 stress 0.2426795 
+#> Run 14 stress 0.2411304 
+#> ... New best solution
+#> ... Procrustes: rmse 0.01529368  max resid 0.1295043 
+#> Run 15 stress 0.2424023 
+#> Run 16 stress 0.2453573 
+#> Run 17 stress 0.2413874 
+#> ... Procrustes: rmse 0.01611501  max resid 0.1572572 
+#> Run 18 stress 0.2451825 
+#> Run 19 stress 0.2414994 
+#> ... Procrustes: rmse 0.01454366  max resid 0.09770501 
+#> Run 20 stress 0.2454234 
+#> *** Best solution was not repeated -- monoMDS stopping criteria:
+#>      2: no. of iterations >= maxit
+#>     18: stress ratio > sratmax
+
+cowplot::plot_grid(plotlist = betaplots, nrow = 1)
+```
+
+<img src="man/figures/README-beta2-1.png" width="100%" />

@@ -127,7 +127,7 @@ getAlphaDiversity <- function(phseq_obj, vars, qvars= c(),
 
     plots[[v]] <- plot_richness(phseq_obj, x = v,
                                 color = v,
-                                measures = c("Observed", "Chao1", "Shannon", "InvSimpson")) +
+                                measures = indices) +
       geom_point(aes_string(fill = v), alpha = 0.7) +
       ggpmisc::stat_poly_eq(use_label(c("R2", "p")), #c("eq", "R2", "f", "p", "n")
                    method="lm", small.p=T, small.r=F, label.y=0.99)+

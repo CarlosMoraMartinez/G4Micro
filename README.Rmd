@@ -30,11 +30,11 @@ You can install the development version of G4Micro from [GitHub](https://github.
 pak::pak("CarlosMoraMartinez/G4Micro")
 ```
 
-## Example
+## Alpha Diversity Analysis
 
 Load a list of phyloseq objects and select one of them.
 
-```{r load}
+```{r load, warning=FALSE, message=FALSE}
 library(G4Micro)
 
 data("all_phyloseq")
@@ -51,7 +51,7 @@ print(opt)
 
 Calculate alpha diversity indices
 
-```{r alpha1}
+```{r alpha1, warning=FALSE, message=FALSE}
 opt$out <- "~/"
 outdir <- paste0(opt$out, "/AlphaDiversity/")
 if(!dir.exists(outdir)) dir.create(outdir)
@@ -119,5 +119,43 @@ divplots <- getAlphaDiversity(phobj,
 cowplot::plot_grid(plotlist = divplots, nrow = 4)
 ```
 
+## Beta Diversity Analysis
+
+PCoA on Bray-Curtis distances:
+
+```{r beta1, fig.width=12, fig.height=12, warning=FALSE, message=FALSE}
+library(cowplot)
+
+vars <- c("Condition", "Sexo", "BMI")
+betaplots <- makeAllPCoAs(phobj, outdir,
+                          method = "PCoA",
+                          name = "PCoA_Bray",
+                          dist_type = "bray",
+                          dist_name = "Bray-Curtis",
+                          vars2plot = vars,
+                          extradims = 2:3,
+                          labelsamples = "sampleID",
+                          create_pdfs = T)
+
+cowplot::plot_grid(plotlist = betaplots, nrow = 3)
+```
+
+NMDS on Bray-Curtis distances:
 
 
+```{r beta2, fig.width=12, fig.height=6, warning=FALSE, message=FALSE}
+library(cowplot)
+
+vars <- c("Condition", "Sexo")
+betaplots <- makeAllPCoAs(phobj, outdir,
+                          method = "NMDS",
+                          name = "NMDS_Bray",
+                          dist_type = "bray",
+                          dist_name = "Bray-Curtis",
+                          vars2plot = vars,
+                          extradims = 2,
+                          labelsamples = "sampleID",
+                          create_pdfs = T)
+
+cowplot::plot_grid(plotlist = betaplots, nrow = 1)
+```

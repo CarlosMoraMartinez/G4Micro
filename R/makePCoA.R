@@ -34,6 +34,7 @@
 #' @export
 #' @importFrom cowplot plot_grid
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom phyloseq plot_ordination
 makePCoA <- function(phobj, pcoa.bray, evals,
                      var2color="Condition", name = "Bray-Curtis",
                      extradims= 2:5, labelsamples="sampleID"){
