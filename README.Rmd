@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+
 # G4Micro
 
 <!-- badges: start -->
@@ -25,14 +26,14 @@ G4Micro contains helper functions used to analyze microbiome data in the Mora-Ma
 
 First, it is necessary to install the following packages and linux dependencies:
 
-- sudo libgdal-dev libgeos-dev libproj-dev
+- libgdal-dev, libgeos-dev, libproj-dev, libudunits2-dev
 - DMwR2
 - UBL
 - catboost
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
+sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev
 ```
 
 ``` r
@@ -41,7 +42,7 @@ sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
 
 remotes::install_url("https://cran.r-project.org/src/contrib/Archive/DMwR2/DMwR2_0.0.2.tar.gz")
 devtools::install_github("paobranco/UBL",ref="master")
-remotes::install_github("catboost/catboost")
+remotes::install_github("catboost/catboost", subdir = "catboost/R-package")
 
 ```
 
@@ -67,6 +68,7 @@ data("phobj_raref")
 phobj_raref
 ```
 
+
 A list with default options is also loaded. Copy it and modify it to use a custom output directory. 
 
 ```{r load2}
@@ -82,6 +84,7 @@ The `restoreopt` function will allow to reset the options to the state when `res
 ```{r load3}
 opt <- restoreopt(opt)
 ```
+
 
 Calculate alpha diversity indices:
 
@@ -109,6 +112,7 @@ alphadif <- testDiversityDifferences(divtab, alpha_indices,
 alphadif %>% kableExtra::kable()
 ```
 
+
 Fit linear models using a main variable and several covariates:
 
 ```{r alpha3, warning=FALSE, warning=FALSE, message=FALSE}
@@ -132,6 +136,7 @@ models$single_anovas %>% select(-mod1, -mod2, nvars, Index,
   kableExtra::kable()
 ```
 
+
 Show tests using covariates:
 
 ```{r alpha5}
@@ -140,6 +145,7 @@ models$anovas %>% select(-mod1, -mod2, nvars, Index,
                                 `Pr(>F)`, padj_all) %>% 
   kableExtra::kable()
 ```
+
 
 Finally, plot differences (recalculating statistical tests):
 
@@ -160,6 +166,7 @@ divplots <- getAlphaDiversity(phobj_raref,
 
 cowplot::plot_grid(plotlist = divplots, nrow = 4)
 ```
+
 
 ## Beta Diversity Analysis
 
@@ -182,6 +189,7 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 cowplot::plot_grid(plotlist = betaplots, nrow = 3)
 ```
 
+
 NMDS on Bray-Curtis distances:
 
 ```{r beta2, fig.width=12, fig.height=4, warning=FALSE, message=FALSE, error=FALSE}
@@ -201,6 +209,7 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
 
+
 Perform PERMANOVA with the `vegan::adonis2` function:
 
 ```{r beta3, fig.width=12, fig.height=4, warning=FALSE}
@@ -214,6 +223,7 @@ result <- makePermanova(phobj_raref,
 
 result %>% kableExtra::kable()
 ```
+
 
 Perform PERMANOVA with the `vegan::adonis2` function, using covariates:
 
@@ -242,6 +252,7 @@ result$modelos[[4]]
 
 ```
 
+
 ## Differential Abundance Analysis with DESeq2
 
 First, use Sex and Age as covariates. We will use the `phyloseq` object with the raw counts, since `DESeq2` normalizes data internally.
@@ -256,6 +267,7 @@ result <- deseq_full_pipeline(phobj_filtonly, name = "CondSexAge", vars2deseq = 
 
 ```
 
+
 Several tables and plots will be saved automatically to the `opt$out` directory. 
 
 See results table for the contrast of Condition:
@@ -266,10 +278,11 @@ taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filt
      arrange(padj) %>% pull(taxon) 
 gtt <- result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
 ```
-```{r deseq2b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE}
+```{r deseq2b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE, out.width='50%', fig.align='center'}
 gt::gtsave(gtt, "man/figures/gt_table.png")
 knitr::include_graphics("man/figures/gt_table.png")
 ```
+
 
 See results table for the contrast of Sex:
 
@@ -279,10 +292,12 @@ taxa2plot <- result$all_contrasts$Sex_Female_vs_Male$resdf %>% filter(!is.na(pad
      arrange(padj) %>% pull(taxon) 
 gtt <- result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
 ```
-```{r deseq5b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE}
+
+```{r deseq5b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE, out.width='50%', fig.align='center'}
 gt::gtsave(gtt, "man/figures/gt_table2.png")
 knitr::include_graphics("man/figures/gt_table2.png")
 ```
+
 
 See results table for the contrast of Age:
 
@@ -294,7 +309,7 @@ gtt <- result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa w
 
 ```
 
-```{r deseq6b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE}
+```{r deseq6b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE, out.width='50%', fig.align='center'}
 gt::gtsave(gtt, "man/figures/gt_table3.png")
 knitr::include_graphics("man/figures/gt_table3.png")
 ```
@@ -320,6 +335,7 @@ makeHeatmap(result$all_contrasts$Condition_Depression_vs_Control$resdf,
             max_hm_h=10, max_hm_w=12)
 
 ```
+
 
 Also, different contrasts can be compared:
 
@@ -347,6 +363,7 @@ compareLFCContrats2(contrastlist2, mainContrast,
 restoreopt <- restauraropt_mk(opt)
 ```
 
+
 ## DESeq2 analysis with interaction
 
 Instead of using several covariates in an additive way, one may specify more complex formulas with interactions:
@@ -372,7 +389,7 @@ gtt <- result_int$all_contrasts$Condition_Depression_vs_Control$res %>%
   getGTTableFromRes(taxa2plot, "DAA between Depr and C controlling for  BMI + Sex * Age")
 ```
 
-```{r deseq7b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE}
+```{r deseq7b, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE, out.width='50%', fig.align='center'}
 gt::gtsave(gtt, "man/figures/gt_table4.png")
 knitr::include_graphics("man/figures/gt_table4.png")
 

@@ -16,14 +16,14 @@ Mora-Martinez, Molina-Mendoza et al. paper.
 First, it is necessary to install the following packages and linux
 dependencies:
 
-- sudo libgdal-dev libgeos-dev libproj-dev
+- libgdal-dev, libgeos-dev, libproj-dev, libudunits2-dev
 - DMwR2
 - UBL
 - catboost
 
 ``` bash
 sudo apt-get update
-sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
+sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev
 ```
 
 ``` r
@@ -32,7 +32,7 @@ sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev
 
 remotes::install_url("https://cran.r-project.org/src/contrib/Archive/DMwR2/DMwR2_0.0.2.tar.gz")
 devtools::install_github("paobranco/UBL",ref="master")
-remotes::install_github("catboost/catboost")
+remotes::install_github("catboost/catboost", subdir = "catboost/R-package")
 ```
 
 You can install the development version of G4Micro from
@@ -265,37 +265,37 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 #> Square root transformation
 #> Wisconsin double standardization
 #> Run 0 stress 0.2424031 
-#> Run 1 stress 0.2422512 
+#> Run 1 stress 0.2450441 
+#> Run 2 stress 0.2418238 
 #> ... New best solution
-#> ... Procrustes: rmse 0.009474492  max resid 0.07000841 
-#> Run 2 stress 0.243626 
-#> Run 3 stress 0.2429186 
-#> Run 4 stress 0.241829 
+#> ... Procrustes: rmse 0.03592079  max resid 0.2039121 
+#> Run 3 stress 0.2425736 
+#> Run 4 stress 0.2425657 
+#> Run 5 stress 0.2479826 
+#> Run 6 stress 0.2470064 
+#> Run 7 stress 0.243741 
+#> Run 8 stress 0.2436178 
+#> Run 9 stress 0.2453063 
+#> Run 10 stress 0.2422513 
+#> ... Procrustes: rmse 0.03546092  max resid 0.2062974 
+#> Run 11 stress 0.2447231 
+#> Run 12 stress 0.2504898 
+#> Run 13 stress 0.2412017 
 #> ... New best solution
-#> ... Procrustes: rmse 0.03522794  max resid 0.2049714 
-#> Run 5 stress 0.2451826 
-#> Run 6 stress 0.2430095 
-#> Run 7 stress 0.2444327 
-#> Run 8 stress 0.246308 
-#> Run 9 stress 0.242964 
-#> Run 10 stress 0.247947 
-#> Run 11 stress 0.2467233 
-#> Run 12 stress 0.2418705 
-#> ... Procrustes: rmse 0.005713131  max resid 0.03024138 
-#> Run 13 stress 0.2447416 
-#> Run 14 stress 0.2413644 
-#> ... New best solution
-#> ... Procrustes: rmse 0.01397548  max resid 0.09507856 
-#> Run 15 stress 0.2453064 
-#> Run 16 stress 0.24693 
-#> Run 17 stress 0.2428948 
-#> Run 18 stress 0.2426785 
-#> Run 19 stress 0.2738686 
-#> Run 20 stress 0.2451774 
+#> ... Procrustes: rmse 0.01976362  max resid 0.1553633 
+#> Run 14 stress 0.2414831 
+#> ... Procrustes: rmse 0.01629938  max resid 0.1545399 
+#> Run 15 stress 0.2422512 
+#> Run 16 stress 0.2429346 
+#> Run 17 stress 0.2414664 
+#> ... Procrustes: rmse 0.01344268  max resid 0.09110863 
+#> Run 18 stress 0.2413492 
+#> ... Procrustes: rmse 0.01180794  max resid 0.08008196 
+#> Run 19 stress 0.2416823 
+#> ... Procrustes: rmse 0.01485076  max resid 0.08648119 
+#> Run 20 stress 0.2441167 
 #> *** Best solution was not repeated -- monoMDS stopping criteria:
-#>      1: no. of iterations >= maxit
-#>     18: stress ratio > sratmax
-#>      1: scale factor of the gradient < sfgrmin
+#>     20: stress ratio > sratmax
 
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
@@ -417,7 +417,7 @@ taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filt
 gtt <- result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
 ```
 
-<img src="man/figures/gt_table.png" width="100%" />
+<img src="man/figures/gt_table.png" width="50%" style="display: block; margin: auto;" />
 
 See results table for the contrast of Sex:
 
@@ -428,7 +428,7 @@ taxa2plot <- result$all_contrasts$Sex_Female_vs_Male$resdf %>% filter(!is.na(pad
 gtt <- result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
 ```
 
-<img src="man/figures/gt_table2.png" width="100%" />
+<img src="man/figures/gt_table2.png" width="50%" style="display: block; margin: auto;" />
 
 See results table for the contrast of Age:
 
@@ -439,7 +439,7 @@ taxa2plot <- result$all_contrasts$Age$resdf %>% filter(!is.na(padj ) & padj < 0.
 gtt <- result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa with Age")
 ```
 
-<img src="man/figures/gt_table3.png" width="100%" />
+<img src="man/figures/gt_table3.png" width="50%" style="display: block; margin: auto;" />
 
 Make heatmap:
 
@@ -520,4 +520,4 @@ gtt <- result_int$all_contrasts$Condition_Depression_vs_Control$res %>%
   getGTTableFromRes(taxa2plot, "DAA between Depr and C controlling for  BMI + Sex * Age")
 ```
 
-<img src="man/figures/gt_table4.png" width="100%" />
+<img src="man/figures/gt_table4.png" width="50%" style="display: block; margin: auto;" />
