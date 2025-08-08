@@ -19,6 +19,10 @@ You can install the development version of G4Micro from
 ``` r
 # install.packages("pak")
 pak::pak("CarlosMoraMartinez/G4Micro")
+
+# Alternatively
+# install.packages("devtools")
+# devtools::install_github("Displayr/flipPlots")
 ```
 
 ## Alpha Diversity Analysis
@@ -240,42 +244,36 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 #> Square root transformation
 #> Wisconsin double standardization
 #> Run 0 stress 0.2424031 
-#> Run 1 stress 0.2448277 
-#> Run 2 stress 0.2428898 
-#> ... Procrustes: rmse 0.03462346  max resid 0.2044303 
-#> Run 3 stress 0.2467451 
-#> Run 4 stress 0.2454384 
-#> Run 5 stress 0.2428982 
-#> ... Procrustes: rmse 0.01704541  max resid 0.1012432 
-#> Run 6 stress 0.242542 
-#> ... Procrustes: rmse 0.03042661  max resid 0.20539 
-#> Run 7 stress 0.2426041 
-#> ... Procrustes: rmse 0.01197078  max resid 0.07874232 
-#> Run 8 stress 0.2428818 
-#> ... Procrustes: rmse 0.01704511  max resid 0.1012487 
-#> Run 9 stress 0.2424087 
-#> ... Procrustes: rmse 0.02134426  max resid 0.2075353 
-#> Run 10 stress 0.2451827 
-#> Run 11 stress 0.2453073 
-#> Run 12 stress 0.242542 
-#> ... Procrustes: rmse 0.03065969  max resid 0.2053179 
-#> Run 13 stress 0.2428023 
-#> ... Procrustes: rmse 0.009441156  max resid 0.08372681 
-#> Run 14 stress 0.2453726 
-#> Run 15 stress 0.2461969 
-#> Run 16 stress 0.2414916 
+#> Run 1 stress 0.2418233 
 #> ... New best solution
-#> ... Procrustes: rmse 0.02910673  max resid 0.2055788 
-#> Run 17 stress 0.2463081 
-#> Run 18 stress 0.241074 
+#> ... Procrustes: rmse 0.03572854  max resid 0.2040072 
+#> Run 2 stress 0.2447099 
+#> Run 3 stress 0.2414991 
 #> ... New best solution
-#> ... Procrustes: rmse 0.01073554  max resid 0.09044995 
-#> Run 19 stress 0.2413643 
-#> ... Procrustes: rmse 0.01548271  max resid 0.1330373 
-#> Run 20 stress 0.2422251 
+#> ... Procrustes: rmse 0.01622136  max resid 0.1566057 
+#> Run 4 stress 0.412099 
+#> Run 5 stress 0.2428885 
+#> Run 6 stress 0.2423004 
+#> Run 7 stress 0.2418237 
+#> ... Procrustes: rmse 0.016532  max resid 0.1570263 
+#> Run 8 stress 0.242706 
+#> Run 9 stress 0.2447252 
+#> Run 10 stress 0.2449334 
+#> Run 11 stress 0.2416749 
+#> ... Procrustes: rmse 0.02248396  max resid 0.1317105 
+#> Run 12 stress 0.2451827 
+#> Run 13 stress 0.2565237 
+#> Run 14 stress 0.2418364 
+#> ... Procrustes: rmse 0.01379898  max resid 0.131399 
+#> Run 15 stress 0.2448811 
+#> Run 16 stress 0.244341 
+#> Run 17 stress 0.2421058 
+#> Run 18 stress 0.2451858 
+#> Run 19 stress 0.2478613 
+#> Run 20 stress 0.2451657 
 #> *** Best solution was not repeated -- monoMDS stopping criteria:
-#>      2: no. of iterations >= maxit
-#>     18: stress ratio > sratmax
+#>      1: no. of iterations >= maxit
+#>     19: stress ratio > sratmax
 
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
@@ -381,16 +379,7 @@ test_vars <- c("Condition", "Sex", "Age")
 
 result <- deseq_full_pipeline(phobj_filtonly, name = "CondSexAge", vars2deseq = test_vars, opt = opt)
 #> Minfreq:  0.05 , setting minsampleswithcount to  5.25
-#> NUM COLS:  2
-#> NUM COLS:  2
-#> NUM COLS:  2
-#> NUM COLS:  2
-#> NUM COLS:  2
-#> NUM COLS:  2
-#> All contrasts TRUE, intersecting Taxon listNUM COLS:  2
-#> NUM COLS:  2
-#> NUM COLS:  2
-#> NUM COLS:  2
+#> All contrasts TRUE, intersecting Taxon list
 #> Error plotDispEsts
 ```
 
@@ -406,6 +395,8 @@ taxa2plot <- result$all_contrasts$Condition_Depression_vs_Control$resdf %>% filt
 gtt <- result$all_contrasts$Condition_Depression_vs_Control$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Depressed vs Controls")
 ```
 
+<img src="man/figures/gt_table.png" width="100%" />
+
 See results table for the contrast of Sex:
 
 ``` r
@@ -415,6 +406,8 @@ taxa2plot <- result$all_contrasts$Sex_Female_vs_Male$resdf %>% filter(!is.na(pad
 gtt <- result$all_contrasts$Sex_Female_vs_Male$res %>% getGTTableFromRes(taxa2plot, "DAA taxa in Women vs Men")
 ```
 
+<img src="man/figures/gt_table2.png" width="100%" />
+
 See results table for the contrast of Age:
 
 ``` r
@@ -423,6 +416,8 @@ taxa2plot <- result$all_contrasts$Age$resdf %>% filter(!is.na(padj ) & padj < 0.
      arrange(padj) %>% pull(taxon) 
 gtt <- result$all_contrasts$Age$res %>% getGTTableFromRes(taxa2plot, "DAA taxa with Age")
 ```
+
+<img src="man/figures/gt_table3.png" width="100%" />
 
 Make heatmap:
 
@@ -442,7 +437,6 @@ makeHeatmap(result$all_contrasts$Condition_Depression_vs_Control$resdf,
             trim_values = TRUE, 
             taxalist=taxa2plot, 
             max_hm_h=10, max_hm_w=12)
-#> NUM COLS:  2
 ```
 
 <img src="man/figures/README-deseq5-1.png" width="100%" />
@@ -459,7 +453,7 @@ contrastlist2 <- list(
 
 names(contrastlist2) <- c( "Sex", "Age")
 
-contrast_names_pretty <- c("Depression vs Control",  gsub("_", " ", names(contrastlist2)))
+contrast_names_pretty <- c("Depression vs Control",  "Female vs Male", "Age")
 
 compareLFCContrats2(contrastlist2, mainContrast, 
                    contrast_names_pretty, "Depression_vs_Control", 
@@ -503,3 +497,5 @@ taxa2plot <- result_int$all_contrasts$Condition_Depression_vs_Control$resdf %>%
 gtt <- result_int$all_contrasts$Condition_Depression_vs_Control$res %>% 
   getGTTableFromRes(taxa2plot, "DAA between Depr and C controlling for  BMI + Sex * Age")
 ```
+
+<img src="man/figures/gt_table4.png" width="100%" />

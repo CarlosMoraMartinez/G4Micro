@@ -130,7 +130,7 @@ makeHeatmap <- function(resdf, dds, df2plot,
   }
 
   numcols <- max(sapply(annot %>% select_if(\(x) !is.numeric(x)), \(x)length(unique(x))))
-  cat("NUM COLS: ", numcols, "\n")
+
   #cc <- ggsci::pal_npg()(numcols) #palette = "category10"
   cc <- grDevices::colorRampPalette( wesanderson::wes_palette(annotpal_cat))(numcols)
 
