@@ -343,7 +343,7 @@ contrastlist2 <- list(
 
 names(contrastlist2) <- c( "Sex", "Age")
 
-contrast_names_pretty <- c("Depression vs Control",  "Sex", "Age")
+contrast_names_pretty <- c("Depression vs Control",  "Sex Female vs Male", "Age")
 
 compareLFCContrats2(contrastlist2, mainContrast, 
                    contrast_names_pretty, "Depression_vs_Control", 
