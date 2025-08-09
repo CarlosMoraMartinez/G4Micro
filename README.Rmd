@@ -341,12 +341,12 @@ contrastlist2 <- list(
   result$all_contrasts$Age$resdf
 ) %>% lapply(\(x)return(list(resdf=x)))
 
-names(contrastlist2) <- c( "Sex", "Age")
+names(contrastlist2) <- c( "Sex_Female_vs_Male", "Age")
 
-contrast_names_pretty <- c("Depression vs Control",  "Sex Female vs Male", "Age")
+contrast_names_ordered <- c("Depression vs Control",  gsub("_", " ", names(contrastlist2)))
 
 compareLFCContrats2(contrastlist2, mainContrast, 
-                   contrast_names_pretty, "Depression_vs_Control", 
+                   contrast_names_ordered, "Depression_vs_Control", 
                    plim_select= 0.001, plim_plot=0.05,
                    name2remove = "xxx",
                    resdfname="resdf", 

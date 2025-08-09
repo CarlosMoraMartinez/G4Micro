@@ -259,38 +259,39 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 #> Square root transformation
 #> Wisconsin double standardization
 #> Run 0 stress 0.2424031 
-#> Run 1 stress 0.2451518 
-#> Run 2 stress 0.2414116 
+#> Run 1 stress 0.2443403 
+#> Run 2 stress 0.2453728 
+#> Run 3 stress 0.2423611 
 #> ... New best solution
-#> ... Procrustes: rmse 0.02584181  max resid 0.2067943 
-#> Run 3 stress 0.2430303 
-#> Run 4 stress 0.2447278 
-#> Run 5 stress 0.2414118 
-#> ... Procrustes: rmse 0.0002327242  max resid 0.001200414 
-#> ... Similar to previous best
-#> Run 6 stress 0.241823 
-#> ... Procrustes: rmse 0.02236939  max resid 0.1450639 
-#> Run 7 stress 0.241074 
+#> ... Procrustes: rmse 0.01056373  max resid 0.08251605 
+#> Run 4 stress 0.2448805 
+#> Run 5 stress 0.2424755 
+#> ... Procrustes: rmse 0.01059435  max resid 0.09719754 
+#> Run 6 stress 0.2423265 
 #> ... New best solution
-#> ... Procrustes: rmse 0.008858315  max resid 0.0787398 
-#> Run 8 stress 0.2418288 
-#> Run 9 stress 0.2444151 
-#> Run 10 stress 0.2504021 
-#> Run 11 stress 0.2417249 
-#> Run 12 stress 0.2418238 
-#> Run 13 stress 0.2418369 
-#> Run 14 stress 0.2479119 
-#> Run 15 stress 0.2421172 
-#> Run 16 stress 0.2414217 
-#> ... Procrustes: rmse 0.01309684  max resid 0.125387 
-#> Run 17 stress 0.2412971 
-#> ... Procrustes: rmse 0.007323474  max resid 0.05759286 
-#> Run 18 stress 0.2418288 
-#> Run 19 stress 0.2428719 
-#> Run 20 stress 0.2443353 
+#> ... Procrustes: rmse 0.01158079  max resid 0.08677874 
+#> Run 7 stress 0.2451656 
+#> Run 8 stress 0.2413875 
+#> ... New best solution
+#> ... Procrustes: rmse 0.03638126  max resid 0.2036798 
+#> Run 9 stress 0.2466801 
+#> Run 10 stress 0.2428797 
+#> Run 11 stress 0.2418506 
+#> ... Procrustes: rmse 0.009664707  max resid 0.09101485 
+#> Run 12 stress 0.2683218 
+#> Run 13 stress 0.2485375 
+#> Run 14 stress 0.2425272 
+#> Run 15 stress 0.2452056 
+#> Run 16 stress 0.2411033 
+#> ... New best solution
+#> ... Procrustes: rmse 0.0183157  max resid 0.1574724 
+#> Run 17 stress 0.2428799 
+#> Run 18 stress 0.2423011 
+#> Run 19 stress 0.2448276 
+#> Run 20 stress 0.2416822 
 #> *** Best solution was not repeated -- monoMDS stopping criteria:
-#>      1: no. of iterations >= maxit
-#>     19: stress ratio > sratmax
+#>      2: no. of iterations >= maxit
+#>     18: stress ratio > sratmax
 
 cowplot::plot_grid(plotlist = betaplots, nrow = 1)
 ```
@@ -468,12 +469,12 @@ contrastlist2 <- list(
   result$all_contrasts$Age$resdf
 ) %>% lapply(\(x)return(list(resdf=x)))
 
-names(contrastlist2) <- c( "Sex", "Age")
+names(contrastlist2) <- c( "Sex_Female_vs_Male", "Age")
 
-contrast_names_pretty <- c("Depression vs Control",  "Sex Female vs Male", "Age")
+contrast_names_ordered <- c("Depression vs Control",  gsub("_", " ", names(contrastlist2)))
 
 compareLFCContrats2(contrastlist2, mainContrast, 
-                   contrast_names_pretty, "Depression_vs_Control", 
+                   contrast_names_ordered, "Depression_vs_Control", 
                    plim_select= 0.001, plim_plot=0.05,
                    name2remove = "xxx",
                    resdfname="resdf", 
