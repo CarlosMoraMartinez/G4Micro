@@ -63,6 +63,7 @@ Load a phyloseq object with filtered and rarefied counts:
 
 ```{r load, warning=FALSE, message=FALSE}
 library(G4Micro)
+library(cowplot)
 
 data("phobj_raref")
 phobj_raref
@@ -389,6 +390,85 @@ knitr::include_graphics("man/figures/gt_table4.png")
 
 restoreopt <- restauraropt_mk(opt)
 ```
+
+## Train classification models based on microbiome
+
+Let's train a set of machine learning models to classify samples into classes. 
+
+First, select taxa from DESeq2 results:
+
+```{r pred1, fig.width=12, fig.height=4, warning=FALSE, error=FALSE, fig.show='hide', message=FALSE}
+
+resultds <- getDeseqResults(phobj_filtonly, opt = opt, variables=c("Condition"))
+
+taxa_2train <- resultds$resdf %>% 
+  dplyr::filter(padj <= 0.05) %>%
+    pull(taxon)
+
+cat("Selecting ", length(taxa_2train), " taxa for PCA.")
+```
+
+Now, compute a PCA using VST abundances from DESeq2 (or transformed in any other way):
+
+```{r pred2, fig.width=12, fig.height=8, warning=FALSE, error=FALSE, message=FALSE, fig.align='center'}
+
+pca_results <- makeAllPCAs(phobj_filtonly, 
+                           resultds$vst_counts_df, 
+                           taxa_2train, 
+                           c("Condition"), 
+                           opt, 
+                           name = "PCA_DiffTaxaPadj")
+pca_results$Condition$plots
+```
+Train models with the PCs. The package provides default parameters for XGBoost, CatBoost and RandomForest stored in the `xgboost_params_default`, `catboost_params_default` and `randomforest_params_default` variables. 
+
+```{r pred3, fig.width=12, fig.height=8, warning=FALSE, error=FALSE, message=FALSE, fig.align='center'}
+metadata <- data.frame(sample_data(phobj_filtonly))
+
+predmodels <-callDoAllModelsFromALLPCAs(pca_results, 
+                                        name="TrainWithPCA1",
+                                        metadata=metadata,
+                                        vars2pca=c("Condition"), 
+                                        nfolds = 0, # Leave one out
+                                        xgboost_params = xgboost_params_default, 
+                                        catboost_params = catboost_params_default,
+                                        randomforest_params = randomforest_params_default,
+                                        do_smote = FALSE, opt = opt)
+
+predmodels$modummary %>% select(model, BalancedAccuracy_l1out, AUC_l1out, 
+                                  Accuracy_l1out, Kappa_l1out, 
+                                  Sensitivity_l1out, Specificity_l1out, PPV_l1out, NPV_l1out, Precision_l1out, Recall_l1out) %>% 
+  mutate_if(is.numeric, round, 3) %>% 
+  rename_with(~ str_remove(.x, "_l1out")) %>%
+  kableExtra::kable()
+
+```
+
+Plot the performance metrics:
+
+```{r pred4, fig.width=12, fig.height=10, warning=FALSE, error=FALSE, message=FALSE, fig.align='center'}
+# First we need to create a nested list
+results_list <- list("phobj_filtonly"=list("PCA"=predmodels))
+
+plots <- makeLinePlotComparingSamePhobjModels(phname = "phobj_filtonly", 
+                                     all_model_results = results_list,
+                                     get_pcnames_from = "PCA",
+                                     opt = opt,
+                                     plot_extra = FALSE, 
+                                     order_by_measure = "BalancedAccuracy_l1out",
+                                     name="test_models", 
+                                     sel_method_name="PCA")
+ 
+cw <- cowplot::plot_grid(plotlist=list(plots$g5 + theme(legend.position = "none"),
+                                       plots$g6 + theme(legend.position = "none"),
+                                       plots$g3 + theme(legend.position = "none"),
+                                       plots$g4 + theme(legend.position = "none"),
+                                       plots$g7 + theme(legend.position = "none")), ncol = 2)
+
+print(cw)
+
+```
+
 
 
 

@@ -70,7 +70,8 @@ makeLinePlotComparingSamePhobjModels<- function(phname, all_model_results, opt,
 
   resph <- all_model_results[[phname]]
   pcnames <- resph[[get_pcnames_from]]$varnames
-  tabs <- resph[[get_pcnames_from]]$modummary %>% dplyr::mutate(sel_method = sel_method_name, varsused = paste(pcnames, collapse="|"))
+  tabs <- resph[[get_pcnames_from]]$modummary %>%
+    dplyr::mutate(sel_method = sel_method_name, varsused = paste(pcnames, collapse="|"))
   if(lindaname %in% names(resph) & plot_extra){
     linda_pcnames <- resph[[lindaname]]$varnames
     aux <- resph[[lindaname]]$modummary %>% dplyr::mutate(sel_method = "PCA LinDA", varsused = paste(linda_pcnames, collapse="|"))
@@ -128,8 +129,8 @@ makeLinePlotComparingSamePhobjModels<- function(phname, all_model_results, opt,
       geom_col(alpha=1, width = 0.8, position="dodge")+
       #geom_point(size=2)+
       #geom_line(alpha=1)+
-      scale_color_cosmic()+
-      scale_fill_cosmic() +
+      ggsci::scale_color_cosmic()+
+      ggsci::scale_fill_cosmic() +
       ggpubr::theme_pubr() +
       theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
   )
@@ -315,4 +316,5 @@ makeLinePlotComparingSamePhobjModels<- function(phname, all_model_results, opt,
   print(cw)
   dev.off()
 
+  return(list(g1=g1, g2=g2, g3=g3, g4=g4, g5=g5, g6=g6, g7=g7))
 }

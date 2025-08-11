@@ -52,6 +52,7 @@ Load a phyloseq object with filtered and rarefied counts:
 
 ``` r
 library(G4Micro)
+library(cowplot)
 
 data("phobj_raref")
 phobj_raref
@@ -259,36 +260,33 @@ betaplots <- makeAllPCoAs(phobj_raref, outdir,
 #> Square root transformation
 #> Wisconsin double standardization
 #> Run 0 stress 0.2424031 
-#> Run 1 stress 0.2443403 
-#> Run 2 stress 0.2453728 
-#> Run 3 stress 0.2423611 
+#> Run 1 stress 0.2447432 
+#> Run 2 stress 0.2417309 
 #> ... New best solution
-#> ... Procrustes: rmse 0.01056373  max resid 0.08251605 
-#> Run 4 stress 0.2448805 
-#> Run 5 stress 0.2424755 
-#> ... Procrustes: rmse 0.01059435  max resid 0.09719754 
-#> Run 6 stress 0.2423265 
+#> ... Procrustes: rmse 0.03070245  max resid 0.2058067 
+#> Run 3 stress 0.2422827 
+#> Run 4 stress 0.2424651 
+#> Run 5 stress 0.2412914 
 #> ... New best solution
-#> ... Procrustes: rmse 0.01158079  max resid 0.08677874 
-#> Run 7 stress 0.2451656 
-#> Run 8 stress 0.2413875 
+#> ... Procrustes: rmse 0.01082094  max resid 0.07100492 
+#> Run 6 stress 0.2473113 
+#> Run 7 stress 0.2411035 
 #> ... New best solution
-#> ... Procrustes: rmse 0.03638126  max resid 0.2036798 
-#> Run 9 stress 0.2466801 
-#> Run 10 stress 0.2428797 
-#> Run 11 stress 0.2418506 
-#> ... Procrustes: rmse 0.009664707  max resid 0.09101485 
-#> Run 12 stress 0.2683218 
-#> Run 13 stress 0.2485375 
-#> Run 14 stress 0.2425272 
-#> Run 15 stress 0.2452056 
-#> Run 16 stress 0.2411033 
-#> ... New best solution
-#> ... Procrustes: rmse 0.0183157  max resid 0.1574724 
-#> Run 17 stress 0.2428799 
-#> Run 18 stress 0.2423011 
-#> Run 19 stress 0.2448276 
-#> Run 20 stress 0.2416822 
+#> ... Procrustes: rmse 0.01081649  max resid 0.0780362 
+#> Run 8 stress 0.2451824 
+#> Run 9 stress 0.2448274 
+#> Run 10 stress 0.2418611 
+#> Run 11 stress 0.250654 
+#> Run 12 stress 0.2428996 
+#> Run 13 stress 0.2470644 
+#> Run 14 stress 0.244742 
+#> Run 15 stress 0.2451799 
+#> Run 16 stress 0.2451732 
+#> Run 17 stress 0.2747277 
+#> Run 18 stress 0.2414438 
+#> ... Procrustes: rmse 0.007116678  max resid 0.06182965 
+#> Run 19 stress 0.2464021 
+#> Run 20 stress 0.2425719 
 #> *** Best solution was not repeated -- monoMDS stopping criteria:
 #>      2: no. of iterations >= maxit
 #>     18: stress ratio > sratmax
@@ -517,3 +515,222 @@ gtt <- result_int$all_contrasts$Condition_Depression_vs_Control$res %>%
 ```
 
 <img src="man/figures/gt_table4.png" width="70%" style="display: block; margin: auto;" />
+
+## Train classification models based on microbiome
+
+Let’s train a set of machine learning models to classify samples into
+classes.
+
+First, select taxa from DESeq2 results:
+
+``` r
+
+resultds <- getDeseqResults(phobj_filtonly, opt = opt, variables=c("Condition"))
+
+taxa_2train <- resultds$resdf %>% 
+  dplyr::filter(padj <= 0.05) %>%
+    pull(taxon)
+
+cat("Selecting ", length(taxa_2train), " taxa for PCA.")
+#> Selecting  111  taxa for PCA.
+```
+
+Now, compute a PCA using VST abundances from DESeq2 (or transformed in
+any other way):
+
+``` r
+
+pca_results <- makeAllPCAs(phobj_filtonly, 
+                           resultds$vst_counts_df, 
+                           taxa_2train, 
+                           c("Condition"), 
+                           opt, 
+                           name = "PCA_DiffTaxaPadj")
+pca_results$Condition$plots
+```
+
+<img src="man/figures/README-pred2-1.png" width="100%" style="display: block; margin: auto;" />
+Train models with the PCs. The package provides default parameters for
+XGBoost, CatBoost and RandomForest stored in the
+`xgboost_params_default`, `catboost_params_default` and
+`randomforest_params_default` variables.
+
+``` r
+metadata <- data.frame(sample_data(phobj_filtonly))
+
+predmodels <-callDoAllModelsFromALLPCAs(pca_results, 
+                                        name="TrainWithPCA1",
+                                        metadata=metadata,
+                                        vars2pca=c("Condition"), 
+                                        nfolds = 0, # Leave one out
+                                        xgboost_params = xgboost_params_default, 
+                                        catboost_params = catboost_params_default,
+                                        randomforest_params = randomforest_params_default,
+                                        do_smote = FALSE, opt = opt)
+#> -- GLM finished
+#> -- SVMs finished
+#> -- RandomForest finished
+#> -- C5.0 Tree finished
+#> -- NaiveBayes finished
+#> -- KNN finished
+#> -- K-Means finished
+#> -- XGBoost finished
+#> -- CatBoost finished
+#> 1 : L1= 0 , L2= 1  
+#> 2 : L1= 1 , L2= 2  
+#> 3 : L1= 2 , L2= 3  
+#> 4 : L1= 3 , L2= 4  
+#> 5 : L1= 4 , L2= 5  
+#> 6 : L1= 5 , L2= 6  
+#> 7 : L1= 6 , L2= 7  
+#> 8 : L1= 7 , L2= 8  
+#> 9 : L1= 8 , L2= 9  
+#> 10 : L1= 9 , L2= 10  
+#> 11 : L1= 10 , L2= 11  
+#> 12 : L1= 11 , L2= 12  
+#> 13 : L1= 12 , L2= 13  
+#> 14 : L1= 13 , L2= 14  
+#> 15 : L1= 14 , L2= 15  
+#> 16 : L1= 15 , L2= 16  
+#> 17 : L1= 16 , L2= 17  
+#> 18 : L1= 17 , L2= 18  
+#> 19 : L1= 18 , L2= 19  
+#> 20 : L1= 19 , L2= 20  
+#> 21 : L1= 20 , L2= 21  
+#> 22 : L1= 21 , L2= 22  
+#> 23 : L1= 22 , L2= 23  
+#> 24 : L1= 23 , L2= 24  
+#> 25 : L1= 24 , L2= 25  
+#> 26 : L1= 25 , L2= 26  
+#> 27 : L1= 26 , L2= 27  
+#> 28 : L1= 27 , L2= 28  
+#> 29 : L1= 28 , L2= 29  
+#> 30 : L1= 29 , L2= 30  
+#> 31 : L1= 30 , L2= 31  
+#> 32 : L1= 31 , L2= 32  
+#> 33 : L1= 32 , L2= 33  
+#> 34 : L1= 33 , L2= 34  
+#> 35 : L1= 34 , L2= 35  
+#> 36 : L1= 35 , L2= 36  
+#> 37 : L1= 36 , L2= 37  
+#> 38 : L1= 37 , L2= 38  
+#> 39 : L1= 38 , L2= 39  
+#> 40 : L1= 39 , L2= 40  
+#> 41 : L1= 40 , L2= 41  
+#> 42 : L1= 41 , L2= 42  
+#> 43 : L1= 42 , L2= 43  
+#> 44 : L1= 43 , L2= 44  
+#> 45 : L1= 44 , L2= 45  
+#> 46 : L1= 45 , L2= 46  
+#> 47 : L1= 46 , L2= 47  
+#> 48 : L1= 47 , L2= 48  
+#> 49 : L1= 48 , L2= 49  
+#> 50 : L1= 49 , L2= 50  
+#> 51 : L1= 50 , L2= 51  
+#> 52 : L1= 51 , L2= 52  
+#> 53 : L1= 52 , L2= 53  
+#> 54 : L1= 53 , L2= 54  
+#> 55 : L1= 54 , L2= 55  
+#> 56 : L1= 55 , L2= 56  
+#> 57 : L1= 56 , L2= 57  
+#> 58 : L1= 57 , L2= 58  
+#> 59 : L1= 58 , L2= 59  
+#> 60 : L1= 59 , L2= 60  
+#> 61 : L1= 60 , L2= 61  
+#> 62 : L1= 61 , L2= 62  
+#> 63 : L1= 62 , L2= 63  
+#> 64 : L1= 63 , L2= 64  
+#> 65 : L1= 64 , L2= 65  
+#> 66 : L1= 65 , L2= 66  
+#> 67 : L1= 66 , L2= 67  
+#> 68 : L1= 67 , L2= 68  
+#> 69 : L1= 68 , L2= 69  
+#> 70 : L1= 69 , L2= 70  
+#> 71 : L1= 70 , L2= 71  
+#> 72 : L1= 71 , L2= 72  
+#> 73 : L1= 72 , L2= 73  
+#> 74 : L1= 73 , L2= 74  
+#> 75 : L1= 74 , L2= 75  
+#> 76 : L1= 75 , L2= 76  
+#> 77 : L1= 76 , L2= 77  
+#> 78 : L1= 77 , L2= 78  
+#> 79 : L1= 78 , L2= 79  
+#> 80 : L1= 79 , L2= 80  
+#> 81 : L1= 80 , L2= 81  
+#> 82 : L1= 81 , L2= 82  
+#> 83 : L1= 82 , L2= 83  
+#> 84 : L1= 83 , L2= 84  
+#> 85 : L1= 84 , L2= 85  
+#> 86 : L1= 85 , L2= 86  
+#> 87 : L1= 86 , L2= 87  
+#> 88 : L1= 87 , L2= 88  
+#> 89 : L1= 88 , L2= 89  
+#> 90 : L1= 89 , L2= 90  
+#> 91 : L1= 90 , L2= 91  
+#> 92 : L1= 91 , L2= 92  
+#> 93 : L1= 92 , L2= 93  
+#> 94 : L1= 93 , L2= 94  
+#> 95 : L1= 94 , L2= 95  
+#> 96 : L1= 95 , L2= 96  
+#> 97 : L1= 96 , L2= 97  
+#> 98 : L1= 97 , L2= 98  
+#> 99 : L1= 98 , L2= 99  
+#> 100 : L1= 99 , L2= 100  
+#> 101 : L1= 100 , L2= 101  
+#> 102 : L1= 101 , L2= 102  
+#> 103 : L1= 102 , L2= 103  
+#> 104 : L1= 103 , L2= 104  
+#> 105 : L1= 104 , L2= 105
+#> -- Ensemble finished
+
+predmodels$modummary %>% select(model, BalancedAccuracy_l1out, AUC_l1out, 
+                                  Accuracy_l1out, Kappa_l1out, 
+                                  Sensitivity_l1out, Specificity_l1out, PPV_l1out, NPV_l1out, Precision_l1out, Recall_l1out) %>% 
+  mutate_if(is.numeric, round, 3) %>% 
+  rename_with(~ str_remove(.x, "_l1out")) %>%
+  kableExtra::kable()
+```
+
+| model | BalancedAccuracy | AUC | Accuracy | Kappa | Sensitivity | Specificity | PPV | NPV | Precision | Recall |
+|:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| KNN-K=5 | 0.886 | 0.889 | 0.895 | 0.781 | 0.837 | 0.935 | 0.900 | 0.892 | 0.900 | 0.837 |
+| KNN-K=7 | 0.886 | 0.895 | 0.895 | 0.781 | 0.837 | 0.935 | 0.900 | 0.892 | 0.900 | 0.837 |
+| Ensemble | 0.878 | 0.907 | 0.886 | 0.762 | 0.837 | 0.919 | 0.878 | 0.891 | 0.878 | 0.837 |
+| SVM-linear | 0.844 | 0.923 | 0.867 | 0.714 | 0.721 | 0.968 | 0.939 | 0.833 | 0.939 | 0.721 |
+| KNN-K=9 | 0.862 | 0.904 | 0.867 | 0.724 | 0.837 | 0.887 | 0.837 | 0.887 | 0.837 | 0.837 |
+| KNN-K=11 | 0.859 | 0.917 | 0.867 | 0.722 | 0.814 | 0.903 | 0.854 | 0.875 | 0.854 | 0.814 |
+| RandomForest | 0.854 | 0.884 | 0.857 | 0.706 | 0.837 | 0.871 | 0.818 | 0.885 | 0.818 | 0.837 |
+| C5.0 Tree | 0.854 | 0.908 | 0.857 | 0.706 | 0.837 | 0.871 | 0.818 | 0.885 | 0.818 | 0.837 |
+| XGBoost | 0.847 | 0.901 | 0.857 | 0.701 | 0.791 | 0.903 | 0.850 | 0.862 | 0.850 | 0.791 |
+| KMeans | 0.833 | 0.856 | 0.857 | 0.693 | 0.698 | 0.968 | 0.938 | 0.822 | 0.938 | 0.698 |
+| KNN-K=3 | 0.839 | 0.860 | 0.848 | 0.683 | 0.791 | 0.887 | 0.829 | 0.859 | 0.829 | 0.791 |
+| SVM-radial | 0.820 | 0.889 | 0.838 | 0.657 | 0.721 | 0.919 | 0.861 | 0.826 | 0.861 | 0.721 |
+| CatBoost | 0.838 | 0.918 | 0.838 | 0.669 | 0.837 | 0.839 | 0.783 | 0.881 | 0.783 | 0.837 |
+| NaiveBayes | 0.809 | 0.923 | 0.829 | 0.635 | 0.698 | 0.919 | 0.857 | 0.814 | 0.857 | 0.698 |
+| logistic_regression | 0.811 | 0.922 | 0.819 | 0.625 | 0.767 | 0.855 | 0.786 | 0.841 | 0.786 | 0.767 |
+
+Plot the performance metrics:
+
+``` r
+# First we need to create a nested list
+results_list <- list("phobj_filtonly"=list("PCA"=predmodels))
+
+plots <- makeLinePlotComparingSamePhobjModels(phname = "phobj_filtonly", 
+                                     all_model_results = results_list,
+                                     get_pcnames_from = "PCA",
+                                     opt = opt,
+                                     plot_extra = FALSE, 
+                                     order_by_measure = "BalancedAccuracy_l1out",
+                                     name="test_models", 
+                                     sel_method_name="PCA")
+ 
+cw <- cowplot::plot_grid(plotlist=list(plots$g5 + theme(legend.position = "none"),
+                                       plots$g6 + theme(legend.position = "none"),
+                                       plots$g3 + theme(legend.position = "none"),
+                                       plots$g4 + theme(legend.position = "none"),
+                                       plots$g7 + theme(legend.position = "none")), ncol = 2)
+
+print(cw)
+```
+
+<img src="man/figures/README-pred4-1.png" width="100%" style="display: block; margin: auto;" />

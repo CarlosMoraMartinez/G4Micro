@@ -12,6 +12,7 @@
 #' @param randomforest_params List of parameters for the Random Forest model, Default: randomforest_params_default.
 #' @param do_smote Logical, whether to apply SMOTE oversampling, Default: FALSE.
 #' @param smote_params List of parameters for SMOTE oversampling, Default: list(K = 5, dup_size = "balance").
+#' @param opt A list of options, must contain an output path in `opt$out`.
 #' @return A list containing model summaries and generated plots, including trained models and SVM visualizations.
 #' @details This function prepares a dataset from PCA results and associated metadata, selects variables based on logistic regression (for binomial data), trains various machine learning models (SVM, XGBoost, CatBoost, Random Forest, KNN, K-Means, C5.0 Tree, NaiveBayes, GLM), and optionally applies SMOTE. It returns a summary and generates plots for linear and radial SVMs.
 #' @examples
@@ -41,7 +42,7 @@ callDoAllModelsFromALLPCAs <- function(all_pcas, name, metadata, vars2pca=c("Con
                                        catboost_params = catboost_params_default,
                                        randomforest_params = randomforest_params_default,
                                        do_smote=FALSE,
-                                       smote_params=smote_params_default){
+                                       smote_params=smote_params_default, opt){
   datasc <- all_pcas[[1]]$pca$x %>%
     as.data.frame %>%
     rownames_to_column("sample") %>%

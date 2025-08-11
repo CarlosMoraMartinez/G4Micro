@@ -16,7 +16,8 @@ callDoAllModelsFromALLPCAs(
   catboost_params = catboost_params_default,
   randomforest_params = randomforest_params_default,
   do_smote = FALSE,
-  smote_params = smote_params_default
+  smote_params = smote_params_default,
+  opt
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ callDoAllModelsFromALLPCAs(
 \item{do_smote}{Logical, whether to apply SMOTE oversampling, Default: FALSE.}
 
 \item{smote_params}{List of parameters for SMOTE oversampling, Default: list(K = 5, dup_size = "balance").}
+
+\item{opt}{A list of options, must contain an output path in \code{opt$out}.}
 }
 \value{
 A list containing model summaries and generated plots, including trained models and SVM visualizations.
