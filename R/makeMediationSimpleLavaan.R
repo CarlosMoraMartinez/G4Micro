@@ -48,7 +48,6 @@
 #' @importFrom dplyr mutate select filter
 #' @importFrom lavaan sem
 makeMediationSimpleLavaan <- function(df, xname, yname, medname){
-  library(lavaan)
 
   eq1 = paste0(medname, " ~ a*", xname)
   eq2 = paste0(yname, " ~ b*", medname, " + cp*", xname)
@@ -67,8 +66,8 @@ makeMediationSimpleLavaan <- function(df, xname, yname, medname){
     return(list(sem=list(), estimates=ss))
   }
 
+  #df <- df %>% dplyr::mutate(!!yname := as.numeric(!!sym(yname)))
   df <- df %>% dplyr::mutate(!!yname := ordered(!!sym(yname)))
-
 
   eqs <- paste(eq1, eq2, eq3, eq4, sep="\n", collapse="\n")
 

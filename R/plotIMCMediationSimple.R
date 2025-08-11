@@ -12,21 +12,22 @@
 #' @param name PARAM_DESCRIPTION, Default: 'plotIMCMediationSimple'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[assertthat]{assert_that}}
 #'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
 #'  \code{\link[scales]{pal_gradient_n}}
 #' @rdname plotIMCMediationSimple
-#' @export 
+#' @export
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr filter mutate select
 #' @importFrom scales gradient_n_pal
+#' @importFrom geomtextpath geom_textsegment
 plotIMCMediationSimple <- function(res, vars2test, outdir, outname,
                                    plim_plot = 0.05, use_color_scale=FALSE, w=14, h=10,custom_colors=NULL,
                                    name = "plotIMCMediationSimple"){
@@ -118,7 +119,7 @@ plotIMCMediationSimple <- function(res, vars2test, outdir, outname,
       #              col = edgetab$color,
       #              linetype = edgetab$linetype,
       #              arrow=arrow(length=unit(0.01, "npc"), type="closed")) +
-      geom_textsegment(data = edgetab,
+      geomtextpath::geom_textsegment(data = edgetab,
                        aes(label=labelnames,x=x0, y=y0, xend=x1, yend=y1),
                        #size = edgetab$width,
                        col = edgetab$color,

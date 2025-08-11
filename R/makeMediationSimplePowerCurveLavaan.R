@@ -12,11 +12,12 @@
 #' @param max_n Maximum sample size for power simulation. Default is 500.
 #' @param inc_n Increment step of sample sizes from min_n to max_n. Default is 20.
 #' @param error Noise level used in mediator simulation. (Not currently used.) Default is 0.1.
+#' @param plim_pow P-value threshold to consider the result as significant.
 #' @param ncores Number of cores to use for parallel computing. Default is 12.
 #'
 #' @return A data frame summarizing the mean estimates, standard errors, z-scores, and power for each parameter at each sample size.
 #'
-#' @details This function simulates new datasets by sampling the independent variable and generating mediator and binary outcome values based on a logistic model using coefficients from a previously fitted mediation model. For each simulated dataset, a mediation analysis is repeated and the proportion of significant results (p < 0.05) is used to estimate statistical power across a range of sample sizes.
+#' @details This function simulates new datasets by sampling the independent variable and generating mediator and binary outcome values based on a logistic model using coefficients from a previously fitted mediation model. For each simulated dataset, a mediation analysis is repeated and the proportion of significant results (p < `plim_pow`) is used to estimate statistical power across a range of sample sizes.
 #'
 #' @examples
 #' \dontrun{
@@ -40,10 +41,8 @@ makeMediationSimplePowerCurveLavaan <- function(df, xname, yname, medname, med_r
                                                 max_n=500,
                                                 inc_n=20,
                                                 error=0.1,
-                                                ncores=12){
-  library(parallel)
-  library(doParallel)
-  library(foreach)
+                                                plim_pow=0.05,
+                                                ncores=10){
 
   cat("Doing Power Test for ", xname, "\n")
   cl <- makeCluster(ncores)
@@ -111,7 +110,7 @@ makeMediationSimplePowerCurveLavaan <- function(df, xname, yname, medname, med_r
         mean_se = mean(`S.E.`, na.rm=T),
         mean_zscore = mean(`z-score`, na.rm=T),
         n = n(),
-        power = sum(p.value < 0.05)/n()
+        power = sum(p.value <= plim_pow)/n()
       )
       ressum
   } ## foreach

@@ -24,6 +24,7 @@
 #' @export
 #' @importFrom dplyr mutate
 #' @importFrom htmlwidgets saveWidget
+#'@importFrom plotly plot_ly layout
 makeSankeyPlot <- function(nodelist, linklist, name, fname, outdir, fontsize=18){
 
   nodelist <- nodelist %>%

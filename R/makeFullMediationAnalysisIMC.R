@@ -153,7 +153,7 @@ makeFullMediationAnalysisIMC <- function(vstdf, df_all, opt, getVarsFunction, me
                                                            mediator_name,
                                                            med_res =medres_x,
                                                            nrep=100,
-                                                           min_n=100, max_n=1000, inc_n=50, error=0.1) %>%
+                                                           min_n=100, max_n=1000, inc_n=50, error=0.1, plim_pow=plim_plot) %>%
           dplyr::mutate(taxa = x) %>%
           dplyr::select(taxa, everything())
 

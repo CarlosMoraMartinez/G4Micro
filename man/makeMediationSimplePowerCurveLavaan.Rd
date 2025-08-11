@@ -15,7 +15,8 @@ makeMediationSimplePowerCurveLavaan(
   max_n = 500,
   inc_n = 20,
   error = 0.1,
-  ncores = 12
+  plim_pow = 0.05,
+  ncores = 10
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ makeMediationSimplePowerCurveLavaan(
 
 \item{error}{Noise level used in mediator simulation. (Not currently used.) Default is 0.1.}
 
+\item{plim_pow}{P-value threshold to consider the result as significant.}
+
 \item{ncores}{Number of cores to use for parallel computing. Default is 12.}
 }
 \value{
@@ -48,7 +51,7 @@ A data frame summarizing the mean estimates, standard errors, z-scores, and powe
 Simulates data and evaluates the statistical power of a mediation model using increasing sample sizes and the \code{lavaan} package.
 }
 \details{
-This function simulates new datasets by sampling the independent variable and generating mediator and binary outcome values based on a logistic model using coefficients from a previously fitted mediation model. For each simulated dataset, a mediation analysis is repeated and the proportion of significant results (p < 0.05) is used to estimate statistical power across a range of sample sizes.
+This function simulates new datasets by sampling the independent variable and generating mediator and binary outcome values based on a logistic model using coefficients from a previously fitted mediation model. For each simulated dataset, a mediation analysis is repeated and the proportion of significant results (p < \code{plim_pow}) is used to estimate statistical power across a range of sample sizes.
 }
 \examples{
 \dontrun{
