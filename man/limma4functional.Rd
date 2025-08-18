@@ -61,7 +61,7 @@ if(interactive()){
                     Sample2 = c(20, 15),
                     Sample3 = c(8, 3),
                     Sample4 = c(1, 13))
-  metad2 <- data.frame(sampleID = c("Sample1", "Sample2", "Sample3"),
+  metad2 <- data.frame(sampleID = c("Sample1", "Sample2", "Sample3", "Sample4"),
                       Condition = c("Control", "Depression", "Control", "Depression"))
 
   # Run differential abundance analysis
