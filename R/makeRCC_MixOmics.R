@@ -48,7 +48,7 @@
 #' @export
 #' @importFrom assertthat assert_that
 #' @importFrom mixOmics rcc
-makeRCC_MixOmics <- function(microbiome_mat, diet_mat, tax2plot=c(), meta2plot = c(),
+akeRCC_MixOmics <- function(microbiome_mat, diet_mat, tax2plot=c(), meta2plot = c(),
                              outdir="./", name="all"){
 
   assertthat::assert_that(all(tax2plot %in% colnames(microbiome_mat)))
