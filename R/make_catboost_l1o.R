@@ -107,8 +107,11 @@ make_catboost_l1o <- function(datasc, levs, varnames,
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
-  predict_probs = numeric(0)
+  predict_probs = list()
 
   if(catboost_params$balance_weights & ! do_smote){
     class_weights <- table(datasc$class)
@@ -191,13 +194,29 @@ make_catboost_l1o <- function(datasc, levs, varnames,
     }
     pred_prob <- catboost::catboost.predict(model, test_pool, prediction_type = "Probability")
 
-    if(length(levs) == 2){
-      predict_probs <- c(predict_probs, pred_prob)
+    if(reorder_samples){
+      if(length(levs) == 2){
+        for(ii in 1:length(i)) predict_probs[[ i[ii] ]] <- pred_prob[ii]
+      }else{
+        rownames(pred_prob) <- i
+        predict_probs <- rbind(predict_probs, pred_prob)
+      }
     }else{
-      predict_probs <- rbind(predict_probs, pred_prob)
+      if(length(levs) == 2){
+        predict_probs <- c(predict_probs, pred_prob)
+      }else{
+        predict_probs <- rbind(predict_probs, pred_prob)
+      }
     }
 
   }
+  if(length(levs) == 2){
+    predict_probs <- unlist(predict_probs)
+  }else if(reorder_samples & length(levs) >2){
+    predict_probs <- predict_probs[as.character(1:nrow(datasc)),] ## test late
+  }
+
+
   if(length(levs) == 2){
     predict_tree1 <- factor(levs[as.integer(round(predict_probs))+1], levels=levs)
     roc1 <- roc(response=as.numeric(datasc$class)-1, predictor=predict_probs)

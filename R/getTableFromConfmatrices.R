@@ -42,7 +42,10 @@ getTableFromConfmatrices <- function(modlist){
       NPV = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$byClass["Neg Pred Value"],
       Precision = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$byClass["Precision"],
       Recall = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$byClass["Recall"],
-      BalancedAccuracy = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$byClass["Balanced Accuracy"]
+      BalancedAccuracy = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$byClass["Balanced Accuracy"],
+      NoInformationRate = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$overall["AccuracyNull"],
+      Pval_Acc_lower_than_NIR = if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$overall["AccuracyPValue"],
+      McNemar_test =  if(is.null(mod$confmat_no_l1o)) NA else mod$confmat_no_l1o$overall["McnemarPValue"]
     )
   }) %>% bind_rows() %>%
     dplyr::mutate(model = names(modlist)) %>%

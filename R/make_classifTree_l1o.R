@@ -82,8 +82,7 @@ make_classifTree_l1o <- function(datasc, levs, varnames,
                                  balance_weights = TRUE,
                                  do_smote=FALSE,
                                  smote_params=list(K=5, dup_size="balance")){
-  library(C50)
-  predict_tree1 <- factor()
+  predict_tree1 <- list()
   predict_probs <- list()
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
   if(balance_weights & !do_smote){
@@ -95,6 +94,9 @@ make_classifTree_l1o <- function(datasc, levs, varnames,
   }
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
   for(i in folds){
     # Separar datos
@@ -120,10 +122,18 @@ make_classifTree_l1o <- function(datasc, levs, varnames,
     }
 
     mod_tree1 <- C5.0(train_df, train_labels, trials = 20) # , weights=train_weighs # makes it crash!
-    predict_tree1 <- c(predict_tree1, predict(mod_tree1, test_df))
-    predict_probs[[i]] <- predict(mod_tree1, test_df, type = "prob")
-  }
 
+    if(length(i) > 1){
+      for(ii in i) predict_tree1[[ii]] <- predict(mod_tree1, test_df[as.character(ii), ])
+      for(ii in i) predict_probs[[ii]] <- predict(mod_tree1, test_df[as.character(ii), ], type = "prob")
+    }else{
+      predict_tree1 <- c(predict_tree1, predict(mod_tree1, test_df))
+      predict_probs[[i]] <- predict(mod_tree1, test_df, type = "prob")
+    }
+  }
+  if(reorder_samples){
+    predict_tree1 <- unlist(predict_tree1)
+  }
   confmat_tree1 <- confusionMatrix(predict_tree1, datasc$class, positive = levs[2])
   if(length(levs)==2){
     probs_vector <- map(predict_probs, \(xx) xx %>% as.data.frame) %>%

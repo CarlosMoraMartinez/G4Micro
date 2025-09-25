@@ -61,6 +61,9 @@ make_glm_l1o_multiclass <- function(datasc, levs, varnames, folds=c(),
 
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
 
   for(i in folds){
@@ -85,7 +88,9 @@ make_glm_l1o_multiclass <- function(datasc, levs, varnames, folds=c(),
     predict_glm1 <- rbind(predict_glm1, newpred)
 
   }
-
+  if(reorder_samples){
+    predict_glm1 <- predict_glm1[as.character(1:nrow(datasc)), ] ## FIX LATER
+  }
   predict1<- colnames(predict_glm1)[apply(predict_glm1, MAR=1, which.max)] %>% factor
   confmat1 <- confusionMatrix(predict1, factor(datasc$class))
 

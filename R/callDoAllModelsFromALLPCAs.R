@@ -4,6 +4,7 @@
 #' @param name Character string, prefix for naming the output files.
 #' @param metadata Data frame with sample metadata. Must contain column `sampleID` and variables to join and model.
 #' @param vars2pca Character vector of metadata variable names to use as class labels for modeling, Default: c("Condition").
+#' @param levs2predict Levels of the variable to predict. If empty, gets them automatically in alphabetical order. Default: c()
 #' @param variable_plim P-value threshold for variable preselection, based on logistic regressions, Default: 0.01.
 #' @param meta_vars Character vector of additional metadata variables to merge into the modeling dataset, Default: c().
 #' @param nfolds Integer, number of folds for cross-validation (0 means leave-one-out), Default: 0.
@@ -35,6 +36,7 @@
 #' @export
 #' @importFrom dplyr mutate filter select
 callDoAllModelsFromALLPCAs <- function(all_pcas, name, metadata, vars2pca=c("Condition"),
+                                       levs2predict = c(),
                                        variable_plim=0.01,
                                        meta_vars = c(),
                                        nfolds = 0,
@@ -57,6 +59,7 @@ callDoAllModelsFromALLPCAs <- function(all_pcas, name, metadata, vars2pca=c("Con
   }
   allmodssumm <- makeAllModels(datasc, plim=variable_plim, opt,
                                name= name, nfolds = nfolds,
+                               levs2predict = levs2predict,
                                xgboost_params = xgboost_params,
                                catboost_params = catboost_params,
                                randomforest_params = randomforest_params,

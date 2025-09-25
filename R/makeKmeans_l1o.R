@@ -1,78 +1,40 @@
-#' @title K-means Clustering with Leave-One-Out Cross-Validation and Optional SMOTE
-#' @description
-#' Performs K-means clustering with leave-one-out or k-fold cross-validation on a dataset using specified variables.
-#' Optionally applies SMOTE to balance training data in each fold before clustering.
-#' Computes confusion matrices and ROC curves for model evaluation.
-#'
-#' @param datasc A data frame containing the dataset. Must include a factor column `class` with true class labels, and `sample`.
-#' @param levs A character vector specifying the class levels (clusters). Determines the number of clusters and factor levels.
-#' @param varnames A character vector of column names in `datasc` to be used as features for clustering.
-#' @param SEED Integer seed for reproducibility. Default is 123.
-#' @param folds Integer vector specifying the indices of samples to leave out for cross-validation.
-#'   If empty (default), leave-one-out is performed over all samples.
-#' @param do_smote Logical; if TRUE, applies SMOTE to training data in each fold to address class imbalance. Default is FALSE.
-#' @param smote_params A list of parameters for SMOTE: `K` (number of nearest neighbors) and `dup_size` (duplication size or "balance"). Default is list(K = 5, dup_size = "balance").
-#'
-#' @return A list containing:
-#' \describe{
-#'   \item{confmat}{Confusion matrix from cross-validation (CV) predictions.}
-#'   \item{confmat_no_l1o}{Confusion matrix from clustering on the full dataset without CV.}
-#'   \item{preds}{Factor vector of predicted classes from CV.}
-#'   \item{pred_probs}{Predicted probabilities derived from cluster-to-center distances.}
-#'   \item{preds_no_l1o}{Predicted classes from clustering the entire dataset without CV.}
-#'   \item{mod}{K-means model trained on the full dataset.}
-#'   \item{roc_obj_no_l1o}{Currently NULL; placeholder for ROC object from full data (not computed).}
-#'   \item{roc_auc_no_l1o}{Currently NULL; placeholder for ROC AUC from full data (not computed).}
-#'   \item{roc_obj}{ROC object from CV predictions.}
-#'   \item{roc_auc}{Area Under the Curve (AUC) value from CV ROC.}
-#' }
-#'
-#' @details
-#' For each fold (samples left out), the function fits K-means on the remaining data,
-#' optionally applying SMOTE to balance classes in the training set.
-#' It assigns cluster labels to class labels based on nearest centers.
-#' Predictions are made on the left-out sample(s) by comparing distances to cluster centers.
-#' The function computes confusion matrices and ROC curves to evaluate performance.
-#'
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param datasc PARAM_DESCRIPTION
+#' @param levs PARAM_DESCRIPTION
+#' @param varnames PARAM_DESCRIPTION
+#' @param SEED PARAM_DESCRIPTION, Default: 123
+#' @param folds PARAM_DESCRIPTION, Default: c()
+#' @param do_smote PARAM_DESCRIPTION, Default: FALSE
+#' @param smote_params PARAM_DESCRIPTION, Default: list(K = 5, dup_size = "balance")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'   library(dplyr)
-#'   data(iris)
-#'   iris <- iris %>% mutate(class = factor(ifelse(Species == "setosa", "A", "B")),
-#'                           sample = 1:n())
-#'   result <- makeKmeans_l1o(iris, levs=c("A", "B"), varnames=colnames(iris)[1:4],
-#'                            SEED=42, do_smote=FALSE)
-#'   print(result$confmat)
-#'   print(result$roc_auc)
+#'  #EXAMPLE1
+#'  }
 #' }
-#' }
-#'
 #' @seealso
-#' \code{\link[stats]{kmeans}},
-#' \code{\link[caret]{confusionMatrix}},
-#' \code{\link[dplyr]{select}},
-#' \code{\link[dplyr]{mutate}},
-#' \code{\link[dplyr]{summarise}},
-#' \code{\link[dplyr]{arrange}},
-#' \code{\link[dplyr]{mutate_all}}
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{summarise}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{mutate_all}}
 #' @rdname makeKmeans_l1o
 #' @export
 #' @importFrom dplyr select mutate summarise arrange mutate_all
-#' @importFrom stats kmeans
-#' @importFrom caret confusionMatrix
 #' @importFrom UBL SmoteClassif
 #' @importFrom pROC roc multiclass.roc
+#' @importFrom caret confusionMatrix
+#' @importFrom stats as.formula
 makeKmeans_l1o <- function(datasc, levs, varnames, SEED=123, folds=c(),
                            do_smote=FALSE,
                            smote_params=list(K=5, dup_size="balance")){
-  library(stats)
-  library(caret)
   set.seed(SEED)
   train_df_all <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
 
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
 
   preds <- c()
@@ -128,14 +90,17 @@ makeKmeans_l1o <- function(datasc, levs, varnames, SEED=123, folds=c(),
     dists <- dist(rbind(cents, test_df)) %>% as.matrix
     assign_class <- rownames(cents)
 
-    if(length(i)> 1){
+    if(length(i)> 1){ # already there
       pred_i <- apply(dists[rownames(test_df),  assign_class], MAR=1, \(x) assign_class[which.min(x)])
-      all_dists[[i]] <- dists[rownames(test_df),  assign_class]
+      for(ii in i) all_dists[[ii]] <- dists[as.character(ii),  assign_class]
     }else{
       pred_i <- assign_class[which.min(dists[rownames(test_df),  assign_class])]
       all_dists[[i]] <- dists[rownames(test_df),  assign_class]
     }
-    preds  <- c(preds, pred_i )
+    preds  <- c(preds, pred_i)
+  }
+  if(reorder_samples){
+    preds <- preds[as.character(1:nrow(datasc))] ## check
   }
   preds <- factor(preds, levels=levels(datasc$class))
   confmat_kmeans <- confusionMatrix(preds, datasc$class, positive = levs[2])

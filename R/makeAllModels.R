@@ -6,6 +6,7 @@
 #' @param opt A list of options, must contain an output path in `opt$out`.
 #' @param name Name for the output files and modeling group. Default: 'Condition'
 #' @param nfolds Number of folds for cross-validation. If 0, leave-one-out is used. Default: 0
+#' @param levs2predict Levels of the variable to predict. If empty, gets them automatically in alphabetical order. Default: c()
 #' @param xgboost_params Parameters for the xgboost model. Default: xgboost_params_default
 #' @param catboost_params Parameters for the catboost model. Default: catboost_params_default
 #' @param randomforest_params Parameters for the random forest model. Default: randomforest_params_default
@@ -48,6 +49,7 @@
 #' @importFrom readr write_tsv
 #' @importFrom caret createFolds
 makeAllModels <- function(datasc, plim=0.01, opt, name="Condition", nfolds=0,
+                          levs2predict = c(),
                           xgboost_params = xgboost_params_default,
                           catboost_params = catboost_params_default,
                           randomforest_params = randomforest_params_default,
@@ -57,7 +59,12 @@ makeAllModels <- function(datasc, plim=0.01, opt, name="Condition", nfolds=0,
                           ensemble_minval = 0,
                           ensemble_1knn = FALSE,
                           do_ensemble_probs=TRUE){
-  levs <- datasc %>% pull(class) %>% as.factor %>% levels
+  if(length(levs2predict) == 0){
+    levs <- datasc %>% pull(class) %>% as.factor %>% levels
+  }else{
+    levs <- levs2predict
+  }
+  datasc <- datasc %>% dplyr::mutate(class=factor(class, levels=levs))
   # Select features
   if(length(levs)==2){
     compsig <- get_signif_components(datasc, levs)

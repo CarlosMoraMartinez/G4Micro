@@ -96,6 +96,9 @@ makeNaiveBayes_l1o <- function(datasc, levs, varnames,
   df <- datasc %>% dplyr::select(-class, -sample) %>% dplyr::select(all_of(varnames))
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
   for(i in folds){
     # Separar datos
@@ -120,8 +123,16 @@ makeNaiveBayes_l1o <- function(datasc, levs, varnames,
     }
     mod_bayes2 <- e1071::naiveBayes(train_df, train_labels, laplace = 0)
     predict_bayes1 <- c(predict_bayes1, predict(mod_bayes2, test_df))
-    predict_bayes1_probs[[i]] <- predict(mod_bayes2, test_df, type="raw")
+    if(length(i) > 1){
+      for(ii in i) predict_bayes1_probs[[ii]] <- predict(mod_bayes2, test_df[as.character(ii), ], type="raw")
+    }else{
+      predict_bayes1_probs[[i]] <- predict(mod_bayes2, test_df, type="raw")
+    }
 
+
+  }
+  if(reorder_samples){
+    predict_bayes1 <- predict_bayes1[as.character(1:nrow(datasc))]
   }
   confusionMatrix_bayes1 <- confusionMatrix(predict_bayes1, datasc$class,
                                             positive = levs[2])

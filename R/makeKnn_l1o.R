@@ -71,11 +71,14 @@ makeKnn_l1o <- function(datasc, levs, varnames,
 
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
   for(k in  different_ks){
     kname = paste("K=", as.character(k), sep="", collapse="")
     results[[kname]] <- list()
-    preds <- c()
+    preds <- list()
     pred_probs <- list()
     for(i in folds){
       train_df <- train_df_all[-i, ]
@@ -97,11 +100,20 @@ makeKnn_l1o <- function(datasc, levs, varnames,
       }else{
         smoteData = NULL
       }
-      kires <- class::knn(train_df, test_df, train_labels, k = k, prob = T)
-      preds  <- c(preds, kires)
-      pred_probs[[i]] <- kires
 
-    }
+      kires <- class::knn(train_df, test_df, train_labels, k = k, prob = T)
+      if(length(i) > 1){
+        for(ii in 1:length(i)) preds[[ i[[ii]] ]] <- kires[ii]
+        for(ii in 1:length(i)) pred_probs[[ i[[ii]] ]] <- class::knn(train_df, test_df[ii, ], train_labels, k = k, prob = T)
+      }else{
+        preds  <- c(preds, kires)
+        pred_probs[[i]] <- kires
+      }
+
+    }# for i in folds
+
+    preds <- unlist(preds)
+
     if(length(levs == 2)){
       prob_vec <- map_vec(pred_probs, \(x){ifelse(x==levs[1], 1-attr(x, "prob"), attr(x, "prob"))})
       roc1 <- roc(response=as.numeric(datasc$class)-1, predictor=prob_vec)
@@ -127,7 +139,7 @@ makeKnn_l1o <- function(datasc, levs, varnames,
     results[[kname]][["confmat_no_l1o"]] <- confusionMatrix(results[[kname]][["preds_no_l1o"]],
                                                             factor(datasc$class),
                                                             positive = levs[2])
-  }
+  } # for k
 
   return(results)
 }

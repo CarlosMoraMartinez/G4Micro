@@ -71,7 +71,6 @@ make_randomForest_l1o <- function(datasc, levs, varnames,
                                   do_smote=FALSE,
                                   smote_params=smote_params_default
 ){
-  library(randomForest)
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
 
   if(randomforest_params$balance_weights & !do_smote){
@@ -88,6 +87,9 @@ make_randomForest_l1o <- function(datasc, levs, varnames,
 
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
   for(i in folds){
     # Separar datos
@@ -118,8 +120,15 @@ make_randomForest_l1o <- function(datasc, levs, varnames,
                               mtry = randomforest_params$mtry,
                               nodesize = randomforest_params$nodesize)
     predict_tree1 <- c(predict_tree1, predict(mod_tree1, test_df))
-    predict_tree1_probs[[i]] <- predict(mod_tree1, test_df, type = "prob")
+    if(length(i) > 1){
+      for(ii in i) predict_tree1_probs[[ii]] <- predict(mod_tree1, test_df[as.character(ii), ], type = "prob")
+    }else{
+      predict_tree1_probs[[i]] <- predict(mod_tree1, test_df, type = "prob")
+    }
 
+  }
+  if(reorder_samples){
+    predict_tree1 <- predict_tree1[as.character(1:nrow(datasc))]
   }
   confmat_tree1 <- confusionMatrix(predict_tree1, datasc$class, positive = levs[2])
   if(length(levs)==2){

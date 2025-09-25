@@ -54,6 +54,9 @@ make_glm_l1o <- function(datasc, levs, varnames, folds= c(),
 
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
 
   for(i in folds){
@@ -77,15 +80,18 @@ make_glm_l1o <- function(datasc, levs, varnames, folds= c(),
     predict_glm1 <- c(predict_glm1, predict(mod_glm, test_df, type = "response"))
 
   }
+  if(reorder_samples){
+    predict_glm1 <- predict_glm1[as.character(1:nrow(datasc))]
+  }
   predict1 <- ifelse(predict_glm1 > 0.5, levs[2], levs[1]) %>% factor(levels=levs)
   confmat1 <- confusionMatrix(predict1, datasc$class, positive = levs[2])
-  roc1 <- roc(response=as.numeric(datasc$class)-1, predictor=predict_glm1)
+  roc1 <- pROC::roc(response=as.numeric(datasc$class)-1, predictor=predict_glm1)
 
   mod_all <- glm(formula, data=datasc, family = binomial)
   predict2_probs <- predict(mod_all, df, type = "response")
   predict2 <- ifelse(predict2_probs > 0.5, levs[2], levs[1]) %>% factor(levels=levs)
   confmat2 <- confusionMatrix(predict2, datasc$class, positive = levs[2])
-  roc2 <- roc(response=as.numeric(datasc$class)-1, predictor=predict2_probs)
+  roc2 <- pROC::roc(response=as.numeric(datasc$class)-1, predictor=predict2_probs)
   return(list(confmat=confmat1,
               confmat_no_l1o=confmat2,
               mod=mod_all,

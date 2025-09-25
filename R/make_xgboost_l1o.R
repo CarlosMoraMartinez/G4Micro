@@ -88,6 +88,9 @@ make_xgboost_l1o <- function(datasc, levs, varnames,
   df <- datasc %>% dplyr::select(-class, -sample)  %>% dplyr::select(all_of(varnames))
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
   predict_probs = numeric(0)
 
@@ -152,7 +155,7 @@ make_xgboost_l1o <- function(datasc, levs, varnames,
                          min_child_weight = xgboost_params$min_child_weight,
                          subsample = xgboost_params$subsample,
                          colsample_bytree = xgboost_params$colsample_bytree,
-                         gamma = xgboost_params$gamma,
+                         min_split_loss = xgboost_params$gamma,
                          reg_lambda=xgboost_params$reg_lambda,
                          reg_alpha= xgboost_params$reg_alpha,
                          nthread = xgboost_params$nthread,
@@ -162,8 +165,14 @@ make_xgboost_l1o <- function(datasc, levs, varnames,
     }else{
       predict_probs <- rbind(predict_probs, predict(mod_tree1, test_df))
     }
+  }
 
-
+  if(reorder_samples){
+    if(length(levs) == 2){
+      predict_probs <- predict_probs[as.character(1:nrow(datasc))]
+    }else{
+      predict_probs <- predict_probs[as.character(1:nrow(datasc)), ] ## Check later
+    }
   }
   if(length(levs) == 2){
     predict_tree1 <- factor(levs[as.integer(round(predict_probs))+1], levels=levs)

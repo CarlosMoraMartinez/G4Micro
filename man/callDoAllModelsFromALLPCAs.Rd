@@ -9,6 +9,7 @@ callDoAllModelsFromALLPCAs(
   name,
   metadata,
   vars2pca = c("Condition"),
+  levs2predict = c(),
   variable_plim = 0.01,
   meta_vars = c(),
   nfolds = 0,
@@ -28,6 +29,8 @@ callDoAllModelsFromALLPCAs(
 \item{metadata}{Data frame with sample metadata. Must contain column \code{sampleID} and variables to join and model.}
 
 \item{vars2pca}{Character vector of metadata variable names to use as class labels for modeling, Default: c("Condition").}
+
+\item{levs2predict}{Levels of the variable to predict. If empty, gets them automatically in alphabetical order. Default: c()}
 
 \item{variable_plim}{P-value threshold for variable preselection, based on logistic regressions, Default: 0.01.}
 

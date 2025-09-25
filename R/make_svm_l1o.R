@@ -95,6 +95,9 @@ make_svm_l1o <- function(datasc, levs, varnames, kernel="linear", SEED=123, fold
 
   if(length(folds)==0){
     folds <- 1:nrow(datasc)
+    reorder_samples <- FALSE
+  }else{
+    reorder_samples <- TRUE
   }
   set.seed(SEED)
   for(i in folds){
@@ -123,19 +126,25 @@ make_svm_l1o <- function(datasc, levs, varnames, kernel="linear", SEED=123, fold
                       class.weights = class_weight,
                       probability = TRUE)
     predict1 <- c(predict1, predict(mod, test_df))
-    predict1_probs[[i]] <- predict(mod, test_df, probability = TRUE)
+    if(length(i) > 1){
+      for(ii in i)predict1_probs[[ii]] <- predict(mod, test_df[as.character(ii), ], probability = TRUE)
+    }else{
+      predict1_probs[[i]] <- predict(mod, test_df, probability = TRUE)
+    }
 
   }
-
+  if(reorder_samples){
+    predict1 <- predict1[as.character(1:nrow(datasc))]
+  }
   confmat1 <- confusionMatrix(predict1, datasc$class, positive = levs[2])
   if(length(levs)==2){
     probs_vector <- map(predict1_probs, \(xx) attr(xx, "probabilities") %>% as.data.frame) %>%
       bind_rows %>% pull(!!sym(levs[2]))
-    roc1 <- roc(response=as.numeric(datasc$class)-1, predictor=probs_vector)
+    roc1 <- pROC::roc(response=as.numeric(datasc$class)-1, predictor=probs_vector)
   }else{
     probs_vector <- map(predict1_probs, \(xx) attr(xx, "probabilities") %>% as.data.frame) %>%
       bind_rows #%>% pull(!!sym(levs[2]))
-    roc1 <- multiclass.roc(response=datasc$class, predictor=probs_vector)
+    roc1 <- pROC::multiclass.roc(response=datasc$class, predictor=probs_vector)
     roc_auc <- as.numeric(roc1$auc)
   }
 
