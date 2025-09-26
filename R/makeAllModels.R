@@ -98,7 +98,7 @@ makeAllModels <- function(datasc, plim=0.01, opt, name="Condition", nfolds=0,
   cat("-- SVMs finished\n")
   res_randfor <- make_randomForest_l1o(datasc, levs, varnames, folds = folds, do_smote = do_smote, smote_params = smote_params, randomforest_params = randomforest_params)
   cat("-- RandomForest finished\n")
-  res_tree <- make_classifTree_l1o(datasc, levs, varnames, folds = folds, do_smote = do_smote, smote_params = smote_params, balance_weights = TRUE)
+  res_tree <- make_classifTree_l1o(datasc, levs, varnames, folds = folds, do_smote = do_smote, smote_params = smote_params, balance_weights = FALSE)
   cat("-- C5.0 Tree finished\n")
   res_naivebayes <- makeNaiveBayes_l1o(datasc, levs, varnames, SEED=SEED, folds = folds, do_smote = do_smote, smote_params = smote_params)
   cat("-- NaiveBayes finished\n")

@@ -68,7 +68,7 @@ callDoAllModelsFromALLPCAsOriginalVars <- function(all_pcas, PCs, modelo_svm, vs
 
   pcts <- summary(all_pcas[[1]]$pca)$importance[2, PCs]
   pcslope <- pcts[1]/pcts[2]
-  beta <- drop(t(modelo_svm$coefs) %*% all_pcas[[vars2pca[1]]]$pca$x[modelo_svm$index,PCs])
+  beta <- drop(t(modelo_svm$coefs) %*% all_pcas[[vars2pca[1]]]$pca$x[modelo_svm$index,PCs, drop=FALSE])
   bslope <- -beta[1]/beta[2]
 
   rotvals <- all_pcas[[1]]$pca$rotation %>% as.data.frame %>% dplyr::select(all_of(PCs)) %>%

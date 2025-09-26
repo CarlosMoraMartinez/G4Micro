@@ -132,7 +132,7 @@ make_classifTree_l1o <- function(datasc, levs, varnames,
     }
   }
   if(reorder_samples){
-    predict_tree1 <- unlist(predict_tree1)
+    predict_tree1 <- factor(unlist(predict_tree1), levels=levs)
   }
   confmat_tree1 <- confusionMatrix(predict_tree1, datasc$class, positive = levs[2])
   if(length(levs)==2){
@@ -145,7 +145,7 @@ make_classifTree_l1o <- function(datasc, levs, varnames,
     roc1 <- multiclass.roc(response=datasc$class, predictor=probs_vector)
   }
   mod_all <- C5.0(df, datasc$class, trials = 20) # , weights=sweighs
-  predict_tree2 <- predict(mod_all, df)
+  predict_tree2 <- factor(predict(mod_all, df), levels=levs)
   confmat_tree2 <- confusionMatrix(predict_tree2, datasc$class, positive = levs[2])
   return(list(confmat=confmat_tree1,
               mod=mod_all,
