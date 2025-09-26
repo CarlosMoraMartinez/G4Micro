@@ -117,7 +117,10 @@ makeKmeans_l1o <- function(datasc, levs, varnames, SEED=123, folds=c(),
   mod_kmeans_all <- kmeans(train_df_all, centers=length(levs), iter.max = 100, nstart=100)
   predict_kmeans_nol1o <-levels(datasc$class)[mod_kmeans_all$cluster] %>% factor(levels=levs)
   confmat_kmeans_nol1o <- confusionMatrix(predict_kmeans_nol1o, datasc$class, positive = levs[2])
-
+  if(length(levs) == 2 & confmat_kmeans_nol1o$overall["Accuracy"] < 0.5){
+    predict_kmeans_nol1o <-rev(levels(datasc$class))[mod_kmeans_all$cluster] %>% factor(levels=levs)
+    confmat_kmeans_nol1o <- confusionMatrix(predict_kmeans_nol1o, datasc$class, positive = levs[2])
+  }
   return(list(confmat = confmat_kmeans,
               confmat_no_l1o=confmat_kmeans_nol1o,
               preds=preds,
